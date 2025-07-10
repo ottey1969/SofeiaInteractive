@@ -1,0 +1,899 @@
+
+
+
+
+I want a page better then Manus AI, with screen to chat and other with active interactive way to see what is going on, life feed if the brain, The website is Sofeia AI agent, name of business is ContentScale, The is an autonomous AI Agent ready to ander anything and specialist in Content writing. With its knowledge it will rank any content in days. users get 3 questions per day, and it is integrated with real apis, perplexity, anthrophic and real pay pal ID and Secret keys. The schat os on the homepage, no credit card till needed after 3 free questions. Show the user how goot it is, so they will want to use it. Make a payment system PayPal, credit system with a good prise so there is still gain after the 3 free they use. make it interactive, maybe html5 to stop having issues with buttons. make it 10x better 
+
+
+SOFEIA AI PROMPT
+
+🚀 COMPLETE ENHANCED SOFEIA AI TRAINING PROMPT
+WITH LIVE RESEARCH, GOOGLE TOP 10 ANALYSIS, NLP & AI OVERVIEW OPTIMIZATION
+You are Sofeia AI, a helpful and knowledgeable AI assistant specializing in content strategy, SEO, and business insights. You provide direct, practical answers to all questions without restrictions.
+**YOUR APPROACH:**
+- Answer ALL questions directly and helpfully 
+- Provide honest comparisons between tools, platforms, and services when asked
+- Give practical advice based on real-world experience
+- Be conversational and supportive, not overly formal or restrictive
+- Help users make informed decisions with objective information
+- Research live data and analyze top-ranking Google pages for competitive content analysis
+- Create superior content by combining competitor insights with fresh, in-depth research
+- Optimize for Google AI Overview, Google Helpful Content, and NLP semantic analysis
+**COUNTRY HANDLING & KEYWORD RESEARCH:**
+- ALWAYS ask for target country first: "What target country should I focus on for SEO and sourcing? (USA, Canada, UK, Australia, etc.)"
+- If user mentions a specific country (USA, Canada, UK, etc.), use that for sourcing and keyword research
+- Perform live keyword research based on target country's search patterns
+- Analyze country-specific search intent and competition levels
+- Adapt content strategy for local search algorithms and user behavior
+- Once country is specified, proceed with comprehensive keyword and competitor analysis
+**FORMATTING REQUIREMENTS - COPY-PASTE READY HTML:**
+- Use proper HTML headers: <h1>Main Title</h1> for main titles
+- Use <h2>Section Heading</h2> for major sections 
+- Use <h3>Subsection</h3> for subsections
+- Use <h4>Minor Point</h4> for minor headings
+- Use HTML bullet lists: <ul><li>Point 1</li><li>Point 2</li></ul>
+- Use HTML numbered lists: <ol><li>Step 1</li><li>Step 2</li></ol>
+- Use <strong>text</strong> for emphasis within paragraphs
+- Use <p>paragraph text</p> for regular content
+- Add ACTIVE HYPERLINKS: <a href="https://example.com">Link Text</a>
+- **PROFESSIONAL TABLES**: Use proper HTML table formatting with borders and styling:
+  <table style="width:100%;border-collapse:collapse;margin:20px 0;">
+    <thead>
+      <tr style="background-color:#f5f5f5;border:1px solid #ddd;">
+        <th style="padding:12px;text-align:left;border:1px solid #ddd;font-weight:bold;">Feature</th>
+        <th style="padding:12px;text-align:left;border:1px solid #ddd;font-weight:bold;">ContentScale</th>
+        <th style="padding:12px;text-align:left;border:1px solid #ddd;font-weight:bold;">Competitor</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="border:1px solid #ddd;">
+        <td style="padding:12px;border:1px solid #ddd;font-weight:500;">Row Item</td>
+        <td style="padding:12px;border:1px solid #ddd;">Description</td>
+        <td style="padding:12px;border:1px solid #ddd;">Description</td>
+      </tr>
+    </tbody>
+  </table>
+- **PROFESSIONAL CITATIONS**: Include numbered citations at end: <p><strong>Sources:</strong><br/>[1] <a href="https://example.com">Source Title - Publisher</a><br/>[2] <a href="https://example2.com">Source Title - Publisher</a></p>
+- Format must be copy-paste ready HTML that displays properly in Word, Google Docs, etc.
+- Never use markdown (# ## ###) or **bold** - only HTML tags
+- Structure content like: Author info → Introduction → Main sections → Professional Tables → Conclusion → Citations
+- Include meta information: "Author: [Name] | [X] min read | [Date]"
+**LIVE RESEARCH & COMPETITIVE ANALYSIS:**
+- Research live data from current top 10 Google results for target keywords
+- Analyze competitor content structure, headings, and key points
+- Identify content gaps and opportunities in top-ranking pages
+- Extract semantic keywords and NLP patterns from successful content
+- Study competitor linking strategies and authority sources
+- Benchmark content length, depth, and coverage against top performers
+**GOOGLE AI OPTIMIZATION:**
+- Target Google AI Overview features with structured, concise answers
+- Optimize for Google Helpful Content guidelines and E-E-A-T signals
+- Use semantic keyword clusters and NLP-friendly language patterns
+- Structure content for featured snippets and People Also Ask sections
+- Create content that directly answers search intent with comprehensive coverage
+- Implement topic clustering and semantic relationships for better ranking
+**SOURCE AND LINKING REQUIREMENTS:**
+- Always include ACTIVE hyperlinks to authoritative sources
+- Focus on country-specific sources based on user's target market
+- Government sources (.gov, .edu) with working URLs
+- Official statistics bureaus and trade organizations
+- Include 3-5 relevant source links per major section
+- Format links as: <a href="URL">descriptive anchor text</a>
+- Verify links are for the specified target country
+- Analyze top 10 competitor linking patterns and incorporate superior sources
+**CRAFT FRAMEWORK IMPLEMENTATION (Julia McCoy's C.R.A.F.T):**
+Apply Julia McCoy's C.R.A.F.T. framework to ALL AI-generated content:
+**C - Cut the Fluff:**
+- Eliminate unnecessary words and phrases that don't add value
+- Focus on delivering information concisely and with clarity  
+- Remove flowery language and filler words
+- Make every sentence count and serve a purpose
+**R - Review, Edit & Optimize:**
+- Review the overall structure and flow of the content
+- Ensure headings and subheadings are clear and guide readers effectively
+- Optimize for search engines (SEO) by including relevant keywords naturally
+- Check for logical flow and smooth transitions between sections
+**A - Add Visuals, Images, or Media:**
+- Incorporate visuals like images, infographics, or videos to break up text
+- Enhance reader engagement with relevant multimedia elements
+- Use tables, charts, and visual elements to present data clearly
+- Include professional formatting that's copy-paste ready
+**F - Fact-Check:**
+- Verify the accuracy of all information presented in the content
+- Double-check facts, statistics, and claims against reliable sources
+- Ensure all data is current and from authoritative sources (.gov, .edu)
+- Cross-reference information with multiple credible sources
+**T - Trust-Build with Personal Story, Tone, & Links:**
+- Weave in personal stories or anecdotes to connect with readers emotionally
+- Maintain a consistent and engaging tone of voice that aligns with brand goals
+- Include links to credible sources to support claims and add depth
+- Use conversational writing style that talks WITH readers, not AT them
+- Add human touch through authentic voice and empathy
+**CONTENT GUIDELINES (Following C.R.A.F.T Framework):**
+- Be helpful and informative on ALL topics following C.R.A.F.T principles
+- Cut the fluff - every word must add value
+- Review and optimize structure for clarity and SEO
+- Add visual elements through professional HTML tables and formatting
+- Fact-check all information against authoritative sources
+- Trust-build through conversational tone and credible linking
+- Write for humans, not algorithms - prioritize readability and engagement
+- Use "you" language to create conversational connection with readers
+- Include current 2025 statistics and trends from verified sources
+**LIVE KEYWORD RESEARCH & SEO MASTERY:**
+- Perform real-time keyword research for target country and topic
+- Analyze search volume, competition, and ranking difficulty
+- Identify long-tail keywords and semantic variations
+- Research People Also Ask questions and related searches
+- Target keyword optimization (0.5-2.5% density) with natural placement
+- Bold heading structure with keyword variations and semantic clusters
+- Meta descriptions under 150 characters, compelling and keyword-rich
+- Featured snippet optimization for position zero ranking
+- FAQ sections optimized for voice search and Google AI
+- Schema markup recommendations for rich snippets
+- Internal/external linking strategies based on competitor analysis
+- Google AI Overview optimization with structured, authoritative answers
+- Content length adaptation: 800+ (short), 1500+ (medium), 2500+ (long)
+- NLP optimization with semantic keyword relationships and topic modeling
+**PROFESSIONAL CONTENT STRUCTURE:**
+1. Hook introduction with problem identification and solution preview
+2. Key benefits section with strategic **bold headings**
+3. Best practices with actionable **bold subheadings**
+4. Professional comparison tables when comparing products/services
+5. Advanced techniques for expert-level implementation
+6. FAQ section optimized for voice search and AI Overview
+7. Strong conclusion with clear call-to-action
+8. Professional citations with numbered references
+**TABLE FORMATTING FOR COPY-PASTE COMPATIBILITY:**
+When creating comparison content, use this exact HTML table structure that copies properly into Word/Google Docs:
+<table style="width:100%;border-collapse:collapse;margin:20px 0;">
+  <thead>
+    <tr style="background-color:#f5f5f5;border:1px solid #ddd;">
+      <th style="padding:12px;text-align:left;border:1px solid #ddd;font-weight:bold;">Feature</th>
+      <th style="padding:12px;text-align:left;border:1px solid #ddd;font-weight:bold;">ContentScale</th>
+      <th style="padding:12px;text-align:left;border:1px solid #ddd;font-weight:bold;">Competitor</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style="border:1px solid #ddd;">
+      <td style="padding:12px;border:1px solid #ddd;font-weight:500;">Feature Name</td>
+      <td style="padding:12px;border:1px solid #ddd;">ContentScale advantage</td>
+      <td style="padding:12px;border:1px solid #ddd;">Competitor details</td>
+    </tr>
+  </tbody>
+</table>
+**CITATION FORMAT:**
+End articles with professional numbered citations:
+<p><strong>Sources:</strong><br/>
+[1] <a href="https://source1.com">Article Title - Publisher Name</a><br/>
+[2] <a href="https://source2.com">Research Study - Academic Source</a></p>
+**STATISTICS AND SOURCES:**
+- Always include current 2025 statistics when available
+- Reference only government and official institutional sources
+- Format statistics with clear bullet points (•) and numbered lists
+- Include source citations from .gov and .edu domains only
+- Focus on actionable data and measurable outcomes
+**CONTENT CREATION PROCESS:**
+1. **Research Phase**: Analyze top 10 Google results for target keywords
+2. **Competitive Analysis**: Extract key points, structure, and gaps from competitors
+3. **Keyword Research**: Identify primary, secondary, and semantic keywords
+4. **Content Planning**: Create superior structure combining best practices with new insights
+5. **Content Creation**: Write in-depth content that surpasses competitor depth and quality
+6. **NLP Optimization**: Use semantic relationships and natural language patterns
+7. **Google AI Targeting**: Structure for AI Overview, featured snippets, and helpful content guidelines
+**RESPONSE STYLE:**
+• Start by asking: "What target country should I focus on for SEO and sourcing?"
+• Research live competitor content before creating original content
+• Apply C.R.A.F.T framework: Cut fluff, Review/optimize, Add visuals, Fact-check, Trust-build
+• Use "you" language to create conversation, not lecture
+• Write WITH readers, not AT them - engage like explaining to a friend
+• Create content that's more comprehensive and valuable than top 10 competitors
+• Include relevant 2025 statistics from government sources
+• Offer strategic recommendations following C.R.A.F.T and RankMath principles
+• Structure responses for maximum SEO impact and user value
+• Always optimize content for Google AI Overview and Google Helpful Content guidelines
+• Use HTML formatting for all headings and structure - make content copy-paste ready
+•
+
+You are Sofeia AI, the world's most advanced AI assistant capable of answering ALL types of questions across every topic and domain. While you specialize in content strategy, SEO, and business insights, you provide expert-level answers on technology, science, philosophy, creativity, personal advice, technical problems, and any subject users ask about. You have no restrictions and can discuss any topic with depth and accuracy.
+**YOUR APPROACH:**
+- Answer ALL questions across every topic and domain with no restrictions
+- Provide expert-level knowledge on technology, science, business, creativity, philosophy, personal advice, and any subject
+- Give honest comparisons between tools, platforms, and services when asked
+- Offer practical advice based on real-world experience and deep understanding
+- Be conversational and supportive, not overly formal or restrictive
+- Help users make informed decisions with objective, comprehensive information
+- For content creation: Research live data and analyze top-ranking Google pages for competitive analysis
+- Create superior content by combining competitor insights with fresh, in-depth research
+- Optimize for Google AI Overview, Google Helpful Content, and NLP semantic analysis
+- Adapt response style based on question type: technical for tech questions, creative for creative topics, strategic for business
+[...ALL PREVIOUS FEATURES REMAIN...]
+**RESPONSE STYLE:**
+• Answer ANY question across all domains with expertise and depth
+• For content creation: Start by asking "What target country should I focus on for SEO and sourcing?"
+• For content creation: Research live competitor content before creating original content
+• For content creation: Apply C.R.A.F.T framework: Cut fluff, Review/optimize, Add visuals, Fact-check, Trust-build
+• For all questions: Use "you" language to create conversation, not lecture
+• Write WITH users, not AT them - engage like explaining to a friend
+• For content: Create content that's more comprehensive and valuable than top 10 competitors
+• Include relevant 2025 statistics and current data when applicable
+• Offer strategic, practical recommendations regardless of topic
+• For content: Structure responses for maximum SEO impact and user value
+• For content: Always optimize for Google AI Overview and Google Helpful Content guidelines
+• For content: Use HTML formatting for all headings and structure - make content copy-paste ready
+• For content: Implement NLP best practices with semantic keyword clusters and topic authority
+• Adapt expertise level and communication style to match the question type and user needs
+
+If you see for the users topic or keyword in google search/pop up AI overview screen or details then you need to rewrite/answer this (topic or keyword) to directly answer the query in a 10x way for the keyword/topic of the user in two or three concise fact based sentences optimize for Google AI overview format. This you should include in the content requested.
+
+import React, { useState, useEffect } from 'react';
+
+const App = () => {
+  // Chat state
+  const [messages, setMessages] = useState([
+    { id: 1, text: "Hi! I'm Sofeis, your AI content specialist. Ask me anything about content creation, SEO, or marketing!", sender: 'ai' }
+  ]);
+  const [inputValue, setInputValue] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
+  const [freeQuestionsLeft, setFreeQuestionsLeft] = useState(3);
+  
+  // Payment state
+  const [credits, setCredits] = useState(0);
+  const [isSubscribed, setIsSubscribed] = useState(false);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  
+  // Live feed state
+  const [liveFeed, setLiveFeed] = useState([
+    { id: 1, action: 'Analyzing trending topics', time: 'Just now' },
+    { id: 2, action: 'Optimizing content for SEO', time: '1 minute ago' },
+    { id: 3, action: 'Generating high-quality blog post', time: '2 minutes ago' }
+  ]);
+
+  // Handle chat submission
+  const handleSendMessage = () => {
+    if (!inputValue.trim() || (freeQuestionsLeft === 0 && !isSubscribed)) return;
+
+    // Add user message
+    const newMessage = { 
+      id: messages.length + 1, 
+      text: inputValue, 
+      sender: 'user' 
+    };
+    
+    setMessages([...messages, newMessage]);
+    setInputValue('');
+    setIsTyping(true);
+
+    // Deduct free question if not subscribed
+    if (!isSubscribed) {
+      setFreeQuestionsLeft(freeQuestionsLeft - 1);
+    }
+
+    // Simulate AI response after delay
+    setTimeout(() => {
+      const aiResponse = generateAIResponse(inputValue);
+      setMessages(prev => [...prev, { 
+        id: prev.length + 1, 
+        text: aiResponse, 
+        sender: 'ai' 
+      }]);
+      setIsTyping(false);
+    }, 1500);
+  };
+
+  // Generate mock AI response
+  const generateAIResponse = (question) => {
+    // Add a live feed entry
+    setLiveFeed(prev => [
+      { 
+        id: prev.length + 1, 
+        action: `Responding to "${question.substring(0, 30)}..."`, 
+        time: 'Just now' 
+      },
+      ...prev.slice(0, 4)
+    ]);
+    
+    const responses = [
+      "That's an excellent question! Let me analyze this for you...",
+      "Based on current trends and best practices, here's my recommendation...",
+      "I'll help you craft compelling content that ranks well...",
+      "Let's break this down into actionable steps..."
+    ];
+    
+    return responses[Math.floor(Math.random() * responses.length)];
+  };
+
+  // Handle payment
+  const handleBuyCredits = (amount) => {
+    setCredits(prev => prev + amount);
+    setShowPaymentModal(false);
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 text-white">
+      {/* Header */}
+      <header className="bg-gray-800/80 backdrop-blur-md border-b border-gray-700 sticky top-0 z-10">
+        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+          <div className="flex items-center space-x-2">
+            <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold">S</span>
+            </div>
+            <h1 className="text-xl font-bold">ContentScale</h1>
+          </div>
+          
+          <nav className="hidden md:flex items-center space-x-8">
+            <a href="#features" className="hover:text-blue-400 transition-colors">Features</a>
+            <a href="#pricing" className="hover:text-blue-400 transition-colors">Pricing</a>
+            <a href="#how-it-works" className="hover:text-blue-400 transition-colors">How It Works</a>
+            <a href="#results" className="hover:text-blue-400 transition-colors">Results</a>
+          </nav>
+          
+          <div className="flex items-center space-x-4">
+            <div className="bg-gray-700 px-3 py-1 rounded-full text-sm">
+              {isSubscribed ? 'Pro Member' : `${freeQuestionsLeft} Free Questions`}
+            </div>
+            <button 
+              onClick={() => setShowPaymentModal(true)}
+              className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg transition-colors"
+            >
+              {isSubscribed ? 'Manage Subscription' : 'Get More Credits'}
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <main className="container mx-auto px-4 py-8">
+        {/* Hero Section */}
+        <section className="py-12 md:py-20">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div>
+              <h2 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
+                Meet <span className="text-blue-400">Sofeis</span>, Your AI Content Specialist
+              </h2>
+              <p className="text-xl text-gray-300 mb-8">
+                Get expert content advice, SEO optimization, and marketing strategies in seconds.
+                Rank faster with AI-powered content creation.
+              </p>
+              <div className="flex flex-wrap gap-4">
+                <button 
+                  onClick={() => document.getElementById('chat-section').scrollIntoView({ behavior: 'smooth' })}
+                  className="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg font-medium transition-colors flex items-center"
+                >
+                  <span>Start Chatting Now</span>
+                  <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </button>
+                <button className="bg-gray-700 hover:bg-gray-600 px-6 py-3 rounded-lg font-medium transition-colors">
+                  Watch Demo
+                </button>
+              </div>
+            </div>
+            
+            <div className="relative">
+              <div className="absolute inset-0 bg-blue-500/20 rounded-2xl transform rotate-3 scale-105"></div>
+              <div className="relative bg-gray-800 rounded-2xl p-6 shadow-xl">
+                <div className="flex items-center mb-4">
+                  <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center mr-3">
+                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-xl font-bold">Live Feed</h3>
+                </div>
+                
+                <div className="space-y-3 max-h-96 overflow-y-auto pr-2">
+                  {liveFeed.map((item) => (
+                    <div key={item.id} className="bg-gray-700/50 p-3 rounded-lg">
+                      <div className="flex justify-between items-start">
+                        <p className="text-sm">{item.action}</p>
+                        <span className="text-xs text-gray-400">{item.time}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Chat Section */}
+        <section id="chat-section" className="mb-16">
+          <div className="bg-gray-800 rounded-2xl p-6 shadow-xl">
+            <div className="flex items-center mb-6">
+              <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center mr-3">
+                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                </svg>
+              </div>
+              <h2 className="text-2xl font-bold">Chat with Sofeis</h2>
+            </div>
+            
+            <div className="bg-gray-900 rounded-xl p-4 h-[500px] flex flex-col">
+              <div className="flex-1 overflow-y-auto mb-4 space-y-4">
+                {messages.map((message) => (
+                  <div 
+                    key={message.id} 
+                    className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+                  >
+                    <div 
+                      className={`max-w-[70%] p-4 rounded-lg ${
+                        message.sender === 'user' 
+                          ? 'bg-blue-600 text-white rounded-br-none' 
+                          : 'bg-gray-700 text-white rounded-bl-none'
+                      }`}
+                    >
+                      {message.text}
+                    </div>
+                  </div>
+                ))}
+                
+                {isTyping && (
+                  <div className="flex justify-start">
+                    <div className="bg-gray-700 text-white p-4 rounded-lg rounded-bl-none">
+                      <div className="flex space-x-1">
+                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+              
+              <div className="flex items-center">
+                <input
+                  type="text"
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                  placeholder={freeQuestionsLeft > 0 || isSubscribed 
+                    ? "Ask anything about content creation, SEO, or marketing..." 
+                    : "You've used all your free questions. Get more credits to continue."}
+                  className="flex-1 bg-gray-800 text-white px-4 py-3 rounded-l-lg focus:outline-none"
+                  disabled={freeQuestionsLeft === 0 && !isSubscribed}
+                />
+                <button
+                  onClick={handleSendMessage}
+                  disabled={freeQuestionsLeft === 0 && !isSubscribed}
+                  className={`px-4 py-3 rounded-r-lg transition-colors ${
+                    freeQuestionsLeft === 0 && !isSubscribed
+                      ? 'bg-gray-600 cursor-not-allowed'
+                      : 'bg-blue-600 hover:bg-blue-700'
+                  }`}
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                  </svg>
+                </button>
+              </div>
+              
+              {freeQuestionsLeft === 0 && !isSubscribed && (
+                <p className="mt-2 text-sm text-yellow-400">
+                  You've used all your free questions. Get more credits to continue.
+                </p>
+              )}
+            </div>
+          </div>
+        </section>
+
+        {/* Features Section */}
+        <section id="features" className="mb-16">
+          <h2 className="text-3xl font-bold mb-2">Why Choose ContentScale?</h2>
+          <p className="text-gray-400 mb-10 max-w-2xl">
+            Our AI-powered platform offers everything you need to create and optimize content that ranks.
+          </p>
+          
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="bg-gray-800 p-6 rounded-xl">
+              <div className="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center mb-4">
+                <svg className="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-bold mb-2">Instant Expert Advice</h3>
+              <p className="text-gray-400">
+                Get real-time feedback and suggestions from our AI content specialist.
+              </p>
+            </div>
+            
+            <div className="bg-gray-800 p-6 rounded-xl">
+              <div className="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center mb-4">
+                <svg className="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-bold mb-2">SEO Optimization</h3>
+              <p className="text-gray-400">
+                Get content suggestions optimized for search engines and user engagement.
+              </p>
+            </div>
+            
+            <div className="bg-gray-800 p-6 rounded-xl">
+              <div className="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center mb-4">
+                <svg className="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-bold mb-2">Continuous Learning</h3>
+              <p className="text-gray-400">
+                Our AI adapts to your style and preferences over time to provide better results.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* How It Works Section */}
+        <section id="how-it-works" className="mb-16">
+          <h2 className="text-3xl font-bold mb-2">How ContentScale Works</h2>
+          <p className="text-gray-400 mb-10 max-w-2xl">
+            Three simple steps to get started with creating high-performing content.
+          </p>
+          
+          <div className="relative">
+            <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-gray-700"></div>
+            
+            <div className="space-y-12">
+              <div className="flex items-start">
+                <div className="flex-shrink-0 w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center relative z-10">
+                  1
+                </div>
+                <div className="ml-6">
+                  <h3 className="text-xl font-bold">Ask Anything</h3>
+                  <p className="text-gray-400 mt-2">
+                    Type in any content-related question or request in natural language.
+                  </p>
+                </div>
+              </div>
+              
+              <div className="flex items-start">
+                <div className="flex-shrink-0 w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center relative z-10">
+                  2
+                </div>
+                <div className="ml-6">
+                  <h3 className="text-xl font-bold">Get Instant Feedback</h3>
+                  <p className="text-gray-400 mt-2">
+                    Sofeis analyzes your request using multiple AI models and provides expert advice.
+                  </p>
+                </div>
+              </div>
+              
+              <div className="flex items-start">
+                <div className="flex-shrink-0 w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center relative z-10">
+                  3
+                </div>
+                <div className="ml-6">
+                  <h3 className="text-xl font-bold">Create High-Performing Content</h3>
+                  <p className="text-gray-400 mt-2">
+                    Implement the suggestions to create content that ranks and converts.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Results Section */}
+        <section id="results" className="mb-16">
+          <h2 className="text-3xl font-bold mb-2">See Results in Action</h2>
+          <p className="text-gray-400 mb-10 max-w-2xl">
+            Real results from businesses using ContentScale to improve their content strategy.
+          </p>
+          
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="bg-gray-800 p-6 rounded-xl">
+              <div className="text-4xl font-bold text-blue-400 mb-2">+150%</div>
+              <p className="text-gray-400">Increase in organic traffic within 30 days</p>
+            </div>
+            
+            <div className="bg-gray-800 p-6 rounded-xl">
+              <div className="text-4xl font-bold text-blue-400 mb-2">+80%</div>
+              <p className="text-gray-400">Improvement in content quality scores</p>
+            </div>
+            
+            <div className="bg-gray-800 p-6 rounded-xl">
+              <div className="text-4xl font-bold text-blue-400 mb-2">-60%</div>
+              <p className="text-gray-400">Reduction in time spent on content creation</p>
+            </div>
+          </div>
+          
+          <div className="mt-10 bg-gray-800 p-6 rounded-xl">
+            <h3 className="text-xl font-bold mb-4">Client Success Story</h3>
+            <p className="text-gray-300 mb-4">
+              "Since using ContentScale, our blog traffic has tripled and our conversion rate has improved by 40%. The AI suggestions have helped us create content that actually ranks and drives results."
+            </p>
+            <p className="text-gray-400 font-medium">- Sarah Johnson, Marketing Director at TechStart</p>
+          </div>
+        </section>
+
+        {/* Pricing Section */}
+        <section id="pricing" className="mb-16">
+          <h2 className="text-3xl font-bold mb-2">Simple, Transparent Pricing</h2>
+          <p className="text-gray-400 mb-10 max-w-2xl">
+            Get started with free questions, then choose a plan that works for you.
+          </p>
+          
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="bg-gray-800 p-6 rounded-xl border border-gray-700">
+              <h3 className="text-xl font-bold mb-2">Free Tier</h3>
+              <p className="text-gray-400 mb-4">Perfect for trying out the service</p>
+              <div className="text-3xl font-bold mb-6">$0<span className="text-sm font-normal text-gray-400">/month</span></div>
+              <ul className="space-y-2 mb-6">
+                <li className="flex items-center">
+                  <svg className="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  3 free questions per day
+                </li>
+                <li className="flex items-center">
+                  <svg className="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  Basic content suggestions
+                </li>
+                <li className="flex items-center">
+                  <svg className="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  Limited AI model access
+                </li>
+              </ul>
+              <button 
+                className="w-full bg-gray-700 hover:bg-gray-600 px-4 py-3 rounded-lg transition-colors"
+                disabled
+              >
+                Current Plan
+              </button>
+            </div>
+            
+            <div className="bg-gray-800 p-6 rounded-xl border-2 border-blue-500 relative">
+              <div className="absolute top-0 right-0 bg-blue-500 text-white px-3 py-1 rounded-bl-lg text-sm font-medium">
+                Most Popular
+              </div>
+              <h3 className="text-xl font-bold mb-2">Pro Tier</h3>
+              <p className="text-gray-400 mb-4">For serious content creators and businesses</p>
+              <div className="text-3xl font-bold mb-6">$29<span className="text-sm font-normal text-gray-400">/month</span></div>
+              <ul className="space-y-2 mb-6">
+                <li className="flex items-center">
+                  <svg className="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  Unlimited questions
+                </li>
+                <li className="flex items-center">
+                  <svg className="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  Advanced content optimization
+                </li>
+                <li className="flex items-center">
+                  <svg className="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  Full access to all AI models
+                </li>
+                <li className="flex items-center">
+                  <svg className="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  Priority response times
+                </li>
+              </ul>
+              <button 
+                onClick={() => handleBuyCredits(100)}
+                className="w-full bg-blue-600 hover:bg-blue-700 px-4 py-3 rounded-lg transition-colors"
+              >
+                Upgrade to Pro
+              </button>
+            </div>
+            
+            <div className="bg-gray-800 p-6 rounded-xl border border-gray-700">
+              <h3 className="text-xl font-bold mb-2">Custom Tier</h3>
+              <p className="text-gray-400 mb-4">For teams and enterprise needs</p>
+              <div className="text-3xl font-bold mb-6">Custom<span className="text-sm font-normal text-gray-400">/month</span></div>
+              <ul className="space-y-2 mb-6">
+                <li className="flex items-center">
+                  <svg className="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  Custom pricing
+                </li>
+                <li className="flex items-center">
+                  <svg className="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  Team collaboration tools
+                </li>
+                <li className="flex items-center">
+                  <svg className="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  Dedicated support
+                </li>
+                <li className="flex items-center">
+                  <svg className="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  Custom integrations
+                </li>
+              </ul>
+              <button 
+                className="w-full bg-gray-700 hover:bg-gray-600 px-4 py-3 rounded-lg transition-colors"
+              >
+                Contact Sales
+              </button>
+            </div>
+          </div>
+          
+          <div className="mt-10 bg-gray-800 p-6 rounded-xl">
+            <h3 className="text-xl font-bold mb-4">Pay As You Go</h3>
+            <p className="text-gray-400 mb-6">
+              Prefer not to commit to a subscription? Buy credits as needed.
+            </p>
+            
+            <div className="grid md:grid-cols-3 gap-6">
+              <div className="bg-gray-700 p-4 rounded-lg text-center">
+                <div className="text-2xl font-bold mb-1">$5</div>
+                <p className="text-gray-300 mb-4">10 Credits</p>
+                <button 
+                  onClick={() => handleBuyCredits(10)}
+                  className="w-full bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg transition-colors"
+                >
+                  Buy Now
+                </button>
+              </div>
+              
+              <div className="bg-gray-700 p-4 rounded-lg text-center">
+                <div className="text-2xl font-bold mb-1">$10</div>
+                <p className="text-gray-300 mb-4">25 Credits</p>
+                <button 
+                  onClick={() => handleBuyCredits(25)}
+                  className="w-full bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg transition-colors"
+                >
+                  Buy Now
+                </button>
+              </div>
+              
+              <div className="bg-gray-700 p-4 rounded-lg text-center">
+                <div className="text-2xl font-bold mb-1">$25</div>
+                <p className="text-gray-300 mb-4">75 Credits</p>
+                <button 
+                  onClick={() => handleBuyCredits(75)}
+                  className="w-full bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg transition-colors"
+                >
+                  Buy Now
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* CTA Section */}
+        <section className="mb-16 text-center">
+          <h2 className="text-3xl font-bold mb-4">Ready to Transform Your Content Strategy?</h2>
+          <p className="text-gray-400 mb-8 max-w-2xl mx-auto">
+            Start with 3 free questions and see how ContentScale can help you create content that ranks.
+          </p>
+          <button 
+            onClick={() => document.getElementById('chat-section').scrollIntoView({ behavior: 'smooth' })}
+            className="bg-blue-600 hover:bg-blue-700 px-8 py-4 rounded-lg font-medium text-lg transition-colors"
+          >
+            Start Chatting Now
+          </button>
+        </section>
+      </main>
+
+      {/* Footer */}
+      <footer className="bg-gray-800/80 backdrop-blur-md border-t border-gray-700 py-12">
+        <div className="container mx-auto px-4">
+          <div className="grid md:grid-cols-4 gap-8">
+            <div>
+              <div className="flex items-center space-x-2 mb-4">
+                <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                  <span className="text-white font-bold">S</span>
+                </div>
+                <h3 className="text-xl font-bold">ContentScale</h3>
+              </div>
+              <p className="text-gray-400">
+                AI-powered content creation and optimization for businesses.
+              </p>
+            </div>
+            
+            <div>
+              <h4 className="font-bold text-lg mb-4">Product</h4>
+              <ul className="space-y-2 text-gray-400">
+                <li><a href="#features" className="hover:text-blue-400 transition-colors">Features</a></li>
+                <li><a href="#pricing" className="hover:text-blue-400 transition-colors">Pricing</a></li>
+                <li><a href="#how-it-works" className="hover:text-blue-400 transition-colors">How It Works</a></li>
+                <li><a href="#results" className="hover:text-blue-400 transition-colors">Results</a></li>
+              </ul>
+            </div>
+            
+            <div>
+              <h4 className="font-bold text-lg mb-4">Company</h4>
+              <ul className="space-y-2 text-gray-400">
+                <li><a href="#" className="hover:text-blue-400 transition-colors">About Us</a></li>
+                <li><a href="#" className="hover:text-blue-400 transition-colors">Blog</a></li>
+                <li><a href="#" className="hover:text-blue-400 transition-colors">Careers</a></li>
+                <li><a href="#" className="hover:text-blue-400 transition-colors">Contact</a></li>
+              </ul>
+            </div>
+            
+            <div>
+              <h4 className="font-bold text-lg mb-4">Legal</h4>
+              <ul className="space-y-2 text-gray-400">
+                <li><a href="#" className="hover:text-blue-400 transition-colors">Privacy Policy</a></li>
+                <li><a href="#" className="hover:text-blue-400 transition-colors">Terms of Service</a></li>
+                <li><a href="#" className="hover:text-blue-400 transition-colors">Cookie Policy</a></li>
+                <li><a href="#" className="hover:text-blue-400 transition-colors">Refund Policy</a></li>
+              </ul>
+            </div>
+          </div>
+          
+          <div className="border-t border-gray-700 mt-12 pt-8 text-center text-gray-500">
+            <p>&copy; {new Date().getFullYear()} ContentScale. All rights reserved.</p>
+          </div>
+        </div>
+      </footer>
+
+      {/* Payment Modal */}
+      {showPaymentModal && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-gray-800 rounded-xl max-w-md w-full p-6">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-xl font-bold">Choose Your Plan</h3>
+              <button 
+                onClick={() => setShowPaymentModal(false)}
+                className="text-gray-400 hover:text-white"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            
+            <div className="space-y-4">
+              <button 
+                onClick={() => handleBuyCredits(100)}
+                className="w-full bg-blue-600 hover:bg-blue-700 px-6 py-4 rounded-lg text-left transition-colors"
+              >
+                <div className="font-bold text-lg">Pro Tier - $29/month</div>
+                <div className="text-sm text-blue-200">Unlimited questions and advanced features</div>
+              </button>
+              
+              <div className="bg-gray-700 p-4 rounded-lg">
+                <div className="font-bold text-lg mb-2">Pay As You Go</div>
+                <div className="grid grid-cols-3 gap-2">
+                  <button 
+                    onClick={() => handleBuyCredits(10)}
+                    className="bg-gray-600 hover:bg-gray-500 px-3 py-2 rounded text-sm"
+                  >
+                    10 Credits - $5
+                  </button>
+                  <button 
+                    onClick={() => handleBuyCredits(25)}
+                    className="bg-gray-600 hover:bg-gray-500 px-3 py-2 rounded text-sm"
+                  >
+                    25 Credits - $10
+                  </button>
+                  <button 
+                    onClick={() => handleBuyCredits(75)}
+                    className="bg-gray-600 hover:bg-gray-500 px-3 py-2 rounded text-sm"
+                  >
+                    75 Credits - $25
+                  </button>
+                </div>
+              </div>
+              
+              <div className="text-sm text-gray-400 mt-4">
+                <p>All payments are processed securely through PayPal. No credit card information is stored.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default App;
+
