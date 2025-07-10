@@ -4,6 +4,8 @@
 
 ContentScale is an advanced AI-powered content writing platform that provides real-time AI visualization, SEO optimization, and competitive analysis. The platform is branded as "Sofeia AI" and features a sophisticated chat interface with live AI thinking processes, keyword research capabilities, and premium subscription features.
 
+**Latest Enhancement (January 2025):** Integrated comprehensive Sofeia AI training prompt with C.R.A.F.T framework (Julia McCoy's methodology), Google AI Overview optimization, live competitor analysis, and copy-paste ready HTML formatting. The AI now follows advanced content creation protocols with real-time research capabilities and professional SEO optimization.
+
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
@@ -46,8 +48,11 @@ Preferred communication style: Simple, everyday language.
 - Conversation creation and management
 
 ### AI Services Integration
-- **Anthropic Claude**: Primary AI service for content generation and analysis
-- **Perplexity API**: Keyword research and competitive analysis
+- **Anthropic Claude Sonnet 4**: Primary AI service using comprehensive Sofeia AI training prompt
+- **Advanced Training Protocol**: C.R.A.F.T framework implementation (Cut fluff, Review/optimize, Add visuals, Fact-check, Trust-build)
+- **Content Optimization**: Google AI Overview targeting, HTML formatting, and copy-paste ready output
+- **Live Research**: Competitor analysis integration with real-time data sourcing
+- **Perplexity API**: Keyword research and competitive analysis with country-specific targeting
 - Advanced content analysis with SEO scoring and optimization
 
 ### Subscription System
