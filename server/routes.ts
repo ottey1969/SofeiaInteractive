@@ -116,9 +116,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Conversation routes - Allow demo mode
   app.get("/api/conversations", async (req: any, res) => {
     try {
-      // Return empty array for demo users
+      // Return demo conversations for demo users
       if (!req.isAuthenticated() || !req.user?.claims?.sub) {
-        return res.json([]);
+        try {
+          const demoConversations = await storage.getUserConversations("demo_user");
+          return res.json(demoConversations);
+        } catch (error) {
+          return res.json([]);
+        }
       }
       
       const userId = req.user.claims.sub;
@@ -132,15 +137,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/conversations", async (req: any, res) => {
     try {
-      // For demo users, return a mock conversation
+      // For demo users, create a real conversation with demo_user
       if (!req.isAuthenticated() || !req.user?.claims?.sub) {
-        return res.json({
-          id: 1,
-          userId: 'demo_user',
-          title: req.body.title || 'Demo Conversation',
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
+        // Ensure demo_user exists in database
+        await storage.upsertUser({
+          id: "demo_user",
+          email: "demo@example.com",
+          firstName: "Demo",
+          lastName: "User",
+          isPremium: false,
+          dailyQuestionsUsed: 0,
+          lastQuestionDate: new Date(),
+          isAdmin: false
         });
+        
+        const conversation = await storage.createConversation("demo_user", {
+          title: req.body.title || "New Chat"
+        });
+        
+        return res.json(conversation);
       }
       
       const userId = req.user.claims.sub;
@@ -156,11 +171,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get("/api/conversations/:id/messages", async (req: any, res) => {
     try {
-      // Return empty array for demo users
-      if (!req.isAuthenticated() || !req.user?.claims?.sub) {
-        return res.json([]);
-      }
-      
       const conversationId = parseInt(req.params.id);
       const messages = await storage.getConversationMessages(conversationId);
       res.json(messages);
@@ -207,6 +217,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
         
         req.session.demoQuestions++;
         
+        // Store user message for demo
+        try {
+          await storage.createMessage(conversationId, {
+            role: "user",
+            content: message
+          });
+        } catch (error) {
+          console.error("Error storing demo user message:", error);
+        }
+
         // Process demo AI response
         processDemoAIResponse(conversationId, message);
         return res.json({ 
@@ -570,19 +590,22 @@ async function processDemoAIResponse(conversationId: number, userMessage: string
   if (isSimpleQuestion) {
     // Store the assistant message first
     try {
+      // Verify conversation exists
+      const conversation = await storage.getConversation(conversationId);
+      if (!conversation) {
+        console.error('Conversation not found:', conversationId);
+        return;
+      }
+      
       const assistantMessage = await storage.createMessage(conversationId, {
         role: 'assistant',
         content: getSimpleResponse(userMessage)
       });
       
       // Broadcast the response immediately
-      wss.clients.forEach((client: WebSocketClient) => {
-        if (client.readyState === WebSocket.OPEN && client.conversationId === conversationId) {
-          client.send(JSON.stringify({
-            type: 'response_complete',
-            message: assistantMessage
-          }));
-        }
+      global.broadcastAIActivity?.(conversationId, {
+        type: 'response_complete',
+        message: assistantMessage
       });
     } catch (error) {
       console.error('Error storing simple response:', error);
@@ -625,19 +648,22 @@ async function processDemoAIResponse(conversationId: number, userMessage: string
     
     // Store and send detailed response
     try {
+      // Verify conversation exists
+      const conversation = await storage.getConversation(conversationId);
+      if (!conversation) {
+        console.error('Conversation not found:', conversationId);
+        return;
+      }
+      
       const assistantMessage = await storage.createMessage(conversationId, {
         role: 'assistant',
         content: getDetailedResponse(userMessage)
       });
       
       // Broadcast the response
-      wss.clients.forEach((client: WebSocketClient) => {
-        if (client.readyState === WebSocket.OPEN && client.conversationId === conversationId) {
-          client.send(JSON.stringify({
-            type: 'response_complete',
-            message: assistantMessage
-          }));
-        }
+      global.broadcastAIActivity?.(conversationId, {
+        type: 'response_complete',
+        message: assistantMessage
       });
     } catch (error) {
       console.error('Error storing detailed response:', error);

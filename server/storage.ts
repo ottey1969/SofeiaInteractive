@@ -110,7 +110,10 @@ export class DatabaseStorage implements IStorage {
   async createConversation(userId: string, conversation: InsertConversation): Promise<Conversation> {
     const [conv] = await db
       .insert(conversations)
-      .values({ ...conversation, userId })
+      .values({ 
+        title: conversation.title,
+        userId 
+      })
       .returning();
     return conv;
   }
