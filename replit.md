@@ -33,6 +33,11 @@ Preferred communication style: Simple, everyday language.
 2. Admin Panel: Direct access to user management
 3. Status Page: Monitor system health and authentication status
 
+**Immediate Access Methods:**
+1. Demo Mode: Full chat interface without login
+2. Admin Panel: Direct access to user management
+3. Status Page: Monitor system health and authentication status
+
 ## System Architecture
 
 ### Frontend Architecture
