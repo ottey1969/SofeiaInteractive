@@ -498,35 +498,42 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (user?.isAdmin) {
         // Admin users have unlimited access
       } else if (!user?.isPremium) {
-        // Free users: 3 questions per month
+        // Free users: 3 questions per month (no overage allowed)
         if (monthlyQuestionsUsed >= 3) {
           return res.status(429).json({ 
-            message: "Monthly question limit reached (3/month). Upgrade to Pro for 150 questions/month + bulk features.",
-            showUpgrade: true
+            message: "Monthly question limit reached (3/month). Upgrade to Pro for 150 questions/month + bulk features, or purchase additional questions at $0.25 each.",
+            showUpgrade: true,
+            allowOverage: false
           });
         }
       } else if (user?.isPremium && !user?.subscriptionType?.includes('agency')) {
-        // Pro users: 150 questions per month
+        // Pro users: 150 questions per month + overage at $0.25 per question
         if (monthlyQuestionsUsed >= 150) {
-          return res.status(429).json({ 
-            message: "Monthly question limit reached (150/month). Upgrade to Agency for 500 questions/month.",
-            showUpgrade: true
+          return res.status(200).json({ 
+            message: `Question will be charged as overage ($0.25). You've used ${monthlyQuestionsUsed}/150 included questions.`,
+            showUpgrade: true,
+            allowOverage: true,
+            overageRate: 0.25
           });
         }
       } else if (user?.subscriptionType?.includes('premium-agency')) {
-        // Premium Agency users: 1500 questions per month
+        // Premium Agency users: 1500 questions per month + overage at $0.25 per question
         if (monthlyQuestionsUsed >= 1500) {
-          return res.status(429).json({ 
-            message: "Monthly question limit reached (1500/month). Contact support for enterprise solutions.",
-            showUpgrade: false
+          return res.status(200).json({ 
+            message: `Question will be charged as overage ($0.25). You've used ${monthlyQuestionsUsed}/1500 included questions.`,
+            showUpgrade: false,
+            allowOverage: true,
+            overageRate: 0.25
           });
         }
       } else if (user?.subscriptionType?.includes('agency')) {
-        // Agency users: 500 questions per month
+        // Agency users: 500 questions per month + overage at $0.25 per question
         if (monthlyQuestionsUsed >= 500) {
-          return res.status(429).json({ 
-            message: "Monthly question limit reached (500/month). Upgrade to Premium Agency for 1500 questions/month.",
-            showUpgrade: true
+          return res.status(200).json({ 
+            message: `Question will be charged as overage ($0.25). You've used ${monthlyQuestionsUsed}/500 included questions.`,
+            showUpgrade: true,
+            allowOverage: true,
+            overageRate: 0.25
           });
         }
       }
@@ -542,6 +549,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!user?.isAdmin) {
         const newCount = monthlyQuestionsUsed + 1;
         await storage.updateUserQuestionCount(userId, newCount);
+        
+        // Track overage questions for billing
+        const limits = { free: 3, pro: 150, agency: 500, premiumAgency: 1500 };
+        const userLimit = user?.subscriptionType?.includes('premium-agency') ? limits.premiumAgency :
+                         user?.subscriptionType?.includes('agency') ? limits.agency :
+                         user?.isPremium ? limits.pro : limits.free;
+        
+        if (newCount > userLimit && user?.isPremium) {
+          const overageCount = (user?.overageQuestionsUsed || 0) + 1;
+          await storage.updateUserOverageCount(userId, overageCount);
+        }
       }
 
       // Process AI response asynchronously with message type
@@ -993,6 +1011,38 @@ async function processBulkBlogGeneration(jobId: number, userId: string) {
     const job = await storage.getBulkBlogJob(jobId);
     if (!job) return;
 
+    // Check question limits before processing
+    const user = await storage.getUser(userId);
+    const currentMonth = new Date().toISOString().slice(0, 7);
+    let monthlyQuestionsUsed = user?.monthlyQuestionsUsed || 0;
+    
+    // Reset questions if it's a new month
+    if (user?.currentMonth !== currentMonth) {
+      monthlyQuestionsUsed = 0;
+      await storage.resetMonthlyQuestions(userId);
+    }
+    
+    // Calculate remaining questions based on subscription
+    const limits = { free: 3, pro: 150, agency: 500, premiumAgency: 1500 };
+    const userLimit = user?.isAdmin ? Infinity :
+                     user?.subscriptionType?.includes('premium-agency') ? limits.premiumAgency :
+                     user?.subscriptionType?.includes('agency') ? limits.agency :
+                     user?.isPremium ? limits.pro : limits.free;
+    
+    const remainingQuestions = Math.max(0, userLimit - monthlyQuestionsUsed);
+    const questionsToGenerate = Math.min(job.keywords.length, remainingQuestions);
+    
+    if (questionsToGenerate === 0 && !user?.isAdmin) {
+      await storage.updateBulkBlogJob(jobId, {
+        status: "failed",
+        processingCompleted: new Date(),
+        completedPosts: 0,
+        failedPosts: 0,
+        limitReached: true
+      });
+      return;
+    }
+
     // Update job status to processing
     await storage.updateBulkBlogJob(jobId, {
       status: "processing",
@@ -1002,8 +1052,9 @@ async function processBulkBlogGeneration(jobId: number, userId: string) {
     let completedPosts = 0;
     let failedPosts = 0;
 
-    // Process each keyword
-    for (const keyword of job.keywords) {
+    // Process each keyword (limited by question count)
+    for (let i = 0; i < questionsToGenerate; i++) {
+      const keyword = job.keywords[i];
       try {
         const blogPost = await generateSEOBlogPost({
           keyword: keyword.trim(),
@@ -1023,10 +1074,24 @@ async function processBulkBlogGeneration(jobId: number, userId: string) {
 
         completedPosts++;
         
+        // Update user question count (skip for admin users)
+        if (!user?.isAdmin) {
+          const newCount = monthlyQuestionsUsed + completedPosts;
+          await storage.updateUserQuestionCount(userId, newCount);
+          
+          // Track overage questions for billing
+          if (newCount > userLimit && user?.isPremium) {
+            const overageCount = (user?.overageQuestionsUsed || 0) + Math.max(0, newCount - userLimit);
+            await storage.updateUserOverageCount(userId, overageCount);
+          }
+        }
+        
         // Update job progress
         await storage.updateBulkBlogJob(jobId, {
           completedPosts,
-          failedPosts
+          failedPosts,
+          questionsUsed: completedPosts,
+          limitReached: completedPosts === questionsToGenerate && questionsToGenerate < job.keywords.length
         });
 
         // Add small delay to avoid rate limiting

@@ -4,20 +4,17 @@
 
 ContentScale is an advanced AI-powered content writing platform that provides real-time AI visualization, SEO optimization, and competitive analysis. The platform is branded as "Sofeia AI" and features a sophisticated chat interface with live AI thinking processes, keyword research capabilities, and premium subscription features.
 
-**Latest Enhancement (July 11, 2025):** COMPREHENSIVE SOLUTION IMPLEMENTATION - Enhanced the entire platform with pricing plans, subscription management, and enhanced C.R.A.F.T. framework AI intelligence. Key features implemented:
-- Pricing Plans: Professional pricing component with Free (3 questions/day), Pro (150 questions/day + bulk features), and Agency (unlimited + bulk features) tiers
-- Subscription Tracking: Advanced subscription manager with proper daily question limits (3/150/unlimited) and feature access controls
-- Enhanced AI Intelligence: Smart query categorization with instant responses for simple queries and full C.R.A.F.T. framework for complex analysis
-- Admin System: Complete user management with credit granting and subscription oversight
-- Subscription Limit Modal: Professional upgrade prompts when users reach daily limits
-- Database Integration: Full subscription and user management schema with proper relationships
-- **FINAL PRICING STRUCTURE (July 11, 2025):** Updated to monthly question tracking with automatic reset each month:
-  * Free: 3 questions/month
-  * Pro: 150 questions/month + bulk features ($35/month)
-  * Agency: 500 questions/month + bulk features ($99/month)
-  * Premium Agency: 1500 questions/month + bulk features ($249/month) with priority support and beta access
-  * Admin: Unlimited access
-- **Monthly Reset System:** Questions reset automatically each month (no rollover) with proper tracking via monthlyQuestionsUsed and currentMonth fields.
+**Latest Enhancement (July 11, 2025):** COMPLETE USAGE-BASED PRICING & ROI IMPLEMENTATION - Implemented comprehensive overage fee system, annual billing discounts, and ROI-focused marketing messaging. Key features implemented:
+- **4-Tier Pricing Structure:** Free (3/month), Pro ($35/150/month), Agency ($99/500/month), Premium Agency ($249/1500/month)
+- **Usage-Based Overage Fees:** $0.25 per additional question beyond monthly limits for paid plans (Free users must upgrade)
+- **Annual Billing Discounts:** 15-20% discount for yearly subscriptions (Pro: $28/month, Agency: $79/month, Premium Agency: $199/month)
+- **ROI-Focused Marketing:** Messaging highlights time savings, revenue increase potential, and business growth rather than just cost
+- **Bulk Generation Limits:** Bulk content generation now counts against monthly question limits and stops when exceeded
+- **Enhanced Subscription Manager:** Tracks both regular and overage questions with proper billing integration
+- **Database Schema Updates:** Added billingCycle and overageQuestionsUsed fields for comprehensive usage tracking
+- **Premium Agency Tier:** Maximum tier at $249/month for 1500 questions with priority support and beta access
+- **Annual Savings Calculator:** Dynamic pricing display showing exact savings amounts for annual billing
+- **Overage Billing System:** Automatic tracking and billing for questions exceeding monthly limits
 - **Government Statistics Integration:** Enhanced both Anthropic and Perplexity services to prioritize real government statistics and official sources
 - **Country-Specific Data:** Added comprehensive country-specific government source mapping for 8 major markets (US, UK, Canada, Australia, Germany, France, Netherlands, Spain)
 - **High-Authority Sources Only:** Configured AI to avoid competitors and low-DR sites, focusing exclusively on .gov, .edu, and official international organization sources

@@ -35,7 +35,9 @@ export const users = pgTable("users", {
   isPremium: boolean("is_premium").default(false),
   isAdmin: boolean("is_admin").default(false),
   subscriptionType: varchar("subscription_type"),
+  billingCycle: varchar("billing_cycle", { enum: ["monthly", "annual"] }).default("monthly"),
   monthlyQuestionsUsed: integer("monthly_questions_used").default(0),
+  overageQuestionsUsed: integer("overage_questions_used").default(0),
   currentMonth: varchar("current_month"), // YYYY-MM format
   totalCredits: integer("total_credits").default(0),
   createdAt: timestamp("created_at").defaultNow(),

@@ -23,6 +23,7 @@ export interface IStorage {
   getUser(id: string): Promise<User | undefined>;
   upsertUser(user: UpsertUser): Promise<User>;
   updateUserQuestionCount(userId: string, count: number): Promise<void>;
+  updateUserOverageCount(userId: string, count: number): Promise<void>;
   resetMonthlyQuestions(userId: string): Promise<void>;
   
   // Admin operations
@@ -113,12 +114,23 @@ export class DatabaseStorage implements IStorage {
       .where(eq(users.id, userId));
   }
 
+  async updateUserOverageCount(userId: string, count: number): Promise<void> {
+    await db
+      .update(users)
+      .set({
+        overageQuestionsUsed: count,
+        updatedAt: new Date(),
+      })
+      .where(eq(users.id, userId));
+  }
+
   async resetMonthlyQuestions(userId: string): Promise<void> {
     const currentMonth = new Date().toISOString().slice(0, 7); // YYYY-MM format
     await db
       .update(users)
       .set({
         monthlyQuestionsUsed: 0,
+        overageQuestionsUsed: 0,
         currentMonth: currentMonth,
         updatedAt: new Date(),
       })
