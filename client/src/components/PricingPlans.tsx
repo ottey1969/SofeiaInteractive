@@ -30,13 +30,13 @@ const pricingPlans: PricingPlan[] = [
       { name: "Advanced competitor analysis", included: false },
       { name: "Bulk content generation", included: false },
       { name: "Priority support", included: false },
-      { name: "Custom integrations", included: false }
+      { name: "Beta feature access", included: false }
     ],
     buttonText: "Get Started Free"
   },
   {
     name: "Pro",
-    price: "$29",
+    price: "$35",
     period: "month",
     description: "For content creators and marketers",
     features: [
@@ -60,13 +60,29 @@ const pricingPlans: PricingPlan[] = [
     features: [
       { name: "Everything in Pro", included: true },
       { name: "500 questions per month", included: true },
-      { name: "Bulk content generation", included: true },
       { name: "Team collaboration", included: true },
       { name: "White-label reports", included: true },
       { name: "API access", included: true },
       { name: "Custom integrations", included: true },
       { name: "Dedicated account manager", included: true },
       { name: "Phone support", included: true }
+    ],
+    buttonText: "Contact Sales"
+  },
+  {
+    name: "Premium Agency",
+    price: "$249",
+    period: "month",
+    description: "For large agencies with maximum needs",
+    features: [
+      { name: "Everything in Agency", included: true },
+      { name: "1500 questions per month", included: true },
+      { name: "Priority support (24/7)", included: true },
+      { name: "Beta feature access", included: true },
+      { name: "Advanced analytics dashboard", included: true },
+      { name: "Custom AI model training", included: true },
+      { name: "Enterprise integrations", included: true },
+      { name: "Dedicated success manager", included: true }
     ],
     buttonText: "Contact Sales"
   }
@@ -95,7 +111,7 @@ export default function PricingPlans({ onPlanSelect }: PricingPlansProps) {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {pricingPlans.map((plan, index) => (
             <Card 
               key={plan.name} 

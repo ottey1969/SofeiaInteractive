@@ -16,8 +16,12 @@ export default function Header() {
   });
 
   // Calculate questions remaining based on subscription type
+  const isPremiumAgency = user?.subscriptionType?.includes('premium-agency');
   const isAgency = user?.subscriptionType?.includes('agency');
-  const monthlyLimit = user?.isAdmin ? -1 : (isAgency ? 500 : (user?.isPremium ? 150 : 3));
+  const monthlyLimit = user?.isAdmin ? -1 : 
+    (isPremiumAgency ? 1500 : 
+     (isAgency ? 500 : 
+      (user?.isPremium ? 150 : 3)));
   const questionsUsed = user?.monthlyQuestionsUsed || 0;
   
   const questionsRemaining = monthlyLimit === -1 ? "∞" : Math.max(0, monthlyLimit - questionsUsed);

@@ -56,6 +56,8 @@ export default function SettingsModal({ open, onOpenChange, user }: SettingsModa
                   <p className="text-slate-200 font-medium">Monthly Question Usage</p>
                   <p className="text-slate-400 text-sm">
                     {user?.isAdmin ? 'Unlimited questions available' 
+                      : user?.subscriptionType?.includes('premium-agency')
+                        ? `${user?.monthlyQuestionsUsed || 0}/1500 questions used this month`
                       : user?.subscriptionType?.includes('agency')
                         ? `${user?.monthlyQuestionsUsed || 0}/500 questions used this month`
                       : user?.isPremium 

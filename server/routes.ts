@@ -162,10 +162,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
           await storage.resetMonthlyQuestions(userId);
         }
         
-        if (isAgency && monthlyQuestionsUsed >= 500) {
+        const isPremiumAgency = user?.subscriptionType?.includes('premium-agency');
+        if (isPremiumAgency && monthlyQuestionsUsed >= 1500) {
           return res.status(429).json({ 
-            message: "Monthly question limit reached (500/month). Contact support for higher limits.",
+            message: "Monthly question limit reached (1500/month). Contact support for enterprise solutions.",
             showUpgrade: false
+          });
+        } else if (isAgency && !isPremiumAgency && monthlyQuestionsUsed >= 500) {
+          return res.status(429).json({ 
+            message: "Monthly question limit reached (500/month). Upgrade to Premium Agency for 1500 questions/month.",
+            showUpgrade: true
           });
         } else if (!isAgency && monthlyQuestionsUsed >= 150) {
           return res.status(429).json({ 
@@ -507,12 +513,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
             showUpgrade: true
           });
         }
+      } else if (user?.subscriptionType?.includes('premium-agency')) {
+        // Premium Agency users: 1500 questions per month
+        if (monthlyQuestionsUsed >= 1500) {
+          return res.status(429).json({ 
+            message: "Monthly question limit reached (1500/month). Contact support for enterprise solutions.",
+            showUpgrade: false
+          });
+        }
       } else if (user?.subscriptionType?.includes('agency')) {
         // Agency users: 500 questions per month
         if (monthlyQuestionsUsed >= 500) {
           return res.status(429).json({ 
-            message: "Monthly question limit reached (500/month). Contact support for higher limits.",
-            showUpgrade: false
+            message: "Monthly question limit reached (500/month). Upgrade to Premium Agency for 1500 questions/month.",
+            showUpgrade: true
           });
         }
       }
@@ -537,6 +551,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       let questionsRemaining;
       if (user?.isAdmin) {
         questionsRemaining = -1; // unlimited for admin
+      } else if (user?.subscriptionType?.includes('premium-agency')) {
+        questionsRemaining = Math.max(0, 1500 - monthlyQuestionsUsed - 1);
       } else if (user?.subscriptionType?.includes('agency')) {
         questionsRemaining = Math.max(0, 500 - monthlyQuestionsUsed - 1);
       } else if (user?.isPremium) {
