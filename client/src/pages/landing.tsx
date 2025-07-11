@@ -4,25 +4,79 @@ import { Badge } from "@/components/ui/badge";
 import { Brain, Search, TrendingUp, Shield, Zap, Users } from "lucide-react";
 import { useLocation } from "wouter";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth0 } from '@auth0/auth0-react';
 
 export default function Landing() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
+  const { loginWithRedirect, logout, isAuthenticated, user, isLoading, getAccessTokenSilently } = useAuth0();
 
   const handleLogin = () => {
-    // Navigate to Replit auth login
-    window.location.href = '/api/login';
+    loginWithRedirect();
   };
 
   const handleStartWriting = () => {
-    // Navigate to Replit auth login for full access
-    window.location.href = '/api/login';
+    if (isAuthenticated) {
+      setLocation('/home');
+    } else {
+      loginWithRedirect();
+    }
   };
 
   const handleDemo = () => {
-    // Go directly to chat screen
+    // Set demo mode and go to chat
+    sessionStorage.setItem('demo_mode', 'true');
     setLocation('/home');
   };
+
+  const callProtectedApi = async () => {
+    try {
+      const accessToken = await getAccessTokenSilently({
+        authorizationParams: {
+          audience: "https://api.sofeia.com",
+        },
+      });
+      console.log("Access Token:", accessToken);
+      
+      // Call the protected API endpoint
+      const response = await fetch('/api/protected', {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        toast({
+          title: "Authentication Success!",
+          description: "You've successfully accessed the protected API. Premium features are now available.",
+          variant: "default",
+        });
+        console.log("Protected API response:", data);
+      } else {
+        throw new Error('Failed to access protected API');
+      }
+    } catch (error) {
+      console.error("Error accessing protected API:", error);
+      toast({
+        title: "Authentication Error",
+        description: "Unable to access premium features. Please try logging in again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
+        <div className="text-center">
+          <Brain className="w-16 h-16 text-indigo-500 mx-auto mb-4 animate-pulse" />
+          <p className="text-slate-300">Loading authentication...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
@@ -41,19 +95,42 @@ export default function Landing() {
             </div>
             
             <div className="flex gap-2">
-              <Button 
-                onClick={handleLogin}
-                className="bg-indigo-600 hover:bg-indigo-700"
-              >
-                Login
-              </Button>
-              <Button 
-                onClick={handleDemo}
-                variant="outline"
-                className="border-slate-600 text-slate-300 hover:bg-slate-800"
-              >
-                Try Demo
-              </Button>
+              {!isAuthenticated ? (
+                <>
+                  <Button 
+                    onClick={handleLogin}
+                    className="bg-indigo-600 hover:bg-indigo-700"
+                  >
+                    Login / Sign Up
+                  </Button>
+                  <Button 
+                    onClick={handleDemo}
+                    variant="outline"
+                    className="border-slate-600 text-slate-300 hover:bg-slate-800"
+                  >
+                    Try Demo
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <div className="flex items-center gap-3 text-slate-300">
+                    <span>Welcome, {user?.name}!</span>
+                  </div>
+                  <Button 
+                    onClick={() => setLocation('/home')}
+                    className="bg-indigo-600 hover:bg-indigo-700"
+                  >
+                    Go to Chat
+                  </Button>
+                  <Button 
+                    onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}
+                    variant="outline"
+                    className="border-slate-600 text-slate-300 hover:bg-slate-800"
+                  >
+                    Logout
+                  </Button>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -80,21 +157,43 @@ export default function Landing() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-            <Button 
-              size="lg" 
-              onClick={handleStartWriting}
-              className="bg-indigo-600 hover:bg-indigo-700 text-lg px-8 py-3"
-            >
-              Login to Start Writing
-            </Button>
-            <Button 
-              size="lg" 
-              variant="outline" 
-              onClick={handleDemo}
-              className="border-slate-600 text-slate-300 hover:bg-slate-800 text-lg px-8 py-3"
-            >
-              Try Demo (No Login)
-            </Button>
+            {!isAuthenticated ? (
+              <>
+                <Button 
+                  size="lg" 
+                  onClick={handleStartWriting}
+                  className="bg-indigo-600 hover:bg-indigo-700 text-lg px-8 py-3"
+                >
+                  Login to Start Writing
+                </Button>
+                <Button 
+                  size="lg" 
+                  variant="outline" 
+                  onClick={handleDemo}
+                  className="border-slate-600 text-slate-300 hover:bg-slate-800 text-lg px-8 py-3"
+                >
+                  Try Demo (No Login)
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button 
+                  size="lg" 
+                  onClick={() => setLocation('/home')}
+                  className="bg-indigo-600 hover:bg-indigo-700 text-lg px-8 py-3"
+                >
+                  Start Writing Now
+                </Button>
+                <Button 
+                  size="lg" 
+                  variant="outline" 
+                  onClick={callProtectedApi}
+                  className="border-slate-600 text-slate-300 hover:bg-slate-800 text-lg px-8 py-3"
+                >
+                  Access Premium Features
+                </Button>
+              </>
+            )}
           </div>
           
           <div className="text-center mb-8">

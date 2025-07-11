@@ -6,6 +6,12 @@ ContentScale is an advanced AI-powered content writing platform that provides re
 
 **Latest Enhancement (July 2025):** COMPLETELY FIXED AI intelligence system with perfect query differentiation. Simple queries (like "hi", "test") now get instant responses without unnecessary analysis phases. Complex queries trigger full C.R.A.F.T framework with advanced research phases. Fixed database relationships, message storage, and WebSocket broadcasting for reliable real-time communication.
 
+**Auth0 Integration (July 11, 2025):** Successfully implemented secure Auth0 authentication system to replace problematic Replit OAuth. All three landing page buttons now working correctly:
+- Login/Sign Up button: Uses Auth0 loginWithRedirect()
+- Try Demo button: Sets demo mode and navigates to chat
+- Login to Start Writing button: Auth0 authentication with redirect to home
+- Access Premium Features button: Calls protected API with JWT token validation
+
 **Admin System (July 2025):** Implemented full admin functionality for ottmar.francisca1969@gmail.com with unlimited credits, user management capabilities, and subscription control. Admin users automatically bypass daily question limits and can grant credits to other users.
 
 ## User Preferences

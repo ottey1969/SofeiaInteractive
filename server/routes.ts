@@ -550,6 +550,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Auth0 protected endpoint example
+  app.get("/api/protected", async (req: any, res) => {
+    try {
+      // For now, return success without Auth0 validation for demo purposes
+      // In production, this would use the Auth0 JWT validation decorator
+      res.json({ message: "This is a protected resource! You are authenticated." });
+    } catch (error) {
+      console.error("Error accessing protected route:", error);
+      res.status(500).json({ message: "Failed to access protected resource" });
+    }
+  });
+
   // WebSocket server for real-time AI activity updates
   const wss = new WebSocketServer({ server: httpServer, path: '/ws' });
 
