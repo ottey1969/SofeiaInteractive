@@ -10,13 +10,13 @@ export default function Landing() {
   const { toast } = useToast();
 
   const handleLogin = () => {
-    // Go directly to chat screen
-    setLocation('/home');
+    // Navigate to Replit auth login
+    window.location.href = '/api/login';
   };
 
   const handleStartWriting = () => {
-    // Go directly to chat screen
-    setLocation('/home');
+    // Navigate to Replit auth login for full access
+    window.location.href = '/api/login';
   };
 
   const handleDemo = () => {
