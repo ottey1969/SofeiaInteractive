@@ -199,7 +199,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Chat routes - Implement question limits
   app.post("/api/chat", async (req: any, res) => {
     try {
-      const { conversationId, message } = req.body;
+      const { conversationId, message, messageType } = req.body;
       
       // Handle demo users
       if (!req.isAuthenticated() || !req.user?.claims?.sub) {
@@ -227,8 +227,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
           console.error("Error storing demo user message:", error);
         }
 
-        // Process demo AI response
-        processDemoAIResponse(conversationId, message);
+        // Process demo AI response with message type
+        processDemoAIResponse(conversationId, message, messageType);
         return res.json({ 
           success: true, 
           message: "Processing your request...", 
@@ -272,8 +272,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         await storage.updateUserQuestionCount(userId, newCount, today);
       }
 
-      // Process AI response asynchronously
-      processAIResponse(conversationId, message);
+      // Process AI response asynchronously with message type
+      processAIResponse(conversationId, message, messageType);
       
       const questionsRemaining = user?.isPremium || user?.isAdmin ? -1 : Math.max(0, 3 - (user?.dailyQuestionsUsed || 0) - 1);
       res.json({ 
@@ -608,11 +608,51 @@ export async function registerRoutes(app: Express): Promise<Server> {
   return httpServer;
 }
 
-// Demo AI response function
-async function processDemoAIResponse(conversationId: number, userMessage: string) {
-  const isSimpleQuestion = /^(hi|hello|hey|thanks|thank you|test|ok|yes|no|.*jhi.*)$/i.test(userMessage.trim());
+// Smart message categorization function
+function categorizeMessage(message: string): 'simple' | 'analysis' | 'complex' {
+  const trimmed = message.trim().toLowerCase();
   
-  if (isSimpleQuestion) {
+  // Simple patterns - instant response
+  const simplePatterns = [
+    /^(hi|hello|hey|good morning|good afternoon|good evening)/,
+    /^(thanks|thank you|thx|ty)/,
+    /^(bye|goodbye|see you)/,
+    /^(yes|no|ok|okay|sure)/,
+    /^(test|testing)/,
+    /^.{1,15}$/ // Very short messages
+  ];
+  
+  if (simplePatterns.some(pattern => pattern.test(trimmed))) {
+    return 'simple';
+  }
+  
+  // Complex patterns - full analysis with research
+  const complexPatterns = [
+    /keyword research|keywords|search volume/,
+    /competitor analysis|competitors|serp analysis/,
+    /backlinks|link building|domain authority/,
+    /market research|industry analysis/,
+    /content strategy|content plan|editorial calendar/,
+    /seo strategy|optimization plan/,
+    /analyze|research|investigate/
+  ];
+  
+  if (complexPatterns.some(pattern => pattern.test(trimmed))) {
+    return 'complex';
+  }
+  
+  // Default to analysis for medium complexity
+  return 'analysis';
+}
+
+// Demo AI response function
+async function processDemoAIResponse(conversationId: number, userMessage: string, messageType?: string) {
+  const actualMessageType = messageType || categorizeMessage(userMessage);
+  
+  if (actualMessageType === 'simple') {
+    // Handle simple messages immediately without research phases
+    const simpleResponse = getSimpleResponse(userMessage);
+    
     // Store the assistant message first
     try {
       // Verify conversation exists
@@ -732,14 +772,37 @@ function getDetailedResponse(userMessage: string): string {
   return `I understand you're asking about: "${userMessage}"\n\nAs your AI content strategist, I can help with:\n• Content planning and strategy\n• SEO optimization techniques\n• Keyword research and analysis\n• Competitor analysis\n• Content performance optimization\n\nWhat specific aspect would you like me to focus on? I can provide detailed, actionable recommendations.\n\n**Demo Mode:** This is a simplified response. Sign up for advanced C.R.A.F.T framework analysis and unlimited questions.`;
 }
 
-async function processAIResponse(conversationId: number, userMessage: string) {
+async function processAIResponse(conversationId: number, userMessage: string, messageType?: string) {
   try {
-    // Create research phase activity
+    // Determine message type if not provided
+    const actualMessageType = messageType || categorizeMessage(userMessage);
+    
+    // Handle simple messages immediately without research phases
+    if (actualMessageType === 'simple') {
+      const simpleResponse = getSimpleResponse(userMessage);
+      
+      // Store AI response immediately
+      await storage.createMessage(conversationId, {
+        role: "assistant",
+        content: simpleResponse,
+        conversationId
+      });
+
+      // Broadcast simple completion
+      global.broadcastAIActivity?.(conversationId, {
+        type: "response_complete",
+        message: simpleResponse
+      });
+      
+      return;
+    }
+    
+    // Create research phase activity for complex queries only
     const researchActivity = await storage.createAIActivity({
       conversationId,
       phase: "research",
       status: "active",
-      description: "Analyzing query and researching online resources..."
+      description: actualMessageType === 'complex' ? "Researching and analyzing..." : "Analyzing your request..."
     });
 
     global.broadcastAIActivity?.(conversationId, researchActivity);
