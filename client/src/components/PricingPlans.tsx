@@ -40,14 +40,14 @@ const pricingPlans: PricingPlan[] = [
     period: "month",
     description: "For content creators and marketers",
     features: [
-      { name: "Unlimited questions", included: true },
-      { name: "Advanced SEO analysis", included: true },
+      { name: "150 questions per day", included: true },
+      { name: "Advanced AI analysis", included: true },
+      { name: "Bulk content generation", included: true },
       { name: "Comprehensive keyword research", included: true },
       { name: "Competitor analysis", included: true },
       { name: "Content strategy planning", included: true },
       { name: "Priority email support", included: true },
-      { name: "Export reports", included: true },
-      { name: "Custom integrations", included: false }
+      { name: "Export reports", included: true }
     ],
     buttonText: "Start Pro Trial",
     popular: true
@@ -59,13 +59,14 @@ const pricingPlans: PricingPlan[] = [
     description: "For agencies and teams",
     features: [
       { name: "Everything in Pro", included: true },
+      { name: "Unlimited questions", included: true },
+      { name: "Bulk content generation", included: true },
       { name: "Team collaboration", included: true },
       { name: "White-label reports", included: true },
       { name: "API access", included: true },
       { name: "Custom integrations", included: true },
       { name: "Dedicated account manager", included: true },
-      { name: "Phone support", included: true },
-      { name: "Custom training", included: true }
+      { name: "Phone support", included: true }
     ],
     buttonText: "Contact Sales"
   }

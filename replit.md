@@ -5,12 +5,13 @@
 ContentScale is an advanced AI-powered content writing platform that provides real-time AI visualization, SEO optimization, and competitive analysis. The platform is branded as "Sofeia AI" and features a sophisticated chat interface with live AI thinking processes, keyword research capabilities, and premium subscription features.
 
 **Latest Enhancement (July 11, 2025):** COMPREHENSIVE SOLUTION IMPLEMENTATION - Enhanced the entire platform with pricing plans, subscription management, and enhanced C.R.A.F.T. framework AI intelligence. Key features implemented:
-- Pricing Plans: Professional pricing component with Free ($0), Pro ($29/month), and Agency ($99/month) tiers
-- Subscription Tracking: Advanced subscription manager with daily question limits and feature access controls
+- Pricing Plans: Professional pricing component with Free (3 questions/day), Pro (150 questions/day + bulk features), and Agency (unlimited + bulk features) tiers
+- Subscription Tracking: Advanced subscription manager with proper daily question limits (3/150/unlimited) and feature access controls
 - Enhanced AI Intelligence: Smart query categorization with instant responses for simple queries and full C.R.A.F.T. framework for complex analysis
 - Admin System: Complete user management with credit granting and subscription oversight
 - Subscription Limit Modal: Professional upgrade prompts when users reach daily limits
 - Database Integration: Full subscription and user management schema with proper relationships
+- **CORRECTED PRICING STRUCTURE (July 11, 2025):** Fixed Pro plan to 150 questions/day + bulk features, Agency plan to unlimited questions + bulk features. Backend properly enforces these limits.
 - **Government Statistics Integration:** Enhanced both Anthropic and Perplexity services to prioritize real government statistics and official sources
 - **Country-Specific Data:** Added comprehensive country-specific government source mapping for 8 major markets (US, UK, Canada, Australia, Germany, France, Netherlands, Spain)
 - **High-Authority Sources Only:** Configured AI to avoid competitors and low-DR sites, focusing exclusively on .gov, .edu, and official international organization sources

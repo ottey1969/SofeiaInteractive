@@ -15,12 +15,13 @@ interface PaymentModalProps {
 
 export default function PaymentModal({ open, onOpenChange }: PaymentModalProps) {
   const features = [
-    "Unlimited daily questions",
-    "Priority AI processing",
+    "150 questions per day",
+    "Bulk content generation",
     "Advanced SEO analysis",
-    "Export to multiple formats",
-    "Premium support access",
-    "Early access to new features"
+    "Keyword research & competitor analysis",
+    "Content strategy planning",
+    "Priority support access",
+    "Export to multiple formats"
   ];
 
   return (
@@ -38,7 +39,7 @@ export default function PaymentModal({ open, onOpenChange }: PaymentModalProps) 
               $29<span className="text-lg text-slate-400">/month</span>
             </div>
             <Badge className="bg-indigo-600 text-white">
-              Most Popular Plan
+              Pro Plan - 150 Questions + Bulk Features
             </Badge>
           </div>
 

@@ -40,7 +40,8 @@ export default function SettingsModal({ open, onOpenChange, user }: SettingsModa
                 <div>
                   <p className="text-slate-200 font-medium">Subscription Plan</p>
                   <p className="text-slate-400 text-sm">
-                    {user?.isPremium ? 'Pro Plan - Unlimited questions' : 'Free Plan - 3 questions per day'}
+                    {user?.isAdmin || user?.subscriptionType?.includes('agency') ? 'Agency Plan - Unlimited questions + bulk features' :
+                     user?.isPremium ? 'Pro Plan - 150 questions/day + bulk features' : 'Free Plan - 3 questions per day'}
                   </p>
                 </div>
                 <Badge variant={user?.isPremium ? "default" : "secondary"} 
@@ -53,18 +54,20 @@ export default function SettingsModal({ open, onOpenChange, user }: SettingsModa
                 <div>
                   <p className="text-slate-200 font-medium">Daily Question Usage</p>
                   <p className="text-slate-400 text-sm">
-                    {user?.isPremium 
+                    {user?.isAdmin || user?.subscriptionType?.includes('agency')
                       ? 'Unlimited questions available' 
-                      : `${user?.dailyQuestionsUsed || 0}/3 questions used today`
+                      : user?.isPremium 
+                        ? `${user?.dailyQuestionsUsed || 0}/150 questions used today`
+                        : `${user?.dailyQuestionsUsed || 0}/3 questions used today`
                     }
                   </p>
                 </div>
-                {!user?.isPremium && (
+                {!(user?.isAdmin || user?.subscriptionType?.includes('agency')) && (
                   <Button
                     onClick={() => setShowPayment(true)}
                     className="bg-indigo-600 hover:bg-indigo-700 text-white"
                   >
-                    Upgrade Plan
+                    {user?.isPremium ? 'Upgrade to Agency' : 'Upgrade Plan'}
                   </Button>
                 )}
               </div>

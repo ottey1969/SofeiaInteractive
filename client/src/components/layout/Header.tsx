@@ -15,8 +15,13 @@ export default function Header() {
     queryKey: ["/api/auth/user"],
   });
 
-  const questionsRemaining = user?.isPremium ? "∞" : Math.max(0, 3 - (user?.dailyQuestionsUsed || 0));
-  const isLimitReached = !user?.isPremium && (user?.dailyQuestionsUsed || 0) >= 3;
+  // Calculate questions remaining based on subscription type
+  const isAgency = user?.subscriptionType?.includes('agency') || user?.isAdmin;
+  const dailyLimit = user?.isAdmin || isAgency ? -1 : (user?.isPremium ? 150 : 3);
+  const questionsUsed = user?.dailyQuestionsUsed || 0;
+  
+  const questionsRemaining = dailyLimit === -1 ? "∞" : Math.max(0, dailyLimit - questionsUsed);
+  const isLimitReached = dailyLimit !== -1 && questionsUsed >= dailyLimit;
 
   return (
     <>
@@ -46,7 +51,7 @@ export default function Header() {
               <i className="fas fa-coins text-amber-400 text-xs"></i>
               <span className={`text-sm ${isLimitReached ? 'text-red-400' : 'text-amber-400'}`}>
                 Questions: {questionsRemaining}/
-                {user?.isPremium ? "∞" : "3"}
+                {dailyLimit === -1 ? "∞" : dailyLimit}
               </span>
             </div>
             

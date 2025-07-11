@@ -139,14 +139,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
         user = await storage.getUser(userId);
       }
       
-      // Check access rights (admin has free access, others need premium)
+      // Check access rights for bulk features
       const isAdmin = user?.isAdmin || user?.email === 'ottmar.francisca1969@gmail.com';
       const isPremium = user?.isPremium || isAdmin;
+      const isAgency = user?.subscriptionType?.includes('agency') || isAdmin;
       
       if (!isPremium && userId !== 'demo_user') {
         return res.status(403).json({ 
-          message: "Bulk blog generation requires Pro subscription or admin access" 
+          message: "Bulk blog generation requires Pro subscription (150 questions/day) or Agency subscription (unlimited)" 
         });
+      }
+      
+      // Check daily limits for Pro users (Agency and Admin have unlimited)
+      if (isPremium && !isAgency && !isAdmin) {
+        const dailyQuestionsUsed = user?.dailyQuestionsUsed || 0;
+        if (dailyQuestionsUsed >= 150) {
+          return res.status(429).json({ 
+            message: "Daily question limit reached (150/day). Upgrade to Agency for unlimited bulk generation.",
+            showUpgrade: true
+          });
+        }
       }
 
       const validatedData = insertBulkBlogJobSchema.parse(req.body);
@@ -453,12 +465,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
       
-      if (!user?.isPremium && !user?.isAdmin && (user?.dailyQuestionsUsed || 0) >= 3) {
-        return res.status(429).json({ 
-          message: "Daily question limit reached. Upgrade to Pro for unlimited questions.",
-          showUpgrade: true
-        });
+      // Check daily limits based on subscription type
+      const dailyQuestionsUsed = user?.dailyQuestionsUsed || 0;
+      
+      if (user?.isAdmin) {
+        // Admin users have unlimited access
+      } else if (!user?.isPremium) {
+        // Free users: 3 questions per day
+        if (dailyQuestionsUsed >= 3) {
+          return res.status(429).json({ 
+            message: "Daily question limit reached. Upgrade to Pro for 150 questions per day + bulk features.",
+            showUpgrade: true
+          });
+        }
+      } else if (user?.isPremium && !user?.subscriptionType?.includes('agency')) {
+        // Pro users: 150 questions per day
+        if (dailyQuestionsUsed >= 150) {
+          return res.status(429).json({ 
+            message: "Daily question limit reached (150/day). Upgrade to Agency for unlimited questions.",
+            showUpgrade: true
+          });
+        }
       }
+      // Agency users have unlimited questions (no limit check)
 
       // Create user message
       await storage.createMessage(conversationId, {
@@ -477,7 +506,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Process AI response asynchronously with message type
       processAIResponse(conversationId, message, messageType);
       
-      const questionsRemaining = user?.isPremium || user?.isAdmin ? -1 : Math.max(0, 3 - (user?.dailyQuestionsUsed || 0) - 1);
+      // Calculate questions remaining based on subscription type
+      let questionsRemaining;
+      if (user?.isAdmin || user?.subscriptionType?.includes('agency')) {
+        questionsRemaining = -1; // unlimited
+      } else if (user?.isPremium) {
+        questionsRemaining = Math.max(0, 150 - (user?.dailyQuestionsUsed || 0) - 1);
+      } else {
+        questionsRemaining = Math.max(0, 3 - (user?.dailyQuestionsUsed || 0) - 1);
+      }
+      
       res.json({ 
         success: true, 
         message: "Processing your request...", 
