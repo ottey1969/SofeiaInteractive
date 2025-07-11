@@ -506,7 +506,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
 
         // Process demo AI response with message type
-        processDemoAIResponse(conversationId, message, messageType);
+        const detectedMessageType = categorizeMessage(message);
+        console.log(`🎯 Demo mode processing: "${message}" | Detected type: ${detectedMessageType}`);
+        
+        processDemoAIResponse(conversationId, message, detectedMessageType);
         return res.json({ 
           success: true, 
           message: "Processing your request...", 
@@ -1174,12 +1177,12 @@ function categorizeMessage(message: string): 'simple' | 'analysis' | 'complex' {
   
   // Simple patterns - instant response
   const simplePatterns = [
-    /^(hi|hello|hey|good morning|good afternoon|good evening)/i,
-    /^(thanks|thank you|thx|ty)/i,
-    /^(bye|goodbye|see you)/i,
-    /^(yes|no|ok|okay|sure)/i,
-    /^(test|testing)/i,
-    /^.{1,15}$/ // Very short messages
+    /^(hi|hello|hey|good morning|good afternoon|good evening)$/i,
+    /^(thanks|thank you|thx|ty)$/i,
+    /^(bye|goodbye|see you)$/i,
+    /^(yes|no|ok|okay|sure)$/i,
+    /^(test|testing)$/i,
+    /^.{1,10}$/ // Very short messages (reduced from 15 to 10)
   ];
   
   if (simplePatterns.some(pattern => pattern.test(trimmed))) {
@@ -1228,8 +1231,11 @@ async function processDemoAIResponse(conversationId: number, userMessage: string
       
       const assistantMessage = await storage.createMessage(conversationId, {
         role: 'assistant',
-        content: simpleResponse
+        content: simpleResponse,
+        conversationId: conversationId
       });
+      
+      console.log(`📝 Stored simple response message:`, assistantMessage);
       
       // Broadcast the response immediately
       global.broadcastAIActivity?.(conversationId, {
@@ -1311,7 +1317,7 @@ function getSimpleResponse(userMessage: string): string {
     return "Hello! I'm Sofeia AI, your expert content strategist. I'm ready to help you with SEO optimization, keyword research, and content strategy. What would you like to work on today?";
   }
   
-  if (msg.includes('jhi') || msg.length < 5) {
+  if (msg.includes('jhi') || msg.length < 5 || msg === 'hi') {
     return "Hello! I understand you're testing the system. I'm Sofeia AI and I'm working perfectly. I can help you with content strategy, SEO optimization, and keyword research. Try asking me something like 'help me with SEO strategy' for a more detailed response!";
   }
   
