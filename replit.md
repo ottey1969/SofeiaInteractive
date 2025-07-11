@@ -6,6 +6,8 @@ ContentScale is an advanced AI-powered content writing platform that provides re
 
 **Latest Enhancement (January 2025):** Integrated comprehensive Sofeia AI training prompt with C.R.A.F.T framework (Julia McCoy's methodology), Google AI Overview optimization, live competitor analysis, and copy-paste ready HTML formatting. The AI now follows advanced content creation protocols with real-time research capabilities and professional SEO optimization.
 
+**Admin System (July 2025):** Implemented full admin functionality for ottmar.francisca1969@gmail.com with unlimited credits, user management capabilities, and subscription control. Admin users automatically bypass daily question limits and can grant credits to other users.
+
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
@@ -40,6 +42,8 @@ Preferred communication style: Simple, everyday language.
 - Session-based authentication with PostgreSQL session storage
 - User profiles with subscription status and daily usage limits
 - Automatic session renewal and logout handling
+- **Admin System**: ottmar.francisca1969@gmail.com has unlimited credits and full admin privileges
+- Admin users can manage user subscriptions and grant credits to other users
 
 ### Chat Interface
 - Real-time chat interface with conversation management

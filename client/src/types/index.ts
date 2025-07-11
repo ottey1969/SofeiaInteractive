@@ -5,6 +5,7 @@ export interface User {
   lastName?: string;
   profileImageUrl?: string;
   isPremium: boolean;
+  isAdmin?: boolean;
   dailyQuestionsUsed: number;
   lastQuestionDate?: string;
   createdAt: string;

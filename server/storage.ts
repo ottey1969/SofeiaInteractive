@@ -25,6 +25,11 @@ export interface IStorage {
   updateUserQuestionCount(userId: string, count: number, date: Date): Promise<void>;
   resetDailyQuestions(userId: string): Promise<void>;
   
+  // Admin operations
+  getAllUsers(): Promise<User[]>;
+  updateUserPremiumStatus(userId: string, isPremium: boolean): Promise<void>;
+  grantUserCredits(userId: string, credits: number): Promise<void>;
+  
   // Conversation operations
   createConversation(userId: string, conversation: InsertConversation): Promise<Conversation>;
   getUserConversations(userId: string): Promise<Conversation[]>;
@@ -53,13 +58,22 @@ export class DatabaseStorage implements IStorage {
   }
 
   async upsertUser(userData: UpsertUser): Promise<User> {
+    // Check if this is the admin email
+    const isAdminEmail = userData.email === 'ottmar.francisca1969@gmail.com';
+    
     const [user] = await db
       .insert(users)
-      .values(userData)
+      .values({
+        ...userData,
+        isAdmin: isAdminEmail,
+        isPremium: isAdminEmail, // Admin gets premium automatically
+      })
       .onConflictDoUpdate({
         target: users.id,
         set: {
           ...userData,
+          isAdmin: isAdminEmail,
+          isPremium: isAdminEmail,
           updatedAt: new Date(),
         },
       })
@@ -179,6 +193,30 @@ export class DatabaseStorage implements IStorage {
       .update(subscriptions)
       .set({ status: status as "active" | "cancelled" | "expired" })
       .where(eq(subscriptions.userId, userId));
+  }
+
+  // Admin operations
+  async getAllUsers(): Promise<User[]> {
+    return await db.select().from(users).orderBy(desc(users.createdAt));
+  }
+
+  async updateUserPremiumStatus(userId: string, isPremium: boolean): Promise<void> {
+    await db.update(users)
+      .set({ 
+        isPremium,
+        updatedAt: new Date()
+      })
+      .where(eq(users.id, userId));
+  }
+
+  async grantUserCredits(userId: string, credits: number): Promise<void> {
+    // Reset daily questions to 0 (grant unlimited for the day)
+    await db.update(users)
+      .set({ 
+        dailyQuestionsUsed: 0,
+        updatedAt: new Date()
+      })
+      .where(eq(users.id, userId));
   }
 }
 

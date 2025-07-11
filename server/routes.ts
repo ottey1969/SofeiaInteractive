@@ -212,9 +212,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       const userId = req.user.claims.sub;
       
-      // Check user's daily limit
+      // Check user's daily limit (skip for admin users)
       const user = await storage.getUser(userId);
-      if (!user?.isPremium && (user?.dailyQuestionsUsed || 0) >= 3) {
+      if (!user?.isPremium && !user?.isAdmin && (user?.dailyQuestionsUsed || 0) >= 3) {
         return res.status(429).json({ 
           message: "Daily question limit reached. Upgrade to Pro for unlimited questions.",
           showUpgrade: true
@@ -228,15 +228,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
         conversationId
       });
       
-      // Update user's question count
-      const today = new Date();
-      const newCount = (user?.dailyQuestionsUsed || 0) + 1;
-      await storage.updateUserQuestionCount(userId, newCount, today);
+      // Update user's question count (skip for admin users)
+      if (!user?.isAdmin) {
+        const today = new Date();
+        const newCount = (user?.dailyQuestionsUsed || 0) + 1;
+        await storage.updateUserQuestionCount(userId, newCount, today);
+      }
 
       // Process AI response asynchronously
       processAIResponse(conversationId, message);
       
-      const questionsRemaining = user?.isPremium ? -1 : Math.max(0, 3 - newCount);
+      const questionsRemaining = user?.isPremium || user?.isAdmin ? -1 : Math.max(0, 3 - (user?.dailyQuestionsUsed || 0) - 1);
       res.json({ 
         success: true, 
         message: "Processing your request...", 
@@ -313,6 +315,55 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error crafting strategy:", error);
       res.status(500).json({ message: "Failed to craft strategy" });
+    }
+  });
+
+  // Admin routes
+  const isAdmin = (req: any, res: any, next: any) => {
+    if (!req.user?.claims?.sub) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+    
+    // Check if user is admin by email
+    const userEmail = req.user.claims.email;
+    if (userEmail !== 'ottmar.francisca1969@gmail.com') {
+      return res.status(403).json({ message: "Admin access required" });
+    }
+    
+    next();
+  };
+
+  app.get("/api/admin/users", isAuthenticated, isAdmin, async (req: any, res) => {
+    try {
+      const users = await storage.getAllUsers();
+      res.json(users);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+      res.status(500).json({ message: "Failed to fetch users" });
+    }
+  });
+
+  app.post("/api/admin/users/:userId/premium", isAuthenticated, isAdmin, async (req: any, res) => {
+    try {
+      const { userId } = req.params;
+      const { isPremium } = req.body;
+      await storage.updateUserPremiumStatus(userId, isPremium);
+      res.json({ success: true, message: `User premium status updated to ${isPremium}` });
+    } catch (error) {
+      console.error("Error updating user premium status:", error);
+      res.status(500).json({ message: "Failed to update user premium status" });
+    }
+  });
+
+  app.post("/api/admin/users/:userId/credits", isAuthenticated, isAdmin, async (req: any, res) => {
+    try {
+      const { userId } = req.params;
+      const { credits } = req.body;
+      await storage.grantUserCredits(userId, credits);
+      res.json({ success: true, message: `Granted ${credits} credits to user` });
+    } catch (error) {
+      console.error("Error granting user credits:", error);
+      res.status(500).json({ message: "Failed to grant user credits" });
     }
   });
 

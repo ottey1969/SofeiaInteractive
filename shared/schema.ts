@@ -33,6 +33,7 @@ export const users = pgTable("users", {
   lastName: varchar("last_name"),
   profileImageUrl: varchar("profile_image_url"),
   isPremium: boolean("is_premium").default(false),
+  isAdmin: boolean("is_admin").default(false),
   dailyQuestionsUsed: integer("daily_questions_used").default(0),
   lastQuestionDate: timestamp("last_question_date"),
   createdAt: timestamp("created_at").defaultNow(),
