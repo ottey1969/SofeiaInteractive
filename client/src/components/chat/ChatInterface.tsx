@@ -36,6 +36,14 @@ export default function ChatInterface({
     onSuccess: (newConversation) => {
       onConversationCreated(newConversation);
       queryClient.invalidateQueries({ queryKey: ["/api/conversations"] });
+      
+      // Send the stored message to the new conversation
+      if (message.trim()) {
+        sendMessageMutation.mutate({
+          conversationId: newConversation.id,
+          message
+        });
+      }
     },
     onError: (error) => {
       if (isUnauthorizedError(error)) {
@@ -128,22 +136,12 @@ export default function ChatInterface({
   });
 
   const handleSendMessage = async () => {
-    if (!message.trim()) return;
+    if (!message.trim() || sendMessageMutation.isPending || createConversationMutation.isPending) return;
 
     if (!conversation) {
       // Create a new conversation first
       const title = message.slice(0, 50) + (message.length > 50 ? "..." : "");
       createConversationMutation.mutate(title);
-      
-      // Store the message to send after conversation is created
-      setTimeout(() => {
-        if (createConversationMutation.data) {
-          sendMessageMutation.mutate({
-            conversationId: createConversationMutation.data.id,
-            message
-          });
-        }
-      }, 100);
     } else {
       sendMessageMutation.mutate({
         conversationId: conversation.id,

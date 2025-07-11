@@ -44,11 +44,16 @@ export default function Home() {
     ws.onopen = () => {
       console.log("WebSocket connected");
       if (selectedConversation) {
-        ws.send(JSON.stringify({
-          type: 'join_conversation',
-          conversationId: selectedConversation.id,
-          userId: 'current_user' // This would come from auth context
-        }));
+        // Add a small delay to ensure connection is fully established
+        setTimeout(() => {
+          if (ws.readyState === WebSocket.OPEN) {
+            ws.send(JSON.stringify({
+              type: 'join_conversation',
+              conversationId: selectedConversation.id,
+              userId: 'current_user'
+            }));
+          }
+        }, 100);
       }
     };
 
@@ -81,7 +86,7 @@ export default function Home() {
 
   // Update WebSocket when conversation changes
   useEffect(() => {
-    if (socket && selectedConversation) {
+    if (socket && selectedConversation && socket.readyState === WebSocket.OPEN) {
       socket.send(JSON.stringify({
         type: 'join_conversation',
         conversationId: selectedConversation.id,
