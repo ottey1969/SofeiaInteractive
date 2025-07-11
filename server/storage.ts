@@ -49,6 +49,21 @@ export interface IStorage {
   createSubscription(subscription: InsertSubscription): Promise<Subscription>;
   getUserSubscription(userId: string): Promise<Subscription | undefined>;
   updateSubscriptionStatus(userId: string, status: string): Promise<void>;
+  
+  // Blog post operations
+  createBlogPost(blogPost: InsertBlogPost): Promise<BlogPost>;
+  getBlogPost(id: number): Promise<BlogPost | undefined>;
+  getUserBlogPosts(userId: string): Promise<BlogPost[]>;
+  updateBlogPost(id: number, updates: Partial<BlogPost>): Promise<void>;
+  deleteBlogPost(id: number): Promise<void>;
+  
+  // Bulk blog job operations
+  createBulkBlogJob(job: InsertBulkBlogJob): Promise<BulkBlogJob>;
+  getBulkBlogJob(id: number): Promise<BulkBlogJob | undefined>;
+  getUserBulkBlogJobs(userId: string): Promise<BulkBlogJob[]>;
+  updateBulkBlogJob(id: number, updates: Partial<BulkBlogJob>): Promise<void>;
+  deleteBulkBlogJob(id: number): Promise<void>;
+  getBlogPostsByJobId(jobId: number): Promise<BlogPost[]>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -225,6 +240,96 @@ export class DatabaseStorage implements IStorage {
         updatedAt: new Date()
       })
       .where(eq(users.id, userId));
+  }
+
+  // Blog post operations
+  async createBlogPost(blogPost: InsertBlogPost): Promise<BlogPost> {
+    const [post] = await db
+      .insert(blogPosts)
+      .values(blogPost)
+      .returning();
+    return post;
+  }
+
+  async getBlogPost(id: number): Promise<BlogPost | undefined> {
+    const [post] = await db
+      .select()
+      .from(blogPosts)
+      .where(eq(blogPosts.id, id));
+    return post;
+  }
+
+  async getUserBlogPosts(userId: string): Promise<BlogPost[]> {
+    return await db
+      .select()
+      .from(blogPosts)
+      .where(eq(blogPosts.userId, userId))
+      .orderBy(desc(blogPosts.createdAt));
+  }
+
+  async updateBlogPost(id: number, updates: Partial<BlogPost>): Promise<void> {
+    await db
+      .update(blogPosts)
+      .set({ ...updates, updatedAt: new Date() })
+      .where(eq(blogPosts.id, id));
+  }
+
+  async deleteBlogPost(id: number): Promise<void> {
+    await db
+      .delete(blogPosts)
+      .where(eq(blogPosts.id, id));
+  }
+
+  // Bulk blog job operations
+  async createBulkBlogJob(job: InsertBulkBlogJob): Promise<BulkBlogJob> {
+    const [blogJob] = await db
+      .insert(bulkBlogJobs)
+      .values(job)
+      .returning();
+    return blogJob;
+  }
+
+  async getBulkBlogJob(id: number): Promise<BulkBlogJob | undefined> {
+    const [job] = await db
+      .select()
+      .from(bulkBlogJobs)
+      .where(eq(bulkBlogJobs.id, id));
+    return job;
+  }
+
+  async getUserBulkBlogJobs(userId: string): Promise<BulkBlogJob[]> {
+    return await db
+      .select()
+      .from(bulkBlogJobs)
+      .where(eq(bulkBlogJobs.userId, userId))
+      .orderBy(desc(bulkBlogJobs.createdAt));
+  }
+
+  async updateBulkBlogJob(id: number, updates: Partial<BulkBlogJob>): Promise<void> {
+    await db
+      .update(bulkBlogJobs)
+      .set(updates)
+      .where(eq(bulkBlogJobs.id, id));
+  }
+
+  async deleteBulkBlogJob(id: number): Promise<void> {
+    // First delete all associated blog posts
+    await db
+      .delete(blogPosts)
+      .where(eq(blogPosts.bulkJobId, id));
+    
+    // Then delete the job
+    await db
+      .delete(bulkBlogJobs)
+      .where(eq(bulkBlogJobs.id, id));
+  }
+
+  async getBlogPostsByJobId(jobId: number): Promise<BlogPost[]> {
+    return await db
+      .select()
+      .from(blogPosts)
+      .where(eq(blogPosts.bulkJobId, jobId))
+      .orderBy(desc(blogPosts.createdAt));
   }
 }
 

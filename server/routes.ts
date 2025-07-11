@@ -6,7 +6,7 @@ import { setupAuth, isAuthenticated } from "./replitAuth";
 import { createPaypalOrder, capturePaypalOrder, loadPaypalDefault } from "./paypal";
 import { researchKeywords, analyzeCompetitors, findAIOverviewOpportunities } from "./services/perplexity";
 import { analyzeContent, generateContent, craftStrategy } from "./services/anthropic";
-import { insertMessageSchema, insertConversationSchema } from "@shared/schema";
+import { insertMessageSchema, insertConversationSchema, insertBlogPostSchema, insertBulkBlogJobSchema } from "@shared/schema";
 
 interface WebSocketClient extends WebSocket {
   conversationId?: number;
@@ -84,6 +84,208 @@ export async function registerRoutes(app: Express): Promise<Server> {
       await capturePaypalOrder(req, res);
     } catch (error) {
       res.status(500).json({ message: "PayPal API keys not configured. Please add your PAYPAL_CLIENT_ID and PAYPAL_CLIENT_SECRET." });
+    }
+  });
+
+  // Blog generation routes (Free for admin, requires payment for subscribers)
+  app.post("/api/blog/generate", async (req: any, res) => {
+    try {
+      const userId = req.user?.claims?.sub || 'demo_user';
+      let user = null;
+      
+      if (userId !== 'demo_user') {
+        user = await storage.getUser(userId);
+      }
+      
+      // Check access rights (admin has free access, others need premium)
+      const isAdmin = user?.isAdmin || user?.email === 'ottmar.francisca1969@gmail.com';
+      const isPremium = user?.isPremium || isAdmin;
+      
+      if (!isPremium && userId !== 'demo_user') {
+        return res.status(403).json({ 
+          message: "Blog generation requires Pro subscription or admin access" 
+        });
+      }
+
+      const { keyword, topic, targetCountry = 'US', contentLength = 'medium', includeImages = true } = req.body;
+      
+      if (!keyword) {
+        return res.status(400).json({ message: "Keyword is required" });
+      }
+
+      // Generate blog post content using AI services
+      const blogContent = await generateSEOBlogPost({
+        keyword,
+        topic,
+        targetCountry,
+        contentLength,
+        includeImages,
+        userId
+      });
+
+      res.json(blogContent);
+    } catch (error) {
+      console.error("Blog generation error:", error);
+      res.status(500).json({ message: "Failed to generate blog post" });
+    }
+  });
+
+  app.post("/api/blog/bulk-generate", async (req: any, res) => {
+    try {
+      const userId = req.user?.claims?.sub || 'demo_user';
+      let user = null;
+      
+      if (userId !== 'demo_user') {
+        user = await storage.getUser(userId);
+      }
+      
+      // Check access rights (admin has free access, others need premium)
+      const isAdmin = user?.isAdmin || user?.email === 'ottmar.francisca1969@gmail.com';
+      const isPremium = user?.isPremium || isAdmin;
+      
+      if (!isPremium && userId !== 'demo_user') {
+        return res.status(403).json({ 
+          message: "Bulk blog generation requires Pro subscription or admin access" 
+        });
+      }
+
+      const validatedData = insertBulkBlogJobSchema.parse(req.body);
+      
+      // Create bulk job
+      const job = await storage.createBulkBlogJob({
+        ...validatedData,
+        userId,
+        totalPosts: validatedData.keywords.length,
+        status: "pending"
+      });
+
+      // Start background processing
+      processBulkBlogGeneration(job.id, userId);
+
+      res.json(job);
+    } catch (error) {
+      console.error("Bulk blog generation error:", error);
+      res.status(500).json({ message: "Failed to start bulk generation" });
+    }
+  });
+
+  app.get("/api/blog/bulk-jobs", async (req: any, res) => {
+    try {
+      const userId = req.user?.claims?.sub || 'demo_user';
+      let user = null;
+      
+      if (userId !== 'demo_user') {
+        user = await storage.getUser(userId);
+      }
+      
+      const isAdmin = user?.isAdmin || user?.email === 'ottmar.francisca1969@gmail.com';
+      const isPremium = user?.isPremium || isAdmin;
+      
+      if (!isPremium && userId !== 'demo_user') {
+        return res.status(403).json({ message: "Access denied" });
+      }
+
+      const jobs = await storage.getUserBulkBlogJobs(userId);
+      res.json(jobs);
+    } catch (error) {
+      console.error("Get bulk jobs error:", error);
+      res.status(500).json({ message: "Failed to fetch bulk jobs" });
+    }
+  });
+
+  app.post("/api/blog/bulk-jobs/:jobId/publish", async (req: any, res) => {
+    try {
+      const userId = req.user?.claims?.sub || 'demo_user';
+      let user = null;
+      
+      if (userId !== 'demo_user') {
+        user = await storage.getUser(userId);
+      }
+      
+      // Only admin can publish to website
+      const isAdmin = user?.isAdmin || user?.email === 'ottmar.francisca1969@gmail.com';
+      if (!isAdmin) {
+        return res.status(403).json({ message: "Admin access required" });
+      }
+
+      const jobId = parseInt(req.params.jobId);
+      const posts = await storage.getBlogPostsByJobId(jobId);
+      
+      // Update all posts to published status
+      for (const post of posts) {
+        await storage.updateBlogPost(post.id, { 
+          status: "published", 
+          publishedAt: new Date() 
+        });
+      }
+
+      res.json({ message: "Posts published successfully", count: posts.length });
+    } catch (error) {
+      console.error("Publish posts error:", error);
+      res.status(500).json({ message: "Failed to publish posts" });
+    }
+  });
+
+  app.get("/api/blog/bulk-jobs/:jobId/download", async (req: any, res) => {
+    try {
+      const userId = req.user?.claims?.sub || 'demo_user';
+      let user = null;
+      
+      if (userId !== 'demo_user') {
+        user = await storage.getUser(userId);
+      }
+      
+      // Only admin can download
+      const isAdmin = user?.isAdmin || user?.email === 'ottmar.francisca1969@gmail.com';
+      if (!isAdmin) {
+        return res.status(403).json({ message: "Admin access required" });
+      }
+
+      const jobId = parseInt(req.params.jobId);
+      const posts = await storage.getBlogPostsByJobId(jobId);
+      
+      // Create simple HTML export for now
+      const htmlContent = posts.map(post => `
+        <article>
+          <h1>${post.title}</h1>
+          <meta name="description" content="${post.metaDescription}">
+          <div class="content">${post.content}</div>
+          <div class="meta">Keywords: ${post.keyword} | SEO Score: ${post.seoScore}</div>
+        </article>
+        <hr>
+      `).join('\n');
+      
+      res.setHeader('Content-Type', 'text/html');
+      res.setHeader('Content-Disposition', `attachment; filename="blog-posts-${jobId}.html"`);
+      res.send(`<!DOCTYPE html><html><head><title>Blog Posts Export</title></head><body>${htmlContent}</body></html>`);
+    } catch (error) {
+      console.error("Download posts error:", error);
+      res.status(500).json({ message: "Failed to download posts" });
+    }
+  });
+
+  app.delete("/api/blog/bulk-jobs/:jobId", async (req: any, res) => {
+    try {
+      const userId = req.user?.claims?.sub || 'demo_user';
+      let user = null;
+      
+      if (userId !== 'demo_user') {
+        user = await storage.getUser(userId);
+      }
+      
+      // Only admin can delete
+      const isAdmin = user?.isAdmin || user?.email === 'ottmar.francisca1969@gmail.com';
+      if (!isAdmin) {
+        return res.status(403).json({ message: "Admin access required" });
+      }
+
+      const jobId = parseInt(req.params.jobId);
+      await storage.deleteBulkBlogJob(jobId);
+      
+      res.json({ message: "Job deleted successfully" });
+    } catch (error) {
+      console.error("Delete job error:", error);
+      res.status(500).json({ message: "Failed to delete job" });
     }
   });
 
@@ -606,6 +808,172 @@ export async function registerRoutes(app: Express): Promise<Server> {
   };
 
   return httpServer;
+}
+
+// Blog generation helper functions
+async function generateSEOBlogPost(params: {
+  keyword: string;
+  topic?: string;
+  targetCountry: string;
+  contentLength: 'short' | 'medium' | 'long';
+  includeImages: boolean;
+  userId: string;
+}) {
+  const { keyword, topic, targetCountry, contentLength, includeImages, userId } = params;
+  
+  // Research keywords and competitors using Perplexity
+  const research = await researchKeywords(keyword, targetCountry);
+  
+  // Generate comprehensive content using Anthropic
+  const contentPrompt = `
+Create a comprehensive, SEO-optimized blog post with the following specifications:
+
+PRIMARY KEYWORD: ${keyword}
+${topic ? `TOPIC FOCUS: ${topic}` : ''}
+TARGET COUNTRY: ${targetCountry}
+CONTENT LENGTH: ${contentLength}
+RESEARCH DATA: ${JSON.stringify(research, null, 2)}
+
+Requirements:
+1. Create an engaging, click-worthy title optimized for the primary keyword
+2. Write a compelling meta description (150-160 characters)
+3. Generate 8-10 relevant tags for categorization
+4. Create SEO-optimized content with proper H1, H2, H3 structure
+5. Include internal linking opportunities and call-to-actions
+6. Optimize for featured snippets and voice search
+7. Calculate estimated read time and SEO score (0-100)
+8. Generate JSON-LD schema markup for the article
+
+CONTENT LENGTH GUIDELINES:
+- Short: 800-1200 words with 3-5 H2 sections
+- Medium: 1200-2000 words with 5-7 H2 sections
+- Long: 2000-3500 words with 7-10 H2 sections
+
+OUTPUT FORMAT (JSON):
+{
+  "title": "SEO-optimized blog post title",
+  "slug": "url-friendly-slug",
+  "metaTitle": "Title tag (55-60 chars)",
+  "metaDescription": "Meta description (150-160 chars)",
+  "content": "Full HTML blog post content with proper headings",
+  "excerpt": "Brief summary (150-200 chars)",
+  "keyword": "${keyword}",
+  "tags": ["tag1", "tag2", "tag3", "tag4", "tag5"],
+  "imageUrl": "${includeImages ? 'https://via.placeholder.com/1200x630/1e293b/ffffff?text=' + encodeURIComponent(keyword) : ''}",
+  "imageAlt": "Alt text for featured image",
+  "schema": { /* JSON-LD schema markup */ },
+  "seoScore": 85,
+  "estimatedReadTime": 5,
+  "wordCount": 1200
+}`;
+
+  const response = await generateContent(contentPrompt);
+  
+  try {
+    const blogData = JSON.parse(response);
+    
+    // Save to database if user is authenticated
+    if (userId !== 'demo_user') {
+      const blogPost = await storage.createBlogPost({
+        userId,
+        title: blogData.title,
+        slug: blogData.slug,
+        metaTitle: blogData.metaTitle,
+        metaDescription: blogData.metaDescription,
+        content: blogData.content,
+        excerpt: blogData.excerpt,
+        keyword: keyword,
+        tags: blogData.tags || [],
+        imageUrl: blogData.imageUrl,
+        imageAlt: blogData.imageAlt,
+        schema: blogData.schema,
+        seoScore: blogData.seoScore || 0,
+        estimatedReadTime: blogData.estimatedReadTime || 0,
+        wordCount: blogData.wordCount || 0,
+        targetCountry,
+        contentLength,
+        status: "draft"
+      });
+      
+      return blogPost;
+    }
+    
+    return blogData;
+  } catch (error) {
+    console.error("Error parsing blog response:", error);
+    throw new Error("Failed to generate valid blog post data");
+  }
+}
+
+async function processBulkBlogGeneration(jobId: number, userId: string) {
+  try {
+    const job = await storage.getBulkBlogJob(jobId);
+    if (!job) return;
+
+    // Update job status to processing
+    await storage.updateBulkBlogJob(jobId, {
+      status: "processing",
+      processingStarted: new Date()
+    });
+
+    let completedPosts = 0;
+    let failedPosts = 0;
+
+    // Process each keyword
+    for (const keyword of job.keywords) {
+      try {
+        const blogPost = await generateSEOBlogPost({
+          keyword: keyword.trim(),
+          targetCountry: job.targetCountry,
+          contentLength: job.contentLength,
+          includeImages: true,
+          userId
+        });
+
+        // Save blog post with job reference
+        await storage.createBlogPost({
+          ...blogPost,
+          userId,
+          bulkJobId: jobId,
+          status: "draft"
+        });
+
+        completedPosts++;
+        
+        // Update job progress
+        await storage.updateBulkBlogJob(jobId, {
+          completedPosts,
+          failedPosts
+        });
+
+        // Add small delay to avoid rate limiting
+        await new Promise(resolve => setTimeout(resolve, 2000));
+      } catch (error) {
+        console.error(`Failed to generate post for keyword "${keyword}":`, error);
+        failedPosts++;
+        
+        await storage.updateBulkBlogJob(jobId, {
+          completedPosts,
+          failedPosts
+        });
+      }
+    }
+
+    // Mark job as completed
+    await storage.updateBulkBlogJob(jobId, {
+      status: "completed",
+      processingCompleted: new Date(),
+      completedPosts,
+      failedPosts
+    });
+
+  } catch (error) {
+    console.error(`Bulk generation job ${jobId} failed:`, error);
+    await storage.updateBulkBlogJob(jobId, {
+      status: "failed",
+      processingCompleted: new Date()
+    });
+  }
 }
 
 // Smart message categorization function

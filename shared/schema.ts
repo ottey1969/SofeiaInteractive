@@ -78,6 +78,50 @@ export const subscriptions = pgTable("subscriptions", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
+// Blog posts table for SEO-optimized content generation
+export const blogPosts = pgTable("blog_posts", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id").notNull().references(() => users.id),
+  bulkJobId: integer("bulk_job_id").references(() => bulkBlogJobs.id),
+  title: varchar("title", { length: 255 }).notNull(),
+  slug: varchar("slug", { length: 255 }).notNull().unique(),
+  metaTitle: varchar("meta_title", { length: 60 }).notNull(),
+  metaDescription: varchar("meta_description", { length: 160 }).notNull(),
+  content: text("content").notNull(),
+  excerpt: text("excerpt"),
+  keyword: varchar("keyword", { length: 100 }).notNull(),
+  tags: text("tags").array().default([]),
+  imageUrl: varchar("image_url"),
+  imageAlt: varchar("image_alt"),
+  schema: jsonb("schema"),
+  seoScore: integer("seo_score").default(0),
+  estimatedReadTime: integer("estimated_read_time").default(0),
+  wordCount: integer("word_count").default(0),
+  status: varchar("status", { enum: ["draft", "published", "archived"] }).default("draft"),
+  targetCountry: varchar("target_country", { length: 2 }).default("US"),
+  contentLength: varchar("content_length", { enum: ["short", "medium", "long"] }).default("medium"),
+  publishedAt: timestamp("published_at"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Bulk blog generation jobs for subscriber feature
+export const bulkBlogJobs = pgTable("bulk_blog_jobs", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id").notNull().references(() => users.id),
+  name: varchar("name").notNull(),
+  keywords: text("keywords").array().notNull(), // Array of keywords to generate posts for
+  targetCountry: varchar("target_country", { length: 2 }).default("US"),
+  contentLength: varchar("content_length", { enum: ["short", "medium", "long"] }).default("medium"),
+  status: varchar("status", { enum: ["pending", "processing", "completed", "failed"] }).default("pending"),
+  totalPosts: integer("total_posts").default(0),
+  completedPosts: integer("completed_posts").default(0),
+  failedPosts: integer("failed_posts").default(0),
+  processingStarted: timestamp("processing_started"),
+  processingCompleted: timestamp("processing_completed"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
 export type UpsertUser = typeof users.$inferInsert;
 export type User = typeof users.$inferSelect;
 
@@ -93,10 +137,30 @@ export type AIActivity = typeof aiActivities.$inferSelect;
 export type InsertSubscription = typeof subscriptions.$inferInsert;
 export type Subscription = typeof subscriptions.$inferSelect;
 
+export type InsertBlogPost = typeof blogPosts.$inferInsert;
+export type BlogPost = typeof blogPosts.$inferSelect;
+
+export type InsertBulkBlogJob = typeof bulkBlogJobs.$inferInsert;
+export type BulkBlogJob = typeof bulkBlogJobs.$inferSelect;
+
 export const insertMessageSchema = createInsertSchema(messages).pick({
   content: true,
 });
 
 export const insertConversationSchema = createInsertSchema(conversations).pick({
   title: true,
+});
+
+export const insertBlogPostSchema = createInsertSchema(blogPosts).pick({
+  title: true,
+  keyword: true,
+  targetCountry: true,
+  contentLength: true,
+});
+
+export const insertBulkBlogJobSchema = createInsertSchema(bulkBlogJobs).pick({
+  name: true,
+  keywords: true,
+  targetCountry: true,
+  contentLength: true,
 });
