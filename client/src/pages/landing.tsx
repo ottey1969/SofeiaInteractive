@@ -9,7 +9,42 @@ import { useAuth0 } from '@auth0/auth0-react';
 export default function Landing() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
-  const { loginWithRedirect, logout, isAuthenticated, user, isLoading, getAccessTokenSilently } = useAuth0();
+  
+  // Check if Auth0 is available and properly configured
+  const isAuth0Available = import.meta.env.VITE_AUTH0_DOMAIN && 
+    import.meta.env.VITE_AUTH0_DOMAIN !== "dev-sofeia.us.auth0.com" &&
+    import.meta.env.VITE_AUTH0_CLIENT_ID && 
+    import.meta.env.VITE_AUTH0_CLIENT_ID !== "sofeia-ai-client-id" &&
+    !import.meta.env.VITE_AUTH0_DOMAIN.includes('your-auth0-domain');
+
+  let auth0Data;
+  if (isAuth0Available) {
+    try {
+      auth0Data = useAuth0();
+    } catch (error) {
+      // Auth0 hook failed, use fallback
+      auth0Data = {
+        loginWithRedirect: () => console.log('Auth0 hook failed'),
+        logout: () => console.log('Auth0 hook failed'),
+        isAuthenticated: false,
+        user: null,
+        isLoading: false,
+        getAccessTokenSilently: () => Promise.reject('Auth0 hook failed')
+      };
+    }
+  } else {
+    // Auth0 not configured, use fallback immediately
+    auth0Data = {
+      loginWithRedirect: () => toast({ title: "Auth0 Setup Required", description: "Please configure Auth0 to enable authentication" }),
+      logout: () => console.log('Auth0 not configured'),
+      isAuthenticated: false,
+      user: null,
+      isLoading: false,
+      getAccessTokenSilently: () => Promise.reject('Auth0 not configured')
+    };
+  }
+  
+  const { loginWithRedirect, logout, isAuthenticated, user, isLoading, getAccessTokenSilently } = auth0Data;
 
   const handleLogin = () => {
     loginWithRedirect();
@@ -30,6 +65,16 @@ export default function Landing() {
   };
 
   const callProtectedApi = async () => {
+    if (!isAuth0Configured) {
+      // Demo mode - show success message without actual authentication
+      toast({
+        title: "Demo Mode Active",
+        description: "This would access premium features with real Auth0 authentication. Set up Auth0 to enable full functionality.",
+        variant: "default",
+      });
+      return;
+    }
+    
     try {
       const accessToken = await getAccessTokenSilently({
         authorizationParams: {
@@ -67,13 +112,11 @@ export default function Landing() {
     }
   };
 
-  // Check if Auth0 is properly configured
-  const isAuth0Configured = import.meta.env.VITE_AUTH0_DOMAIN && 
-    import.meta.env.VITE_AUTH0_DOMAIN !== "dev-sofeia.us.auth0.com" &&
-    import.meta.env.VITE_AUTH0_CLIENT_ID && 
-    import.meta.env.VITE_AUTH0_CLIENT_ID !== "sofeia-ai-client-id";
+  // Auth0 configuration status
+  const isAuth0Configured = isAuth0Available;
 
-  if (isLoading) {
+  // Only show loading if Auth0 is configured and actually loading
+  if (isLoading && isAuth0Configured) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
         <div className="text-center">
