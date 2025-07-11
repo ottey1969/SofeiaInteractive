@@ -11,17 +11,17 @@ export default function Landing() {
 
   const handleLogin = () => {
     // Go directly to chat screen
-    setLocation('/');
+    setLocation('/home');
   };
 
   const handleStartWriting = () => {
     // Go directly to chat screen
-    setLocation('/');
+    setLocation('/home');
   };
 
   const handleDemo = () => {
     // Go directly to chat screen
-    setLocation('/');
+    setLocation('/home');
   };
 
   return (
