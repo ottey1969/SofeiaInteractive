@@ -194,8 +194,21 @@ export default function Home() {
           />
         </div>
 
-        {/* Right Panel - AI Activity & Chat */}
-        <div className="flex-1 flex flex-col bg-slate-900">
+        {/* Middle Column - Welcome to Sofeia AI (Chat Interface) */}
+        <div className="flex-1 flex flex-col">
+          <ChatInterface 
+            conversation={selectedConversation}
+            messages={messages}
+            onConversationCreated={handleConversationCreated}
+            onMessageSent={handleMessageSent}
+            isDemoMode={isDemoMode}
+            demoMessages={demoMessages}
+            isTyping={isTyping}
+          />
+        </div>
+
+        {/* Right Sidebar - AI Brain Activity (narrower) */}
+        <div className="w-1/4 bg-slate-800 border-l border-slate-700 flex flex-col">
           {/* AI Activity Header */}
           <div className="bg-slate-800 border-b border-slate-700 p-4">
             <div className="flex items-center justify-between">
@@ -221,24 +234,32 @@ export default function Home() {
             </div>
           </div>
 
-          {/* AI Activity Feed & Chat Interface */}
-          <div className="flex-1 flex">
-            {/* AI Brain Visualization */}
-            <div className="w-1/2 border-r border-slate-700">
-              <AIActivityFeed 
-                activities={activities} 
-                realTimeActivities={aiActivities}
-              />
-            </div>
-
-            {/* Chat Interface */}
-            <div className="w-1/2">
-              <ChatInterface 
-                conversation={selectedConversation}
-                messages={messages}
-                onConversationCreated={handleConversationCreated}
-                onMessageSent={handleMessageSent}
-              />
+          {/* AI Activity Feed */}
+          <div className="flex-1 overflow-y-auto">
+            <AIActivityFeed 
+              activities={activities} 
+              realTimeActivities={aiActivities}
+              isDemoMode={isDemoMode}
+              className="h-full"
+            />
+          </div>
+          
+          {/* API Integration Status */}
+          <div className="bg-slate-900 border-t border-slate-700 p-4">
+            <h3 className="text-sm font-medium text-slate-300 mb-3">API Integrations</h3>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-slate-400">Perplexity AI</span>
+                <span className="text-xs text-emerald-400">Active</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-slate-400">Anthropic Claude</span>
+                <span className="text-xs text-emerald-400">Active</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-slate-400">PayPal</span>
+                <span className="text-xs text-blue-400">Connected</span>
+              </div>
             </div>
           </div>
         </div>

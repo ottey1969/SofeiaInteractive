@@ -4,7 +4,21 @@
 
 ContentScale is an advanced AI-powered content writing platform that provides real-time AI visualization, SEO optimization, and competitive analysis. The platform is branded as "Sofeia AI" and features a sophisticated chat interface with live AI thinking processes, keyword research capabilities, and premium subscription features.
 
-**Latest Enhancement (July 11, 2025):** COMPLETE USAGE-BASED PRICING & ROI IMPLEMENTATION - Implemented comprehensive overage fee system, annual billing discounts, and ROI-focused marketing messaging. Key features implemented:
+**Latest Enhancement (July 11, 2025):** CRITICAL FIXES & UI IMPROVEMENTS - Fixed conversation creation errors and implemented UI layout rearrangement based on user feedback. Key fixes implemented:
+
+**CRITICAL FIXES:**
+- **Conversation Creation Error Fix**: Enhanced error handling in `/api/conversations` endpoint with proper user initialization and validation
+- **Improved Error Messages**: Added specific error descriptions for better debugging and user feedback
+- **Database User Handling**: Automatic user creation when missing, preventing conversation creation failures
+- **Demo Mode Stability**: Fixed demo user creation process with proper error handling
+
+**UI LAYOUT REARRANGEMENT:**
+- **Middle Column**: Now displays "Welcome to Sofeia AI" section (Keyword Research, SEO Strategy, Content Analysis)
+- **Right Sidebar**: Moved "AI Brain Activity" section with real-time thinking process and API integrations
+- **Left Sidebar**: Maintained chat history and conversation management (unchanged)
+- **Three-Column Layout**: Clean separation between chat history, main interface, and AI activity monitoring
+
+**COMPLETE USAGE-BASED PRICING & ROI IMPLEMENTATION** - Implemented comprehensive overage fee system, annual billing discounts, and ROI-focused marketing messaging. Key features implemented:
 - **4-Tier Pricing Structure:** Free (3/month), Pro ($35/150/month), Agency ($99/500/month), Premium Agency ($249/1500/month)
 - **Usage-Based Overage Fees:** $0.25 per additional question beyond monthly limits for paid plans (Free users must upgrade)
 - **Annual Billing Discounts:** 15-20% discount for yearly subscriptions (Pro: $28/month, Agency: $79/month, Premium Agency: $199/month)

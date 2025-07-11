@@ -60,9 +60,10 @@ export default function ChatInterface({
         }, 500);
         return;
       }
+      console.error("Conversation creation error:", error);
       toast({
         title: "Error",
-        description: "Failed to create conversation",
+        description: "Failed to create conversation. Please try again or contact support.",
         variant: "destructive",
       });
     },
