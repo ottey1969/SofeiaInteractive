@@ -565,22 +565,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
 // Demo AI response function
 async function processDemoAIResponse(conversationId: number, userMessage: string) {
-  const isSimpleQuestion = /^(hi|hello|hey|thanks|thank you|test|ok|yes|no)$/i.test(userMessage.trim());
+  const isSimpleQuestion = /^(hi|hello|hey|thanks|thank you|test|ok|yes|no|.*jhi.*)$/i.test(userMessage.trim());
   
   if (isSimpleQuestion) {
-    // Instant response for simple questions
-    setTimeout(() => {
-      global.broadcastAIActivity?.(conversationId, {
-        type: 'response_complete',
-        message: {
-          id: Date.now(),
-          conversationId,
-          role: 'assistant',
-          content: getSimpleResponse(userMessage),
-          createdAt: new Date().toISOString()
+    // Store the assistant message first
+    try {
+      const assistantMessage = await storage.createMessage(conversationId, {
+        role: 'assistant',
+        content: getSimpleResponse(userMessage)
+      });
+      
+      // Broadcast the response immediately
+      wss.clients.forEach((client: WebSocketClient) => {
+        if (client.readyState === WebSocket.OPEN && client.conversationId === conversationId) {
+          client.send(JSON.stringify({
+            type: 'response_complete',
+            message: assistantMessage
+          }));
         }
       });
-    }, 300);
+    } catch (error) {
+      console.error('Error storing simple response:', error);
+    }
     return;
   }
 
@@ -607,7 +613,7 @@ async function processDemoAIResponse(conversationId: number, userMessage: string
     });
   }, 1500);
 
-  setTimeout(() => {
+  setTimeout(async () => {
     global.broadcastAIActivity?.(conversationId, {
       id: Date.now() + 2,
       conversationId,
@@ -617,17 +623,25 @@ async function processDemoAIResponse(conversationId: number, userMessage: string
       createdAt: new Date().toISOString()
     });
     
-    // Send detailed response
-    global.broadcastAIActivity?.(conversationId, {
-      type: 'response_complete',
-      message: {
-        id: Date.now() + 3,
-        conversationId,
+    // Store and send detailed response
+    try {
+      const assistantMessage = await storage.createMessage(conversationId, {
         role: 'assistant',
-        content: getDetailedResponse(userMessage),
-        createdAt: new Date().toISOString()
-      }
-    });
+        content: getDetailedResponse(userMessage)
+      });
+      
+      // Broadcast the response
+      wss.clients.forEach((client: WebSocketClient) => {
+        if (client.readyState === WebSocket.OPEN && client.conversationId === conversationId) {
+          client.send(JSON.stringify({
+            type: 'response_complete',
+            message: assistantMessage
+          }));
+        }
+      });
+    } catch (error) {
+      console.error('Error storing detailed response:', error);
+    }
   }, 3000);
 }
 
@@ -636,6 +650,10 @@ function getSimpleResponse(userMessage: string): string {
   
   if (msg.includes('hi') || msg.includes('hello') || msg.includes('hey')) {
     return "Hello! I'm Sofeia AI, your expert content strategist. I'm ready to help you with SEO optimization, keyword research, and content strategy. What would you like to work on today?";
+  }
+  
+  if (msg.includes('jhi') || msg.length < 5) {
+    return "Hello! I understand you're testing the system. I'm Sofeia AI and I'm working perfectly. I can help you with content strategy, SEO optimization, and keyword research. Try asking me something like 'help me with SEO strategy' for a more detailed response!";
   }
   
   if (msg.includes('thanks') || msg.includes('thank you')) {
