@@ -17,9 +17,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Auth middleware
   await setupAuth(app);
 
-  // Auth routes
-  app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
+  // Auth routes - Allow without authentication for demo mode
+  app.get('/api/auth/user', async (req: any, res) => {
     try {
+      // Check if user is authenticated
+      if (!req.isAuthenticated() || !req.user?.claims?.sub) {
+        // Return demo user for unauthenticated users
+        return res.json({
+          id: 'demo_user',
+          email: 'demo@example.com',
+          firstName: 'Demo',
+          lastName: 'User',
+          isPremium: false,
+          dailyQuestionsUsed: 0,
+          lastQuestionDate: new Date().toISOString(),
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        });
+      }
+
       const userId = req.user.claims.sub;
       const user = await storage.getUser(userId);
       
@@ -91,9 +107,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Conversation routes
-  app.get("/api/conversations", isAuthenticated, async (req: any, res) => {
+  // Conversation routes - Allow demo mode
+  app.get("/api/conversations", async (req: any, res) => {
     try {
+      // Return empty array for demo users
+      if (!req.isAuthenticated() || !req.user?.claims?.sub) {
+        return res.json([]);
+      }
+      
       const userId = req.user.claims.sub;
       const conversations = await storage.getUserConversations(userId);
       res.json(conversations);
@@ -103,8 +124,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/conversations", isAuthenticated, async (req: any, res) => {
+  app.post("/api/conversations", async (req: any, res) => {
     try {
+      // For demo users, return a mock conversation
+      if (!req.isAuthenticated() || !req.user?.claims?.sub) {
+        return res.json({
+          id: 1,
+          userId: 'demo_user',
+          title: req.body.title || 'Demo Conversation',
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        });
+      }
+      
       const userId = req.user.claims.sub;
       const validatedData = insertConversationSchema.parse(req.body);
       
@@ -116,8 +148,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/conversations/:id/messages", isAuthenticated, async (req: any, res) => {
+  app.get("/api/conversations/:id/messages", async (req: any, res) => {
     try {
+      // Return empty array for demo users
+      if (!req.isAuthenticated() || !req.user?.claims?.sub) {
+        return res.json([]);
+      }
+      
       const conversationId = parseInt(req.params.id);
       const messages = await storage.getConversationMessages(conversationId);
       res.json(messages);
@@ -127,8 +164,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/conversations/:id/activities", isAuthenticated, async (req: any, res) => {
+  app.get("/api/conversations/:id/activities", async (req: any, res) => {
     try {
+      // Return empty array for demo users
+      if (!req.isAuthenticated() || !req.user?.claims?.sub) {
+        return res.json([]);
+      }
+      
       const conversationId = parseInt(req.params.id);
       const activities = await storage.getConversationActivities(conversationId);
       res.json(activities);
@@ -138,17 +180,44 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Chat routes
-  app.post("/api/chat", isAuthenticated, async (req: any, res) => {
+  // Chat routes - Implement question limits
+  app.post("/api/chat", async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
       const { conversationId, message } = req.body;
+      
+      // Handle demo users
+      if (!req.isAuthenticated() || !req.user?.claims?.sub) {
+        // Track demo questions in session
+        if (!req.session.demoQuestions) {
+          req.session.demoQuestions = 0;
+        }
+        
+        if (req.session.demoQuestions >= 3) {
+          return res.status(429).json({ 
+            message: "Daily question limit reached. Sign up for free to continue or upgrade to Pro for unlimited questions.",
+            showUpgrade: true
+          });
+        }
+        
+        req.session.demoQuestions++;
+        
+        // Process demo AI response
+        processDemoAIResponse(conversationId, message);
+        return res.json({ 
+          success: true, 
+          message: "Processing your request...", 
+          questionsRemaining: 3 - req.session.demoQuestions 
+        });
+      }
+      
+      const userId = req.user.claims.sub;
       
       // Check user's daily limit
       const user = await storage.getUser(userId);
       if (!user?.isPremium && (user?.dailyQuestionsUsed || 0) >= 3) {
         return res.status(429).json({ 
-          message: "Daily question limit reached. Upgrade to Pro for unlimited questions." 
+          message: "Daily question limit reached. Upgrade to Pro for unlimited questions.",
+          showUpgrade: true
         });
       }
 
@@ -167,7 +236,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Process AI response asynchronously
       processAIResponse(conversationId, message);
       
-      res.json({ success: true, message: "Processing your request..." });
+      const questionsRemaining = user?.isPremium ? -1 : Math.max(0, 3 - newCount);
+      res.json({ 
+        success: true, 
+        message: "Processing your request...", 
+        questionsRemaining 
+      });
     } catch (error) {
       console.error("Error processing chat:", error);
       res.status(500).json({ message: "Failed to process chat" });
@@ -280,6 +354,52 @@ export async function registerRoutes(app: Express): Promise<Server> {
   };
 
   return httpServer;
+}
+
+// Demo AI response function
+async function processDemoAIResponse(conversationId: number, userMessage: string) {
+  // Simulate AI thinking process for demo
+  setTimeout(() => {
+    global.broadcastAIActivity?.(conversationId, {
+      id: Date.now(),
+      conversationId,
+      phase: "research",
+      status: "active",
+      description: "Analyzing your question...",
+      createdAt: new Date().toISOString()
+    });
+  }, 500);
+
+  setTimeout(() => {
+    global.broadcastAIActivity?.(conversationId, {
+      id: Date.now() + 1,
+      conversationId,
+      phase: "analysis",
+      status: "active", 
+      description: "Processing with Sofeia AI...",
+      createdAt: new Date().toISOString()
+    });
+  }, 2000);
+
+  setTimeout(() => {
+    global.broadcastAIActivity?.(conversationId, {
+      id: Date.now() + 2,
+      conversationId,
+      phase: "generation",
+      status: "completed",
+      description: "Response generated successfully",
+      createdAt: new Date().toISOString()
+    });
+    
+    // Send demo response
+    global.broadcastAIActivity?.(conversationId, {
+      type: 'response_complete',
+      data: {
+        role: 'assistant',
+        content: `Thank you for trying Sofeia AI! This is a demo response to: "${userMessage}"\n\nTo unlock the full power of our advanced AI with real-time research, competitor analysis, and unlimited questions, please sign up for free or upgrade to Pro.\n\n**Features you'll get:**\n- Advanced C.R.A.F.T framework content creation\n- Real-time keyword research with Perplexity API\n- Google AI Overview optimization\n- Live competitor analysis\n- Unlimited questions (Pro plan)\n\nReady to experience the real Sofeia AI?`
+      }
+    });
+  }, 4000);
 }
 
 async function processAIResponse(conversationId: number, userMessage: string) {

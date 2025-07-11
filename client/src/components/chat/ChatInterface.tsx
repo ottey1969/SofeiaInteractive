@@ -60,17 +60,44 @@ export default function ChatInterface({
   const sendMessageMutation = useMutation({
     mutationFn: async ({ conversationId, message }: { conversationId: number; message: string }) => {
       const response = await apiRequest("POST", "/api/chat", { conversationId, message });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(`${response.status}: ${errorData.message}`);
+      }
       return response.json();
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       setMessage("");
       setIsTyping(true);
       onMessageSent();
+      
+      // Show question limit warning if applicable
+      if (data.questionsRemaining !== undefined && data.questionsRemaining <= 1) {
+        toast({
+          title: "Question Limit Warning",
+          description: `You have ${data.questionsRemaining} question${data.questionsRemaining === 1 ? '' : 's'} remaining today. Upgrade to Pro for unlimited questions.`,
+          variant: "destructive",
+        });
+      }
       
       // Stop typing indicator after a delay
       setTimeout(() => setIsTyping(false), 30000);
     },
     onError: (error: any) => {
+      if (error.message.includes('429')) {
+        // Show upgrade modal for question limit
+        const upgradeModal = document.querySelector('[data-upgrade-modal]') as HTMLButtonElement;
+        if (upgradeModal) {
+          upgradeModal.click();
+        } else {
+          toast({
+            title: "Daily Limit Reached",
+            description: "You've used all 3 daily questions. Upgrade to Pro for unlimited access!",
+            variant: "destructive",
+          });
+        }
+        return;
+      }
       if (isUnauthorizedError(error)) {
         toast({
           title: "Unauthorized",

@@ -4,12 +4,15 @@ import Header from "@/components/layout/Header";
 import ChatHistory from "@/components/chat/ChatHistory";
 import AIActivityFeed from "@/components/chat/AIActivityFeed";
 import ChatInterface from "@/components/chat/ChatInterface";
+import PaymentModal from "@/components/modals/PaymentModal";
+import { Button } from "@/components/ui/button";
 import type { Conversation, Message, AIActivity, WebSocketMessage } from "@/types";
 
 export default function Home() {
   const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null);
   const [socket, setSocket] = useState<WebSocket | null>(null);
   const [aiActivities, setAiActivities] = useState<AIActivity[]>([]);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
   
   // Check for demo mode
   const isDemoMode = typeof window !== 'undefined' && sessionStorage.getItem('demo_mode') === 'true';
@@ -184,6 +187,21 @@ export default function Home() {
           </div>
         </div>
       </div>
+
+      {/* Hidden trigger for payment modal */}
+      <Button
+        data-upgrade-modal
+        className="hidden"
+        onClick={() => setShowPaymentModal(true)}
+      >
+        Hidden Trigger
+      </Button>
+
+      {/* Payment Modal */}
+      <PaymentModal 
+        open={showPaymentModal}
+        onOpenChange={setShowPaymentModal}
+      />
     </div>
   );
 }
