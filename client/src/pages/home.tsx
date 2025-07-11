@@ -10,10 +10,14 @@ export default function Home() {
   const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null);
   const [socket, setSocket] = useState<WebSocket | null>(null);
   const [aiActivities, setAiActivities] = useState<AIActivity[]>([]);
+  
+  // Check for demo mode
+  const isDemoMode = typeof window !== 'undefined' && sessionStorage.getItem('demo_mode') === 'true';
 
-  // Fetch conversations
+  // Fetch conversations (skip in demo mode)
   const { data: conversations = [], refetch: refetchConversations } = useQuery({
     queryKey: ["/api/conversations"],
+    enabled: !isDemoMode,
   });
 
   // Fetch messages for selected conversation
@@ -101,11 +105,30 @@ export default function Home() {
     <div className="h-screen flex flex-col bg-slate-900">
       <Header />
       
+      {/* Demo Mode Banner */}
+      {isDemoMode && (
+        <div className="bg-yellow-600/20 border-b border-yellow-500/30 px-6 py-2">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <div className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></div>
+              <span className="text-yellow-400 text-sm font-medium">Demo Mode Active</span>
+              <span className="text-yellow-300/70 text-sm">- Limited functionality for testing</span>
+            </div>
+            <button 
+              onClick={() => { sessionStorage.removeItem('demo_mode'); window.location.reload(); }}
+              className="text-yellow-400 hover:text-yellow-300 text-sm underline"
+            >
+              Exit Demo
+            </button>
+          </div>
+        </div>
+      )}
+      
       <div className="flex flex-1 overflow-hidden">
         {/* Left Sidebar - Chat History */}
         <div className="w-1/3 bg-slate-800 border-r border-slate-700 flex flex-col">
           <ChatHistory 
-            conversations={conversations}
+            conversations={isDemoMode ? [] : conversations}
             selectedConversation={selectedConversation}
             onSelectConversation={setSelectedConversation}
             onNewConversation={handleNewConversation}

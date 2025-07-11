@@ -2,8 +2,62 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Brain, Search, TrendingUp, Shield, Zap, Users } from "lucide-react";
+import { useLocation } from "wouter";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Landing() {
+  const [, setLocation] = useLocation();
+  const { toast } = useToast();
+
+  const handleLogin = async () => {
+    try {
+      // Try to initiate login
+      window.location.href = '/api/login';
+    } catch (error) {
+      console.error('Login error:', error);
+      toast({
+        title: "Login Issue",
+        description: "Having trouble logging in. Please try refreshing the page or contact support.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleStartWriting = async () => {
+    try {
+      // Check if user might already be authenticated
+      const response = await fetch('/api/auth/user');
+      if (response.ok) {
+        // User is authenticated, redirect to home
+        setLocation('/');
+      } else {
+        // Show options to user
+        toast({
+          title: "Authentication Required",
+          description: "Redirecting to login. If login fails, try the demo mode.",
+        });
+        window.location.href = '/api/login';
+      }
+    } catch (error) {
+      // Fallback to login
+      toast({
+        title: "Connecting...",
+        description: "Attempting to authenticate. If this fails, we'll enable demo mode.",
+      });
+      window.location.href = '/api/login';
+    }
+  };
+
+  const handleDemo = () => {
+    toast({
+      title: "Demo Mode",
+      description: "Opening demo interface with limited functionality.",
+    });
+    // Create a temporary session for demo
+    sessionStorage.setItem('demo_mode', 'true');
+    setLocation('/');
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
       {/* Header */}
@@ -21,7 +75,7 @@ export default function Landing() {
             </div>
             
             <Button 
-              onClick={() => window.location.href = '/api/login'}
+              onClick={handleLogin}
               className="bg-indigo-600 hover:bg-indigo-700"
             >
               Sign In
@@ -53,7 +107,7 @@ export default function Landing() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
             <Button 
               size="lg" 
-              onClick={() => window.location.href = '/api/login'}
+              onClick={handleStartWriting}
               className="bg-indigo-600 hover:bg-indigo-700 text-lg px-8 py-3"
             >
               Start Writing with AI
@@ -61,9 +115,10 @@ export default function Landing() {
             <Button 
               size="lg" 
               variant="outline" 
+              onClick={handleDemo}
               className="border-slate-600 text-slate-300 hover:bg-slate-800 text-lg px-8 py-3"
             >
-              Watch Demo
+              Try Demo
             </Button>
           </div>
 
@@ -270,7 +325,7 @@ export default function Landing() {
         <div className="text-center mt-12">
           <Button 
             size="lg" 
-            onClick={() => window.location.href = '/api/login'}
+            onClick={handleStartWriting}
             className="bg-indigo-600 hover:bg-indigo-700 text-lg px-8 py-3"
           >
             Get Started Free

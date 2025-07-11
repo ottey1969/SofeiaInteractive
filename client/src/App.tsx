@@ -14,10 +14,13 @@ import CookieBanner from "@/components/CookieBanner";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
+  
+  // Check for demo mode
+  const isDemoMode = typeof window !== 'undefined' && sessionStorage.getItem('demo_mode') === 'true';
 
   return (
     <Switch>
-      {isLoading || !isAuthenticated ? (
+      {(isLoading || !isAuthenticated) && !isDemoMode ? (
         <>
           <Route path="/" component={Landing} />
           <Route path="/privacy" component={Privacy} />
