@@ -8,6 +8,7 @@ import { Send, Brain, User, Shield } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { isUnauthorizedError } from "@/lib/authUtils";
 import { apiRequest } from "@/lib/queryClient";
+import { responseHandler, type MessageType } from "@/utils/ResponseHandler";
 import type { Conversation, Message } from "@/types";
 
 interface ChatInterfaceProps {
@@ -39,9 +40,11 @@ export default function ChatInterface({
       
       // Send the stored message to the new conversation
       if (message.trim()) {
+        const messageType = responseHandler.categorizeMessage(message);
         sendMessageMutation.mutate({
           conversationId: newConversation.id,
-          message
+          message,
+          messageType
         });
       }
     },
@@ -66,8 +69,8 @@ export default function ChatInterface({
   });
 
   const sendMessageMutation = useMutation({
-    mutationFn: async ({ conversationId, message }: { conversationId: number; message: string }) => {
-      const response = await apiRequest("POST", "/api/chat", { conversationId, message });
+    mutationFn: async ({ conversationId, message, messageType }: { conversationId: number; message: string; messageType?: MessageType }) => {
+      const response = await apiRequest("POST", "/api/chat", { conversationId, message, messageType });
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(`${response.status}: ${errorData.message}`);
@@ -139,6 +142,10 @@ export default function ChatInterface({
   const handleSendMessage = async () => {
     if (!message.trim() || sendMessageMutation.isPending || createConversationMutation.isPending) return;
 
+    // Categorize the message using ResponseHandler
+    const messageType = responseHandler.categorizeMessage(message);
+    console.log(`🔄 Frontend categorized message "${message}" as: ${messageType}`);
+
     if (!conversation) {
       // Create a new conversation first
       const title = message.slice(0, 50) + (message.length > 50 ? "..." : "");
@@ -146,7 +153,8 @@ export default function ChatInterface({
     } else {
       sendMessageMutation.mutate({
         conversationId: conversation.id,
-        message
+        message,
+        messageType
       });
     }
   };
