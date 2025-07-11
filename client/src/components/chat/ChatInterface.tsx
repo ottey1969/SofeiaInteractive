@@ -14,7 +14,7 @@ interface ChatInterfaceProps {
   conversation: Conversation | null;
   messages: Message[];
   onConversationCreated: (conversation: Conversation) => void;
-  onMessageSent: () => void;
+  onMessageSent: (userMessage?: string) => void;
 }
 
 export default function ChatInterface({
@@ -75,9 +75,10 @@ export default function ChatInterface({
       return response.json();
     },
     onSuccess: (data) => {
+      const sentMessage = message;
       setMessage("");
       setIsTyping(true);
-      onMessageSent();
+      onMessageSent(sentMessage);
       
       // Show question limit warning if applicable
       if (data.questionsRemaining !== undefined && data.questionsRemaining <= 1) {

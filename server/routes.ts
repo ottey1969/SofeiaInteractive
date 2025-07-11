@@ -391,12 +391,20 @@ async function processDemoAIResponse(conversationId: number, userMessage: string
       createdAt: new Date().toISOString()
     });
     
-    // Send demo response
+    // Send demo response via WebSocket
     global.broadcastAIActivity?.(conversationId, {
       type: 'response_complete',
-      data: {
+      message: {
+        id: Date.now() + 3,
+        conversationId,
         role: 'assistant',
-        content: `Thank you for trying Sofeia AI! This is a demo response to: "${userMessage}"\n\nTo unlock the full power of our advanced AI with real-time research, competitor analysis, and unlimited questions, please sign up for free or upgrade to Pro.\n\n**Features you'll get:**\n- Advanced C.R.A.F.T framework content creation\n- Real-time keyword research with Perplexity API\n- Google AI Overview optimization\n- Live competitor analysis\n- Unlimited questions (Pro plan)\n\nReady to experience the real Sofeia AI?`
+        content: `Hello! I'm Sofeia AI. For "${userMessage}", here's my response:\n\n${userMessage.toLowerCase().includes('hello') || userMessage.toLowerCase().includes('hi') ? 
+          'Hello! I\'m ready to help you with content strategy, SEO optimization, and keyword research. What would you like to work on today?' :
+          userMessage.toLowerCase().includes('seo') || userMessage.toLowerCase().includes('content') ?
+          'I can help you with comprehensive SEO content strategy. This includes keyword research, competitor analysis, content optimization, and Google AI Overview targeting. Would you like me to analyze a specific topic or help you develop a content plan?' :
+          'I\'m here to assist with content creation, SEO strategy, and digital marketing optimization. I can provide keyword research, competitor analysis, and help optimize your content for search engines. What specific challenge can I help you solve?'
+        }\n\n**Demo Mode:** This is a simplified response. Sign up for the full Sofeia AI experience with:\n- Advanced C.R.A.F.T framework content creation\n- Real-time keyword research\n- Live competitor analysis\n- Unlimited questions`,
+        createdAt: new Date().toISOString()
       }
     });
   }, 4000);

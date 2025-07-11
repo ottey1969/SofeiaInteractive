@@ -13,6 +13,8 @@ export default function Home() {
   const [socket, setSocket] = useState<WebSocket | null>(null);
   const [aiActivities, setAiActivities] = useState<AIActivity[]>([]);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [demoMessages, setDemoMessages] = useState<Message[]>([]);
+  const [isTyping, setIsTyping] = useState(false);
   
   // Check for demo mode
   const isDemoMode = typeof window !== 'undefined' && sessionStorage.getItem('demo_mode') === 'true';
@@ -24,10 +26,13 @@ export default function Home() {
   });
 
   // Fetch messages for selected conversation
-  const { data: messages = [], refetch: refetchMessages } = useQuery({
+  const { data: fetchedMessages = [], refetch: refetchMessages } = useQuery({
     queryKey: ["/api/conversations", selectedConversation?.id, "messages"],
-    enabled: !!selectedConversation,
+    enabled: !!selectedConversation && !isDemoMode,
   });
+
+  // Combine fetched messages with demo messages for demo mode
+  const messages = isDemoMode ? demoMessages : fetchedMessages;
 
   // Fetch AI activities for selected conversation
   const { data: activities = [], refetch: refetchActivities } = useQuery({
@@ -65,8 +70,22 @@ export default function Home() {
           setAiActivities(prev => [...prev, message.data]);
           refetchActivities();
         } else if (message.type === 'response_complete') {
-          refetchMessages();
-          refetchActivities();
+          // For demo mode, add the message directly to avoid database calls
+          if (message.message && isDemoMode) {
+            setDemoMessages(prev => [...prev, message.message]);
+            setAiActivities(prev => [...prev, {
+              id: Date.now(),
+              conversationId: message.message.conversationId,
+              phase: 'generation',
+              status: 'completed',
+              description: 'Response delivered successfully',
+              createdAt: new Date().toISOString()
+            }]);
+          } else {
+            refetchMessages();
+            refetchActivities();
+          }
+          setIsTyping(false);
         }
       } catch (error) {
         console.error('WebSocket message parsing error:', error);
@@ -98,6 +117,8 @@ export default function Home() {
   const handleNewConversation = () => {
     setSelectedConversation(null);
     setAiActivities([]);
+    setDemoMessages([]);
+    setIsTyping(false);
   };
 
   const handleConversationCreated = (conversation: Conversation) => {
@@ -105,7 +126,18 @@ export default function Home() {
     refetchConversations();
   };
 
-  const handleMessageSent = () => {
+  const handleMessageSent = (userMessage?: string) => {
+    if (isDemoMode && userMessage && selectedConversation) {
+      // Add user message to demo messages immediately
+      setDemoMessages(prev => [...prev, {
+        id: Date.now(),
+        conversationId: selectedConversation.id,
+        role: 'user',
+        content: userMessage,
+        createdAt: new Date().toISOString()
+      }]);
+      setIsTyping(true);
+    }
     refetchMessages();
   };
 
