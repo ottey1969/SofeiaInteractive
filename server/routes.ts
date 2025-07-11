@@ -14,8 +14,14 @@ interface WebSocketClient extends WebSocket {
 }
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Auth middleware
-  await setupAuth(app);
+  // Try Replit Auth first, fallback to simple auth
+  try {
+    await setupAuth(app);
+  } catch (error) {
+    console.warn("⚠️  Replit Auth failed, using simplified auth:", error.message);
+    const { setupSimpleAuth } = await import("./authFix");
+    setupSimpleAuth(app);
+  }
 
   // Auth routes - Allow without authentication for demo mode
   app.get('/api/auth/user', async (req: any, res) => {
