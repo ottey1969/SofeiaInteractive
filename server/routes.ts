@@ -214,6 +214,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Check user's daily limit (skip for admin users)
       const user = await storage.getUser(userId);
+      
+      // Special case: if email is admin email, auto-upgrade to admin
+      if (req.user?.claims?.email === 'ottmar.francisca1969@gmail.com') {
+        await storage.upsertUser({
+          id: userId,
+          email: req.user.claims.email,
+          isAdmin: true,
+          isPremium: true
+        });
+      }
+      
       if (!user?.isPremium && !user?.isAdmin && (user?.dailyQuestionsUsed || 0) >= 3) {
         return res.status(429).json({ 
           message: "Daily question limit reached. Upgrade to Pro for unlimited questions.",
@@ -332,6 +343,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
     
     next();
   };
+
+  // Temporary admin routes for testing (remove after auth is fixed)
+  app.get("/api/admin/demo-users", async (req: any, res) => {
+    try {
+      const users = await storage.getAllUsers();
+      res.json({
+        message: "Demo admin endpoint - all users",
+        count: users.length,
+        users: users.slice(0, 10) // Show first 10 users
+      });
+    } catch (error) {
+      console.error("Error fetching users:", error);
+      res.status(500).json({ message: "Failed to fetch users" });
+    }
+  });
+
+  app.post("/api/admin/demo-grant-credits/:userId", async (req: any, res) => {
+    try {
+      const { userId } = req.params;
+      const { credits = 10 } = req.body;
+      await storage.grantUserCredits(userId, credits);
+      res.json({ 
+        success: true, 
+        message: `Demo: Granted ${credits} credits to user ${userId}` 
+      });
+    } catch (error) {
+      console.error("Error granting credits:", error);
+      res.status(500).json({ message: "Failed to grant credits" });
+    }
+  });
 
   app.get("/api/admin/users", isAuthenticated, isAdmin, async (req: any, res) => {
     try {

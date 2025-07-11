@@ -40,12 +40,21 @@ export default function Landing() {
               </div>
             </div>
             
-            <Button 
-              onClick={handleLogin}
-              className="bg-indigo-600 hover:bg-indigo-700"
-            >
-              Get Started
-            </Button>
+            <div className="flex gap-2">
+              <Button 
+                onClick={handleLogin}
+                className="bg-indigo-600 hover:bg-indigo-700"
+              >
+                Login
+              </Button>
+              <Button 
+                onClick={handleDemo}
+                variant="outline"
+                className="border-slate-600 text-slate-300 hover:bg-slate-800"
+              >
+                Try Demo
+              </Button>
+            </div>
           </div>
         </div>
       </header>
@@ -76,7 +85,7 @@ export default function Landing() {
               onClick={handleStartWriting}
               className="bg-indigo-600 hover:bg-indigo-700 text-lg px-8 py-3"
             >
-              Start Writing with AI
+              Login to Start Writing
             </Button>
             <Button 
               size="lg" 
@@ -84,8 +93,14 @@ export default function Landing() {
               onClick={handleDemo}
               className="border-slate-600 text-slate-300 hover:bg-slate-800 text-lg px-8 py-3"
             >
-              Try Demo
+              Try Demo (No Login)
             </Button>
+          </div>
+          
+          <div className="text-center mb-8">
+            <p className="text-sm text-slate-500">
+              Admin users (ottmar.francisca1969@gmail.com) get unlimited access after login
+            </p>
           </div>
 
           {/* AI Thinking Visualization */}
