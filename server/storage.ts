@@ -22,8 +22,8 @@ export interface IStorage {
   // User operations
   getUser(id: string): Promise<User | undefined>;
   upsertUser(user: UpsertUser): Promise<User>;
-  updateUserQuestionCount(userId: string, count: number, date: Date): Promise<void>;
-  resetDailyQuestions(userId: string): Promise<void>;
+  updateUserQuestionCount(userId: string, count: number): Promise<void>;
+  resetMonthlyQuestions(userId: string): Promise<void>;
   
   // Admin operations
   getAllUsers(): Promise<User[]>;
@@ -101,22 +101,25 @@ export class DatabaseStorage implements IStorage {
     return user;
   }
 
-  async updateUserQuestionCount(userId: string, count: number, date: Date): Promise<void> {
+  async updateUserQuestionCount(userId: string, count: number): Promise<void> {
+    const currentMonth = new Date().toISOString().slice(0, 7); // YYYY-MM format
     await db
       .update(users)
       .set({
-        dailyQuestionsUsed: count,
-        lastQuestionDate: date,
+        monthlyQuestionsUsed: count,
+        currentMonth: currentMonth,
         updatedAt: new Date(),
       })
       .where(eq(users.id, userId));
   }
 
-  async resetDailyQuestions(userId: string): Promise<void> {
+  async resetMonthlyQuestions(userId: string): Promise<void> {
+    const currentMonth = new Date().toISOString().slice(0, 7); // YYYY-MM format
     await db
       .update(users)
       .set({
-        dailyQuestionsUsed: 0,
+        monthlyQuestionsUsed: 0,
+        currentMonth: currentMonth,
         updatedAt: new Date(),
       })
       .where(eq(users.id, userId));

@@ -23,12 +23,12 @@ const pricingPlans: PricingPlan[] = [
     period: "forever",
     description: "Perfect for trying out Sofeia AI",
     features: [
-      { name: "3 questions per day", included: true },
+      { name: "3 questions per month", included: true },
       { name: "Basic SEO insights", included: true },
       { name: "Simple keyword research", included: true },
       { name: "Email support", included: true },
       { name: "Advanced competitor analysis", included: false },
-      { name: "Unlimited questions", included: false },
+      { name: "Bulk content generation", included: false },
       { name: "Priority support", included: false },
       { name: "Custom integrations", included: false }
     ],
@@ -40,7 +40,7 @@ const pricingPlans: PricingPlan[] = [
     period: "month",
     description: "For content creators and marketers",
     features: [
-      { name: "150 questions per day", included: true },
+      { name: "150 questions per month", included: true },
       { name: "Advanced AI analysis", included: true },
       { name: "Bulk content generation", included: true },
       { name: "Comprehensive keyword research", included: true },
@@ -59,7 +59,7 @@ const pricingPlans: PricingPlan[] = [
     description: "For agencies and teams",
     features: [
       { name: "Everything in Pro", included: true },
-      { name: "Unlimited questions", included: true },
+      { name: "500 questions per month", included: true },
       { name: "Bulk content generation", included: true },
       { name: "Team collaboration", included: true },
       { name: "White-label reports", included: true },

@@ -40,8 +40,9 @@ export default function SettingsModal({ open, onOpenChange, user }: SettingsModa
                 <div>
                   <p className="text-slate-200 font-medium">Subscription Plan</p>
                   <p className="text-slate-400 text-sm">
-                    {user?.isAdmin || user?.subscriptionType?.includes('agency') ? 'Agency Plan - Unlimited questions + bulk features' :
-                     user?.isPremium ? 'Pro Plan - 150 questions/day + bulk features' : 'Free Plan - 3 questions per day'}
+                    {user?.isAdmin ? 'Admin - Unlimited access' :
+                     user?.subscriptionType?.includes('agency') ? 'Agency Plan - 500 questions/month + bulk features' :
+                     user?.isPremium ? 'Pro Plan - 150 questions/month + bulk features' : 'Free Plan - 3 questions per day'}
                   </p>
                 </div>
                 <Badge variant={user?.isPremium ? "default" : "secondary"} 
@@ -52,13 +53,14 @@ export default function SettingsModal({ open, onOpenChange, user }: SettingsModa
               
               <div className="flex items-center justify-between bg-slate-700/50 rounded-lg p-4">
                 <div>
-                  <p className="text-slate-200 font-medium">Daily Question Usage</p>
+                  <p className="text-slate-200 font-medium">Monthly Question Usage</p>
                   <p className="text-slate-400 text-sm">
-                    {user?.isAdmin || user?.subscriptionType?.includes('agency')
-                      ? 'Unlimited questions available' 
+                    {user?.isAdmin ? 'Unlimited questions available' 
+                      : user?.subscriptionType?.includes('agency')
+                        ? `${user?.monthlyQuestionsUsed || 0}/500 questions used this month`
                       : user?.isPremium 
-                        ? `${user?.dailyQuestionsUsed || 0}/150 questions used today`
-                        : `${user?.dailyQuestionsUsed || 0}/3 questions used today`
+                        ? `${user?.monthlyQuestionsUsed || 0}/150 questions used this month`
+                        : `${user?.monthlyQuestionsUsed || 0}/3 questions used this month`
                     }
                   </p>
                 </div>

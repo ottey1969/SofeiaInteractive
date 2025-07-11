@@ -27,7 +27,7 @@ export class SubscriptionManager {
       
       case 'pro':
         return {
-          dailyQuestions: 150, // 150 questions per day
+          dailyQuestions: 150, // 150 questions per month
           hasUnlimitedQuestions: false,
           features: [
             'bulk_generation',
@@ -42,11 +42,13 @@ export class SubscriptionManager {
       
       case 'agency':
         return {
-          dailyQuestions: -1, // unlimited
-          hasUnlimitedQuestions: true,
+          dailyQuestions: 500, // 500 questions per month
+          hasUnlimitedQuestions: false,
           features: [
-            'unlimited_questions',
             'bulk_generation',
+            'advanced_seo',
+            'comprehensive_keywords',
+            'competitor_analysis',
             'team_collaboration',
             'whitelabel_reports',
             'api_access',

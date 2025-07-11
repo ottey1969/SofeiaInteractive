@@ -16,12 +16,12 @@ export default function Header() {
   });
 
   // Calculate questions remaining based on subscription type
-  const isAgency = user?.subscriptionType?.includes('agency') || user?.isAdmin;
-  const dailyLimit = user?.isAdmin || isAgency ? -1 : (user?.isPremium ? 150 : 3);
-  const questionsUsed = user?.dailyQuestionsUsed || 0;
+  const isAgency = user?.subscriptionType?.includes('agency');
+  const monthlyLimit = user?.isAdmin ? -1 : (isAgency ? 500 : (user?.isPremium ? 150 : 3));
+  const questionsUsed = user?.monthlyQuestionsUsed || 0;
   
-  const questionsRemaining = dailyLimit === -1 ? "∞" : Math.max(0, dailyLimit - questionsUsed);
-  const isLimitReached = dailyLimit !== -1 && questionsUsed >= dailyLimit;
+  const questionsRemaining = monthlyLimit === -1 ? "∞" : Math.max(0, monthlyLimit - questionsUsed);
+  const isLimitReached = monthlyLimit !== -1 && questionsUsed >= monthlyLimit;
 
   return (
     <>
@@ -51,7 +51,7 @@ export default function Header() {
               <i className="fas fa-coins text-amber-400 text-xs"></i>
               <span className={`text-sm ${isLimitReached ? 'text-red-400' : 'text-amber-400'}`}>
                 Questions: {questionsRemaining}/
-                {dailyLimit === -1 ? "∞" : dailyLimit}
+                {monthlyLimit === -1 ? "∞" : monthlyLimit}
               </span>
             </div>
             

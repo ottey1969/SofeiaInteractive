@@ -11,7 +11,12 @@ ContentScale is an advanced AI-powered content writing platform that provides re
 - Admin System: Complete user management with credit granting and subscription oversight
 - Subscription Limit Modal: Professional upgrade prompts when users reach daily limits
 - Database Integration: Full subscription and user management schema with proper relationships
-- **CORRECTED PRICING STRUCTURE (July 11, 2025):** Fixed Pro plan to 150 questions/day + bulk features, Agency plan to unlimited questions + bulk features. Backend properly enforces these limits.
+- **FINAL PRICING STRUCTURE (July 11, 2025):** Updated to monthly question tracking with automatic reset each month:
+  * Free: 3 questions/month
+  * Pro: 150 questions/month + bulk features ($29/month)
+  * Agency: 500 questions/month + bulk features ($99/month)
+  * Admin: Unlimited access
+- **Monthly Reset System:** Questions reset automatically each month (no rollover) with proper tracking via monthlyQuestionsUsed and currentMonth fields.
 - **Government Statistics Integration:** Enhanced both Anthropic and Perplexity services to prioritize real government statistics and official sources
 - **Country-Specific Data:** Added comprehensive country-specific government source mapping for 8 major markets (US, UK, Canada, Australia, Germany, France, Netherlands, Spain)
 - **High-Authority Sources Only:** Configured AI to avoid competitors and low-DR sites, focusing exclusively on .gov, .edu, and official international organization sources

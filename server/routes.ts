@@ -150,12 +150,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
       
-      // Check daily limits for Pro users (Agency and Admin have unlimited)
-      if (isPremium && !isAgency && !isAdmin) {
-        const dailyQuestionsUsed = user?.dailyQuestionsUsed || 0;
-        if (dailyQuestionsUsed >= 150) {
+      // Check monthly limits for Pro and Agency users (Admin has unlimited)
+      if (isPremium && !isAdmin) {
+        // Check if we need to reset monthly questions
+        const currentMonth = new Date().toISOString().slice(0, 7); // YYYY-MM format
+        let monthlyQuestionsUsed = user?.monthlyQuestionsUsed || 0;
+        
+        // Reset questions if it's a new month
+        if (user?.currentMonth !== currentMonth) {
+          monthlyQuestionsUsed = 0;
+          await storage.resetMonthlyQuestions(userId);
+        }
+        
+        if (isAgency && monthlyQuestionsUsed >= 500) {
           return res.status(429).json({ 
-            message: "Daily question limit reached (150/day). Upgrade to Agency for unlimited bulk generation.",
+            message: "Monthly question limit reached (500/month). Contact support for higher limits.",
+            showUpgrade: false
+          });
+        } else if (!isAgency && monthlyQuestionsUsed >= 150) {
+          return res.status(429).json({ 
+            message: "Monthly question limit reached (150/month). Upgrade to Agency for 500 questions/month.",
             showUpgrade: true
           });
         }
@@ -465,29 +479,43 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
       
-      // Check daily limits based on subscription type
-      const dailyQuestionsUsed = user?.dailyQuestionsUsed || 0;
+      // Check if we need to reset monthly questions
+      const currentMonth = new Date().toISOString().slice(0, 7); // YYYY-MM format
+      let monthlyQuestionsUsed = user?.monthlyQuestionsUsed || 0;
+      
+      // Reset questions if it's a new month
+      if (user?.currentMonth !== currentMonth) {
+        monthlyQuestionsUsed = 0;
+        await storage.resetMonthlyQuestions(userId);
+      }
       
       if (user?.isAdmin) {
         // Admin users have unlimited access
       } else if (!user?.isPremium) {
-        // Free users: 3 questions per day
-        if (dailyQuestionsUsed >= 3) {
+        // Free users: 3 questions per month
+        if (monthlyQuestionsUsed >= 3) {
           return res.status(429).json({ 
-            message: "Daily question limit reached. Upgrade to Pro for 150 questions per day + bulk features.",
+            message: "Monthly question limit reached (3/month). Upgrade to Pro for 150 questions/month + bulk features.",
             showUpgrade: true
           });
         }
       } else if (user?.isPremium && !user?.subscriptionType?.includes('agency')) {
-        // Pro users: 150 questions per day
-        if (dailyQuestionsUsed >= 150) {
+        // Pro users: 150 questions per month
+        if (monthlyQuestionsUsed >= 150) {
           return res.status(429).json({ 
-            message: "Daily question limit reached (150/day). Upgrade to Agency for unlimited questions.",
+            message: "Monthly question limit reached (150/month). Upgrade to Agency for 500 questions/month.",
             showUpgrade: true
           });
         }
+      } else if (user?.subscriptionType?.includes('agency')) {
+        // Agency users: 500 questions per month
+        if (monthlyQuestionsUsed >= 500) {
+          return res.status(429).json({ 
+            message: "Monthly question limit reached (500/month). Contact support for higher limits.",
+            showUpgrade: false
+          });
+        }
       }
-      // Agency users have unlimited questions (no limit check)
 
       // Create user message
       await storage.createMessage(conversationId, {
@@ -498,9 +526,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Update user's question count (skip for admin users)
       if (!user?.isAdmin) {
-        const today = new Date();
-        const newCount = (user?.dailyQuestionsUsed || 0) + 1;
-        await storage.updateUserQuestionCount(userId, newCount, today);
+        const newCount = monthlyQuestionsUsed + 1;
+        await storage.updateUserQuestionCount(userId, newCount);
       }
 
       // Process AI response asynchronously with message type
@@ -508,12 +535,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Calculate questions remaining based on subscription type
       let questionsRemaining;
-      if (user?.isAdmin || user?.subscriptionType?.includes('agency')) {
-        questionsRemaining = -1; // unlimited
+      if (user?.isAdmin) {
+        questionsRemaining = -1; // unlimited for admin
+      } else if (user?.subscriptionType?.includes('agency')) {
+        questionsRemaining = Math.max(0, 500 - monthlyQuestionsUsed - 1);
       } else if (user?.isPremium) {
-        questionsRemaining = Math.max(0, 150 - (user?.dailyQuestionsUsed || 0) - 1);
+        questionsRemaining = Math.max(0, 150 - monthlyQuestionsUsed - 1);
       } else {
-        questionsRemaining = Math.max(0, 3 - (user?.dailyQuestionsUsed || 0) - 1);
+        questionsRemaining = Math.max(0, 3 - monthlyQuestionsUsed - 1);
       }
       
       res.json({ 

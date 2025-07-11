@@ -34,8 +34,10 @@ export const users = pgTable("users", {
   profileImageUrl: varchar("profile_image_url"),
   isPremium: boolean("is_premium").default(false),
   isAdmin: boolean("is_admin").default(false),
-  dailyQuestionsUsed: integer("daily_questions_used").default(0),
-  lastQuestionDate: timestamp("last_question_date"),
+  subscriptionType: varchar("subscription_type"),
+  monthlyQuestionsUsed: integer("monthly_questions_used").default(0),
+  currentMonth: varchar("current_month"), // YYYY-MM format
+  totalCredits: integer("total_credits").default(0),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
