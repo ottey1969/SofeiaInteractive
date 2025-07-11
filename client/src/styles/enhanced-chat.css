@@ -81,48 +81,6 @@
     border-left-color: #6c5ce7;
 }
 
-.sidebar-footer {
-    padding: 20px;
-    border-top: 1px solid #2a2a4a;
-}
-
-.user-info {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.plan-info {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-
-.plan-name {
-    font-weight: 600;
-    color: #6c5ce7;
-}
-
-.usage {
-    font-size: 12px;
-    color: #8a8a9a;
-}
-
-.upgrade-btn {
-    padding: 8px 16px;
-    background: #e17055;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 12px;
-    cursor: pointer;
-    transition: background 0.2s ease;
-}
-
-.upgrade-btn:hover {
-    background: #d63031;
-}
-
 .main-chat {
     flex: 1;
     display: flex;
@@ -134,50 +92,6 @@
     padding: 20px;
     border-bottom: 1px solid #2a2a4a;
     background: #1a1a2e;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.ai-status h2 {
-    margin: 0;
-    font-size: 20px;
-    color: #6c5ce7;
-}
-
-.ai-status p {
-    margin: 4px 0 0 0;
-    font-size: 14px;
-    color: #8a8a9a;
-}
-
-.api-integrations {
-    display: flex;
-    gap: 16px;
-}
-
-.integration-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-}
-
-.integration-name {
-    font-size: 12px;
-    color: #8a8a9a;
-}
-
-.status {
-    font-size: 10px;
-    padding: 2px 6px;
-    border-radius: 10px;
-    font-weight: 500;
-}
-
-.status.active {
-    background: #00b894;
-    color: white;
 }
 
 .conversation-area {
@@ -187,46 +101,6 @@
     max-width: 800px;
     margin: 0 auto;
     width: 100%;
-}
-
-.welcome-message {
-    text-align: center;
-    padding: 40px 20px;
-}
-
-.welcome-message h3 {
-    margin: 0 0 16px 0;
-    font-size: 24px;
-    color: #6c5ce7;
-}
-
-.welcome-message p {
-    margin: 0 0 32px 0;
-    color: #8a8a9a;
-    line-height: 1.6;
-}
-
-.quick-actions {
-    display: flex;
-    gap: 12px;
-    justify-content: center;
-    flex-wrap: wrap;
-}
-
-.quick-action-btn {
-    padding: 10px 20px;
-    background: #2a2a4a;
-    color: #ffffff;
-    border: none;
-    border-radius: 8px;
-    font-size: 14px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.quick-action-btn:hover {
-    background: #6c5ce7;
-    transform: translateY(-1px);
 }
 
 .message {
@@ -269,85 +143,6 @@
     margin-top: 4px;
 }
 
-.ai-thinking-area {
-    background: #16213e;
-    border-radius: 12px;
-    padding: 20px;
-    margin: 20px;
-    border-left: 4px solid #6c5ce7;
-}
-
-.ai-thinking-area h4 {
-    margin: 0 0 8px 0;
-    color: #6c5ce7;
-}
-
-.ai-thinking-area p {
-    margin: 0;
-    color: #8a8a9a;
-}
-
-.ai-thinking-area .subtitle {
-    font-size: 12px;
-    margin-top: 4px;
-}
-
-.thinking-indicator {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    color: #6c5ce7;
-    font-weight: 500;
-}
-
-.thinking-dots {
-    display: flex;
-    gap: 4px;
-}
-
-.thinking-dot {
-    width: 6px;
-    height: 6px;
-    background: #6c5ce7;
-    border-radius: 50%;
-    animation: thinkingPulse 1.4s infinite ease-in-out;
-}
-
-.thinking-dot:nth-child(2) {
-    animation-delay: 0.2s;
-}
-
-.thinking-dot:nth-child(3) {
-    animation-delay: 0.4s;
-}
-
-.analysis-steps {
-    margin-top: 16px;
-    padding-top: 16px;
-    border-top: 1px solid #2a2a4a;
-}
-
-.step {
-    padding: 8px 0;
-    color: #6a6a8a;
-    font-size: 14px;
-    transition: color 0.3s ease;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.step.active {
-    color: #6c5ce7;
-    font-weight: 500;
-}
-
-.estimated-time {
-    font-size: 12px;
-    color: #8a8a9a;
-    margin-top: 4px;
-}
-
 .input-area {
     padding: 20px;
     border-top: 1px solid #2a2a4a;
@@ -375,7 +170,6 @@
     line-height: 1.5;
     transition: border-color 0.2s ease;
     outline: none;
-    overflow: hidden;
 }
 
 .input-textarea:focus {
@@ -414,14 +208,41 @@
     transform: none;
 }
 
-.input-footer {
-    text-align: center;
-    margin-top: 8px;
+.ai-thinking-area {
+    background: #16213e;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-left: 4px solid #6c5ce7;
 }
 
-.input-hint {
-    font-size: 12px;
-    color: #6a6a8a;
+.thinking-indicator {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #6c5ce7;
+    font-weight: 500;
+}
+
+.thinking-dots {
+    display: flex;
+    gap: 4px;
+}
+
+.thinking-dot {
+    width: 6px;
+    height: 6px;
+    background: #6c5ce7;
+    border-radius: 50%;
+    animation: thinkingPulse 1.4s infinite ease-in-out;
+}
+
+.thinking-dot:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.thinking-dot:nth-child(3) {
+    animation-delay: 0.4s;
 }
 
 .notification {
@@ -448,6 +269,37 @@
     background: #6c5ce7;
 }
 
+.analysis-steps {
+    margin-top: 16px;
+}
+
+.step {
+    padding: 8px 12px;
+    margin: 4px 0;
+    background: #1a1a2e;
+    border-radius: 6px;
+    opacity: 0.6;
+    transition: all 0.3s ease;
+}
+
+.step.active {
+    opacity: 1;
+    background: #2a2a4a;
+    border-left: 3px solid #6c5ce7;
+}
+
+.step.completed {
+    opacity: 0.8;
+    background: #1e3d2f;
+    border-left: 3px solid #00b894;
+}
+
+.estimated-time {
+    font-size: 12px;
+    color: #8a8a9a;
+    margin-top: 4px;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .chat-container {
@@ -472,17 +324,6 @@
     
     .message-content {
         max-width: 90%;
-    }
-    
-    .chat-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 12px;
-    }
-    
-    .api-integrations {
-        align-self: stretch;
-        justify-content: space-between;
     }
 }
 
@@ -518,4 +359,28 @@
         transform: translateX(0);
         opacity: 1;
     }
+}
+
+/* Auto-resize textarea */
+.input-textarea {
+    overflow: hidden;
+}
+
+/* Welcome message styling */
+.welcome-message {
+    text-align: center;
+    padding: 40px 20px;
+    color: #8a8a9a;
+}
+
+.welcome-message h3 {
+    color: #6c5ce7;
+    margin-bottom: 16px;
+    font-size: 24px;
+}
+
+.welcome-message p {
+    line-height: 1.6;
+    max-width: 500px;
+    margin: 0 auto;
 }

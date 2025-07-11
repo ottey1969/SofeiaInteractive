@@ -7,7 +7,8 @@ class ResponseHandler {
             /^(bye|goodbye|see you)/i,
             /^(yes|no|ok|okay)/i,
             /^(what is|what's|define)/i,
-            /^.{1,20}$/  // Very short messages
+            /^(test|testing)/i,
+            /^.{1,15}$/  // Very short messages
         ];
         
         this.complexPatterns = [
@@ -15,7 +16,10 @@ class ResponseHandler {
             /competitor|competition|compare/i,
             /strategy|plan|roadmap/i,
             /seo|optimization|ranking/i,
-            /content creation|write|generate/i
+            /content creation|write|generate/i,
+            /keyword research|keywords/i,
+            /backlinks|link building/i,
+            /serp|search results/i
         ];
     }
 

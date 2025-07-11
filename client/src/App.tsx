@@ -10,6 +10,7 @@ import Home from "@/pages/home";
 import Privacy from "@/pages/privacy";
 import Terms from "@/pages/terms";
 import GDPR from "@/pages/gdpr";
+import Pricing from "@/pages/pricing";
 import AdminPanel from "@/pages/admin";
 import AuthStatus from "@/pages/auth-status";
 import CookieBanner from "@/components/CookieBanner";
@@ -25,6 +26,7 @@ function Router() {
       <Route path="/gdpr" component={GDPR} />
       <Route path="/admin" component={AdminPanel} />
       <Route path="/status" component={AuthStatus} />
+      <Route path="/pricing" component={Pricing} />
       <Route component={NotFound} />
     </Switch>
   );
