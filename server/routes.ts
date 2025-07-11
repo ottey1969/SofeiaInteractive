@@ -1017,9 +1017,13 @@ function categorizeMessage(message: string): 'simple' | 'analysis' | 'complex' {
 async function processDemoAIResponse(conversationId: number, userMessage: string, messageType?: string) {
   const actualMessageType = messageType || categorizeMessage(userMessage);
   
+  console.log(`🔄 Demo AI Response - Message: "${userMessage}" | Type: ${actualMessageType}`);
+  
   if (actualMessageType === 'simple') {
     // Handle simple messages immediately without research phases
     const simpleResponse = getSimpleResponse(userMessage);
+    
+    console.log(`⚡ Simple response for "${userMessage}": ${simpleResponse.substring(0, 50)}...`);
     
     // Store the assistant message first
     try {
@@ -1040,12 +1044,16 @@ async function processDemoAIResponse(conversationId: number, userMessage: string
         type: 'response_complete',
         message: assistantMessage
       });
+      
+      console.log(`✅ Simple response broadcast completed for conversation ${conversationId}`);
     } catch (error) {
       console.error('Error storing simple response:', error);
     }
     return;
   }
 
+  console.log(`🔍 Complex/Analysis response for "${userMessage}" - starting phases...`);
+  
   // Detailed analysis for complex questions
   setTimeout(() => {
     global.broadcastAIActivity?.(conversationId, {
