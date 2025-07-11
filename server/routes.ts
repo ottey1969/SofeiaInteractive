@@ -614,11 +614,11 @@ function categorizeMessage(message: string): 'simple' | 'analysis' | 'complex' {
   
   // Simple patterns - instant response
   const simplePatterns = [
-    /^(hi|hello|hey|good morning|good afternoon|good evening)/,
-    /^(thanks|thank you|thx|ty)/,
-    /^(bye|goodbye|see you)/,
-    /^(yes|no|ok|okay|sure)/,
-    /^(test|testing)/,
+    /^(hi|hello|hey|good morning|good afternoon|good evening)/i,
+    /^(thanks|thank you|thx|ty)/i,
+    /^(bye|goodbye|see you)/i,
+    /^(yes|no|ok|okay|sure)/i,
+    /^(test|testing)/i,
     /^.{1,15}$/ // Very short messages
   ];
   
@@ -628,13 +628,13 @@ function categorizeMessage(message: string): 'simple' | 'analysis' | 'complex' {
   
   // Complex patterns - full analysis with research
   const complexPatterns = [
-    /keyword research|keywords|search volume/,
-    /competitor analysis|competitors|serp analysis/,
-    /backlinks|link building|domain authority/,
-    /market research|industry analysis/,
-    /content strategy|content plan|editorial calendar/,
-    /seo strategy|optimization plan/,
-    /analyze|research|investigate/
+    /keyword research|keywords|search volume/i,
+    /competitor analysis|competitors|serp analysis/i,
+    /backlinks|link building|domain authority/i,
+    /market research|industry analysis/i,
+    /content strategy|content plan|editorial calendar/i,
+    /seo strategy|optimization plan/i,
+    /analyze|research|investigate/i
   ];
   
   if (complexPatterns.some(pattern => pattern.test(trimmed))) {
@@ -664,7 +664,7 @@ async function processDemoAIResponse(conversationId: number, userMessage: string
       
       const assistantMessage = await storage.createMessage(conversationId, {
         role: 'assistant',
-        content: getSimpleResponse(userMessage)
+        content: simpleResponse
       });
       
       // Broadcast the response immediately

@@ -184,8 +184,8 @@ export default function Home() {
       )}
       
       <div className="flex flex-1 overflow-hidden">
-        {/* Left Sidebar - Chat History */}
-        <div className="w-1/3 bg-slate-800 border-r border-slate-700 flex flex-col">
+        {/* Left Sidebar - Chat History (narrower) */}
+        <div className="w-1/4 bg-slate-800 border-r border-slate-700 flex flex-col">
           <ChatHistory 
             conversations={isDemoMode ? [] : conversations}
             selectedConversation={selectedConversation}
