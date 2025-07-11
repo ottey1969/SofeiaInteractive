@@ -347,15 +347,51 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Temporary admin routes for testing (remove after auth is fixed)
   app.get("/api/admin/demo-users", async (req: any, res) => {
     try {
+      const { email, limit = 50, offset = 0 } = req.query;
       const users = await storage.getAllUsers();
+      
+      let filteredUsers = users;
+      if (email) {
+        filteredUsers = users.filter(user => 
+          user.email && user.email.toLowerCase().includes(email.toLowerCase())
+        );
+      }
+      
+      const paginatedUsers = filteredUsers.slice(
+        parseInt(offset), 
+        parseInt(offset) + parseInt(limit)
+      );
+      
       res.json({
         message: "Demo admin endpoint - all users",
-        count: users.length,
-        users: users.slice(0, 10) // Show first 10 users
+        count: filteredUsers.length,
+        total: users.length,
+        users: paginatedUsers,
+        hasMore: parseInt(offset) + parseInt(limit) < filteredUsers.length
       });
     } catch (error) {
       console.error("Error fetching users:", error);
       res.status(500).json({ message: "Failed to fetch users" });
+    }
+  });
+
+  app.get("/api/admin/demo-user-by-email/:email", async (req: any, res) => {
+    try {
+      const { email } = req.params;
+      const users = await storage.getAllUsers();
+      const user = users.find(u => u.email === email);
+      
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      res.json({
+        message: "User found",
+        user
+      });
+    } catch (error) {
+      console.error("Error fetching user by email:", error);
+      res.status(500).json({ message: "Failed to fetch user" });
     }
   });
 
@@ -371,6 +407,71 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error granting credits:", error);
       res.status(500).json({ message: "Failed to grant credits" });
+    }
+  });
+
+  app.post("/api/admin/demo-create-test-users", async (req: any, res) => {
+    try {
+      const testUsers = [
+        {
+          id: "user_admin_ottmar",
+          email: "ottmar.francisca1969@gmail.com",
+          firstName: "Ottmar",
+          lastName: "Francisca",
+          isPremium: true,
+          isAdmin: true,
+          dailyQuestionsUsed: 0
+        },
+        {
+          id: "user_premium_john",
+          email: "john.doe@example.com",
+          firstName: "John",
+          lastName: "Doe",
+          isPremium: true,
+          isAdmin: false,
+          dailyQuestionsUsed: 5
+        },
+        {
+          id: "user_free_jane",
+          email: "jane.smith@example.com",
+          firstName: "Jane",
+          lastName: "Smith",
+          isPremium: false,
+          isAdmin: false,
+          dailyQuestionsUsed: 2
+        },
+        {
+          id: "user_free_mike",
+          email: "mike.johnson@gmail.com",
+          firstName: "Mike",
+          lastName: "Johnson",
+          isPremium: false,
+          isAdmin: false,
+          dailyQuestionsUsed: 3
+        },
+        {
+          id: "user_premium_sarah",
+          email: "sarah.wilson@company.com",
+          firstName: "Sarah",
+          lastName: "Wilson",
+          isPremium: true,
+          isAdmin: false,
+          dailyQuestionsUsed: 15
+        }
+      ];
+
+      for (const userData of testUsers) {
+        await storage.upsertUser(userData);
+      }
+
+      res.json({ 
+        success: true, 
+        message: `Created ${testUsers.length} test users`,
+        users: testUsers.map(u => ({ id: u.id, email: u.email, isPremium: u.isPremium, isAdmin: u.isAdmin }))
+      });
+    } catch (error) {
+      console.error("Error creating test users:", error);
+      res.status(500).json({ message: "Failed to create test users" });
     }
   });
 

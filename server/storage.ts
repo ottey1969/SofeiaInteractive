@@ -65,15 +65,20 @@ export class DatabaseStorage implements IStorage {
       .insert(users)
       .values({
         ...userData,
-        isAdmin: isAdminEmail,
-        isPremium: isAdminEmail, // Admin gets premium automatically
+        isAdmin: userData.isAdmin ?? isAdminEmail,
+        isPremium: userData.isPremium ?? isAdminEmail, // Preserve user's premium status or set admin
       })
       .onConflictDoUpdate({
         target: users.id,
         set: {
-          ...userData,
-          isAdmin: isAdminEmail,
-          isPremium: isAdminEmail,
+          email: userData.email,
+          firstName: userData.firstName,
+          lastName: userData.lastName,
+          profileImageUrl: userData.profileImageUrl,
+          isAdmin: userData.isAdmin ?? isAdminEmail,
+          isPremium: userData.isPremium ?? isAdminEmail,
+          dailyQuestionsUsed: userData.dailyQuestionsUsed,
+          lastQuestionDate: userData.lastQuestionDate,
           updatedAt: new Date(),
         },
       })
