@@ -358,7 +358,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
 // Demo AI response function
 async function processDemoAIResponse(conversationId: number, userMessage: string) {
-  // Simulate AI thinking process for demo
+  const isSimpleQuestion = /^(hi|hello|hey|thanks|thank you|test|ok|yes|no)$/i.test(userMessage.trim());
+  
+  if (isSimpleQuestion) {
+    // Instant response for simple questions
+    setTimeout(() => {
+      global.broadcastAIActivity?.(conversationId, {
+        type: 'response_complete',
+        message: {
+          id: Date.now(),
+          conversationId,
+          role: 'assistant',
+          content: getSimpleResponse(userMessage),
+          createdAt: new Date().toISOString()
+        }
+      });
+    }, 300);
+    return;
+  }
+
+  // Detailed analysis for complex questions
   setTimeout(() => {
     global.broadcastAIActivity?.(conversationId, {
       id: Date.now(),
@@ -379,7 +398,7 @@ async function processDemoAIResponse(conversationId: number, userMessage: string
       description: "Processing with Sofeia AI...",
       createdAt: new Date().toISOString()
     });
-  }, 2000);
+  }, 1500);
 
   setTimeout(() => {
     global.broadcastAIActivity?.(conversationId, {
@@ -391,23 +410,50 @@ async function processDemoAIResponse(conversationId: number, userMessage: string
       createdAt: new Date().toISOString()
     });
     
-    // Send demo response via WebSocket
+    // Send detailed response
     global.broadcastAIActivity?.(conversationId, {
       type: 'response_complete',
       message: {
         id: Date.now() + 3,
         conversationId,
         role: 'assistant',
-        content: `Hello! I'm Sofeia AI. For "${userMessage}", here's my response:\n\n${userMessage.toLowerCase().includes('hello') || userMessage.toLowerCase().includes('hi') ? 
-          'Hello! I\'m ready to help you with content strategy, SEO optimization, and keyword research. What would you like to work on today?' :
-          userMessage.toLowerCase().includes('seo') || userMessage.toLowerCase().includes('content') ?
-          'I can help you with comprehensive SEO content strategy. This includes keyword research, competitor analysis, content optimization, and Google AI Overview targeting. Would you like me to analyze a specific topic or help you develop a content plan?' :
-          'I\'m here to assist with content creation, SEO strategy, and digital marketing optimization. I can provide keyword research, competitor analysis, and help optimize your content for search engines. What specific challenge can I help you solve?'
-        }\n\n**Demo Mode:** This is a simplified response. Sign up for the full Sofeia AI experience with:\n- Advanced C.R.A.F.T framework content creation\n- Real-time keyword research\n- Live competitor analysis\n- Unlimited questions`,
+        content: getDetailedResponse(userMessage),
         createdAt: new Date().toISOString()
       }
     });
-  }, 4000);
+  }, 3000);
+}
+
+function getSimpleResponse(userMessage: string): string {
+  const msg = userMessage.toLowerCase().trim();
+  
+  if (msg.includes('hi') || msg.includes('hello') || msg.includes('hey')) {
+    return "Hello! I'm Sofeia AI, your expert content strategist. I'm ready to help you with SEO optimization, keyword research, and content strategy. What would you like to work on today?";
+  }
+  
+  if (msg.includes('thanks') || msg.includes('thank you')) {
+    return "You're welcome! I'm here whenever you need help with content strategy, SEO, or digital marketing. Feel free to ask me anything!";
+  }
+  
+  if (msg === 'test' || msg === 'ok' || msg === 'yes') {
+    return "Perfect! I'm working correctly. I can help you with content creation, SEO strategy, keyword research, and competitor analysis. What would you like to explore?";
+  }
+  
+  return "I'm Sofeia AI, ready to assist with your content and SEO needs. How can I help you today?";
+}
+
+function getDetailedResponse(userMessage: string): string {
+  const msg = userMessage.toLowerCase();
+  
+  if (msg.includes('seo') || msg.includes('content') || msg.includes('strategy')) {
+    return `I can help you with comprehensive SEO content strategy for: "${userMessage}"\n\n**My expertise includes:**\n• Keyword research and analysis\n• Competitor content analysis\n• Google AI Overview optimization\n• Content structure and planning\n• SEO-optimized copywriting\n• Performance tracking strategies\n\nWould you like me to analyze a specific topic or help you develop a content plan? I can provide detailed keyword research and competitive analysis.\n\n**Demo Mode:** Sign up for the full Sofeia AI experience with unlimited questions and real-time research capabilities.`;
+  }
+  
+  if (msg.includes('keyword') || msg.includes('research')) {
+    return `For keyword research on "${userMessage}", I can provide:\n\n**Keyword Analysis:**\n• Search volume data\n• Competition analysis\n• Long-tail opportunities\n• Search intent mapping\n• Ranking difficulty assessment\n\n**Competitive Intelligence:**\n• Top-ranking content analysis\n• Content gap identification\n• SERP feature opportunities\n• AI Overview positioning\n\nWould you like me to perform detailed keyword research for a specific topic?\n\n**Demo Mode:** Upgrade for real-time Perplexity API integration and unlimited research.`;
+  }
+  
+  return `I understand you're asking about: "${userMessage}"\n\nAs your AI content strategist, I can help with:\n• Content planning and strategy\n• SEO optimization techniques\n• Keyword research and analysis\n• Competitor analysis\n• Content performance optimization\n\nWhat specific aspect would you like me to focus on? I can provide detailed, actionable recommendations.\n\n**Demo Mode:** This is a simplified response. Sign up for advanced C.R.A.F.T framework analysis and unlimited questions.`;
 }
 
 async function processAIResponse(conversationId: number, userMessage: string) {
