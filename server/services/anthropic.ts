@@ -83,7 +83,9 @@ Apply Julia McCoy's C.R.A.F.T. framework to ALL AI-generated content:
 • Use "you" language to create conversation, not lecture
 • Write WITH readers, not AT them - engage like explaining to a friend
 • Create content that's more comprehensive and valuable than top 10 competitors
-• Include relevant 2025 statistics from government sources
+• Include relevant 2025 statistics from government sources and official agencies
+• Use only high-authority, authentic sources (no competitors or low DR sites)
+• Provide active, working URLs to government statistics
 • Offer strategic recommendations following C.R.A.F.T and RankMath principles
 • Structure responses for maximum SEO impact and user value
 • Always optimize content for Google AI Overview and Google Helpful Content guidelines
@@ -155,13 +157,35 @@ export async function generateContent(prompt: string, context?: any): Promise<st
   }
 
   try {
+    const countryContext = context?.country || 'global';
+    const governmentSources = getGovernmentSourcesForContent(countryContext);
+    
+    const enhancedPrompt = `${prompt}
+
+CRITICAL REQUIREMENTS FOR THIS RESPONSE:
+- Include real statistics from government sources and official agencies
+- Use only high-authority, authentic sources (no competitors or low DR sites)
+- Focus on ${countryContext} market data when available
+- Provide active, working URLs to government statistics
+- Ensure all statistics are current and verifiable
+
+Prioritize sources from:
+${governmentSources.map(source => `- ${source}`).join('\n')}
+- Official government agencies and departments
+- Academic institutions (.edu domains)
+- International organizations (UN, WHO, World Bank, etc.)
+- Industry regulatory bodies
+- Statistical offices and census data
+
+${context ? `\n\nAdditional Context: ${JSON.stringify(context)}` : ''}`;
+
     const response = await anthropic.messages.create({
       // "claude-sonnet-4-20250514"
       model: DEFAULT_MODEL_STR,
       system: SOFEIA_SYSTEM_PROMPT,
       max_tokens: 4096,
       messages: [
-        { role: 'user', content: prompt + (context ? `\n\nAdditional Context: ${JSON.stringify(context)}` : '') }
+        { role: 'user', content: enhancedPrompt }
       ],
     });
 
@@ -223,4 +247,105 @@ Include:
     console.error('Anthropic API error:', error);
     throw new Error('Failed to craft strategy with Anthropic AI');
   }
+}
+
+// Helper function to get country-specific government sources for content generation
+function getGovernmentSourcesForContent(targetCountry?: string): string[] {
+  const countrySourceMap: { [key: string]: string[] } = {
+    'United States': [
+      'census.gov (US Census Bureau)',
+      'bls.gov (Bureau of Labor Statistics)',
+      'sba.gov (Small Business Administration)',
+      'trade.gov (International Trade Administration)',
+      'commerce.gov (Department of Commerce)',
+      'ftc.gov (Federal Trade Commission)',
+      'sec.gov (Securities and Exchange Commission)',
+      'cdc.gov (Centers for Disease Control)',
+      'energy.gov (Department of Energy)',
+      'usda.gov (Department of Agriculture)'
+    ],
+    'United Kingdom': [
+      'gov.uk (UK Government)',
+      'ons.gov.uk (Office for National Statistics)',
+      'companieshouse.gov.uk (Companies House)',
+      'fca.org.uk (Financial Conduct Authority)',
+      'hmrc.gov.uk (HM Revenue & Customs)',
+      'ofcom.org.uk (Office of Communications)',
+      'nhs.uk (National Health Service)',
+      'uktradeinfo.com (UK Trade Info)'
+    ],
+    'Canada': [
+      'statcan.gc.ca (Statistics Canada)',
+      'ic.gc.ca (Innovation, Science and Economic Development)',
+      'cra-arc.gc.ca (Canada Revenue Agency)',
+      'competitionbureau.gc.ca (Competition Bureau)',
+      'canada.ca (Government of Canada)',
+      'bankofcanada.ca (Bank of Canada)',
+      'healthcanada.gc.ca (Health Canada)'
+    ],
+    'Australia': [
+      'abs.gov.au (Australian Bureau of Statistics)',
+      'austrade.gov.au (Australian Trade Commission)',
+      'accc.gov.au (Australian Competition and Consumer Commission)',
+      'asic.gov.au (Australian Securities and Investments Commission)',
+      'australia.gov.au (Australian Government)',
+      'rba.gov.au (Reserve Bank of Australia)',
+      'health.gov.au (Department of Health)'
+    ],
+    'Germany': [
+      'destatis.de (Federal Statistical Office)',
+      'bundesbank.de (German Federal Bank)',
+      'bmwk.de (Federal Ministry for Economic Affairs)',
+      'bafin.de (Federal Financial Supervisory Authority)',
+      'deutschland.de (Federal Government)',
+      'rki.de (Robert Koch Institute)',
+      'umweltbundesamt.de (Federal Environment Agency)'
+    ],
+    'France': [
+      'insee.fr (National Institute of Statistics)',
+      'economie.gouv.fr (Ministry of Economy)',
+      'banque-france.fr (Bank of France)',
+      'gouvernement.fr (French Government)',
+      'amf-france.org (Financial Markets Authority)',
+      'sante.gouv.fr (Ministry of Health)',
+      'ademe.fr (Environment and Energy Management Agency)'
+    ],
+    'Netherlands': [
+      'cbs.nl (Statistics Netherlands)',
+      'government.nl (Dutch Government)',
+      'acm.nl (Authority for Consumers and Markets)',
+      'dnb.nl (Dutch Central Bank)',
+      'kvk.nl (Chamber of Commerce)',
+      'rivm.nl (National Institute for Public Health)',
+      'rvo.nl (Netherlands Enterprise Agency)'
+    ],
+    'Spain': [
+      'ine.es (National Statistics Institute)',
+      'lamoncloa.gob.es (Government of Spain)',
+      'cnmc.es (National Markets and Competition Commission)',
+      'bde.es (Bank of Spain)',
+      'mineco.gob.es (Ministry of Economic Affairs)',
+      'sanidad.gob.es (Ministry of Health)',
+      'miteco.gob.es (Ministry for Ecological Transition)'
+    ]
+  };
+
+  const defaultSources = [
+    'World Bank (worldbank.org)',
+    'OECD (oecd.org)',
+    'UN Statistics (unstats.un.org)',
+    'WHO (who.int)',
+    'IMF (imf.org)',
+    'WTO (wto.org)',
+    'ILO (ilo.org - International Labour Organization)',
+    'FAO (fao.org - Food and Agriculture Organization)',
+    'UNESCO (unesco.org)',
+    'UNICEF (unicef.org)'
+  ];
+
+  if (targetCountry && countrySourceMap[targetCountry]) {
+    return [...countrySourceMap[targetCountry], ...defaultSources];
+  }
+
+  return defaultSources;
 }

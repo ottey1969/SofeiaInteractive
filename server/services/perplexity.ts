@@ -45,6 +45,8 @@ export async function researchKeywords(topic: string, targetCountry?: string): P
   }
 
   try {
+    const governmentSources = getGovernmentSources(targetCountry);
+    
     const prompt = `Research the best keywords for "${topic}" content${targetCountry ? ` in ${targetCountry}` : ''}. Focus on:
 
 1. High search volume keywords with low to medium competition
@@ -52,12 +54,25 @@ export async function researchKeywords(topic: string, targetCountry?: string): P
 3. Long-tail keywords with high commercial intent
 4. Semantic keyword variations
 5. Current trending keywords in this niche
+6. CRITICAL: Include real statistics from government sources and official agencies
+7. Focus on high-authority, authentic sources only
 
 Analyze the top 10 search results for the main keyword and identify:
 - Which pages rank for AI Overviews
 - Content gaps and opportunities
-- Competitor weaknesses
+- Government and official statistics available
 - Search intent patterns
+
+Prioritize sources from:
+${governmentSources.map(source => `- ${source}`).join('\n')}
+- Official government agencies and departments
+- Academic institutions (.edu domains)
+- International organizations (UN, WHO, World Bank, etc.)
+- Industry regulatory bodies
+- Statistical offices and census data
+
+AVOID competitor websites and low-authority sources.
+Include live, working URLs to government statistics and official data sources.
 
 Provide specific, actionable keyword recommendations with estimated search volumes and competition levels.`;
 
@@ -101,6 +116,102 @@ Provide specific, actionable keyword recommendations with estimated search volum
     console.error('Perplexity API error:', error);
     throw new Error('Failed to research keywords with Perplexity AI');
   }
+}
+
+// Helper function to get country-specific government sources
+function getGovernmentSources(targetCountry?: string): string[] {
+  const countrySourceMap: { [key: string]: string[] } = {
+    'United States': [
+      'census.gov',
+      'bls.gov (Bureau of Labor Statistics)',
+      'sba.gov (Small Business Administration)',
+      'trade.gov',
+      'commerce.gov',
+      'ftc.gov (Federal Trade Commission)',
+      'sec.gov (Securities and Exchange Commission)'
+    ],
+    'United Kingdom': [
+      'gov.uk',
+      'ons.gov.uk (Office for National Statistics)',
+      'companieshouse.gov.uk',
+      'fca.org.uk (Financial Conduct Authority)',
+      'hmrc.gov.uk',
+      'ofcom.org.uk'
+    ],
+    'Canada': [
+      'statcan.gc.ca (Statistics Canada)',
+      'ic.gc.ca (Innovation, Science and Economic Development)',
+      'cra-arc.gc.ca (Canada Revenue Agency)',
+      'competitionbureau.gc.ca',
+      'canada.ca'
+    ],
+    'Australia': [
+      'abs.gov.au (Australian Bureau of Statistics)',
+      'austrade.gov.au',
+      'accc.gov.au (Australian Competition and Consumer Commission)',
+      'asic.gov.au',
+      'australia.gov.au'
+    ],
+    'Germany': [
+      'destatis.de (Federal Statistical Office)',
+      'bundesbank.de',
+      'bmwk.de (Federal Ministry for Economic Affairs)',
+      'bafin.de (Federal Financial Supervisory Authority)',
+      'deutschland.de'
+    ],
+    'France': [
+      'insee.fr (National Institute of Statistics)',
+      'economie.gouv.fr',
+      'banque-france.fr',
+      'gouvernement.fr',
+      'amf-france.org'
+    ],
+    'Netherlands': [
+      'cbs.nl (Statistics Netherlands)',
+      'government.nl',
+      'acm.nl (Authority for Consumers and Markets)',
+      'dnb.nl (Dutch Central Bank)',
+      'kvk.nl (Chamber of Commerce)'
+    ],
+    'Spain': [
+      'ine.es (National Statistics Institute)',
+      'lamoncloa.gob.es',
+      'cnmc.es (National Markets and Competition Commission)',
+      'bde.es (Bank of Spain)',
+      'mineco.gob.es'
+    ]
+  };
+
+  const defaultSources = [
+    'World Bank (worldbank.org)',
+    'OECD (oecd.org)',
+    'UN Statistics (unstats.un.org)',
+    'WHO (who.int)',
+    'IMF (imf.org)',
+    'WTO (wto.org)'
+  ];
+
+  if (targetCountry && countrySourceMap[targetCountry]) {
+    return [...countrySourceMap[targetCountry], ...defaultSources];
+  }
+
+  return defaultSources;
+}
+
+// Helper function to get country domain preference
+function getCountryDomain(targetCountry?: string): string {
+  const countryDomains: { [key: string]: string } = {
+    'United States': '.gov',
+    'United Kingdom': '.gov.uk',
+    'Canada': '.gc.ca',
+    'Australia': '.gov.au',
+    'Germany': '.de',
+    'France': '.gouv.fr',
+    'Netherlands': '.nl',
+    'Spain': '.gob.es'
+  };
+
+  return countryDomains[targetCountry || ''] || '.gov';
 }
 
 export async function analyzeCompetitors(keyword: string, competitors?: string[]): Promise<{
