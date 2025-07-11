@@ -13,28 +13,13 @@ import GDPR from "@/pages/gdpr";
 import CookieBanner from "@/components/CookieBanner";
 
 function Router() {
-  const { isAuthenticated, isLoading } = useAuth();
-  
-  // Check for demo mode
-  const isDemoMode = typeof window !== 'undefined' && sessionStorage.getItem('demo_mode') === 'true';
-
   return (
     <Switch>
-      {(isLoading || !isAuthenticated) && !isDemoMode ? (
-        <>
-          <Route path="/" component={Landing} />
-          <Route path="/privacy" component={Privacy} />
-          <Route path="/terms" component={Terms} />
-          <Route path="/gdpr" component={GDPR} />
-        </>
-      ) : (
-        <>
-          <Route path="/" component={Home} />
-          <Route path="/privacy" component={Privacy} />
-          <Route path="/terms" component={Terms} />
-          <Route path="/gdpr" component={GDPR} />
-        </>
-      )}
+      <Route path="/landing" component={Landing} />
+      <Route path="/" component={Home} />
+      <Route path="/privacy" component={Privacy} />
+      <Route path="/terms" component={Terms} />
+      <Route path="/gdpr" component={GDPR} />
       <Route component={NotFound} />
     </Switch>
   );

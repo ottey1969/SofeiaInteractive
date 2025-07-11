@@ -9,52 +9,18 @@ export default function Landing() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
 
-  const handleLogin = async () => {
-    try {
-      // Try to initiate login
-      window.location.href = '/api/login';
-    } catch (error) {
-      console.error('Login error:', error);
-      toast({
-        title: "Login Issue",
-        description: "Having trouble logging in. Please try refreshing the page or contact support.",
-        variant: "destructive",
-      });
-    }
+  const handleLogin = () => {
+    // Go directly to chat screen
+    setLocation('/');
   };
 
-  const handleStartWriting = async () => {
-    try {
-      // Check if user might already be authenticated
-      const response = await fetch('/api/auth/user');
-      if (response.ok) {
-        // User is authenticated, redirect to home
-        setLocation('/');
-      } else {
-        // Show options to user
-        toast({
-          title: "Authentication Required",
-          description: "Redirecting to login. If login fails, try the demo mode.",
-        });
-        window.location.href = '/api/login';
-      }
-    } catch (error) {
-      // Fallback to login
-      toast({
-        title: "Connecting...",
-        description: "Attempting to authenticate. If this fails, we'll enable demo mode.",
-      });
-      window.location.href = '/api/login';
-    }
+  const handleStartWriting = () => {
+    // Go directly to chat screen
+    setLocation('/');
   };
 
   const handleDemo = () => {
-    toast({
-      title: "Demo Mode",
-      description: "Opening demo interface with limited functionality.",
-    });
-    // Create a temporary session for demo
-    sessionStorage.setItem('demo_mode', 'true');
+    // Go directly to chat screen
     setLocation('/');
   };
 
