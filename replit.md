@@ -12,6 +12,24 @@ ContentScale is an advanced AI-powered content writing platform that provides re
 
 Preferred communication style: Simple, everyday language.
 
+## Current Status (July 2025)
+
+**Authentication Status:**
+- Replit OAuth experiencing configuration issues in development environment
+- Demo mode fully functional for immediate testing and admin access
+- When authentication is fixed, ottmar.francisca1969@gmail.com will automatically receive unlimited credits and admin privileges
+
+**Subscriber Access Plan:**
+- Demo mode available now for testing all features
+- Admin panel accessible at /admin route for user management
+- System status page at /status for monitoring authentication health
+- Real authentication will work for subscribers once Replit OIDC configuration is resolved
+
+**Immediate Access Methods:**
+1. Demo Mode: Full chat interface without login
+2. Admin Panel: Direct access to user management
+3. Status Page: Monitor system health and authentication status
+
 ## System Architecture
 
 ### Frontend Architecture

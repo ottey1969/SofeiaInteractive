@@ -11,6 +11,7 @@ import Privacy from "@/pages/privacy";
 import Terms from "@/pages/terms";
 import GDPR from "@/pages/gdpr";
 import AdminPanel from "@/pages/admin";
+import AuthStatus from "@/pages/auth-status";
 import CookieBanner from "@/components/CookieBanner";
 
 function Router() {
@@ -23,6 +24,7 @@ function Router() {
       <Route path="/terms" component={Terms} />
       <Route path="/gdpr" component={GDPR} />
       <Route path="/admin" component={AdminPanel} />
+      <Route path="/status" component={AuthStatus} />
       <Route component={NotFound} />
     </Switch>
   );

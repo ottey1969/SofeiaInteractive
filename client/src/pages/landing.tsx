@@ -100,15 +100,24 @@ export default function Landing() {
           <div className="text-center mb-8">
             <div className="flex flex-col sm:flex-row gap-2 justify-center items-center">
               <p className="text-sm text-slate-500">
-                Admin users (ottmar.francisca1969@gmail.com) get unlimited access after login
+                <strong>For Subscribers:</strong> Real login is now available! Admin users get unlimited access.
               </p>
-              <Button
-                variant="link"
-                onClick={() => setLocation('/admin')}
-                className="text-indigo-400 hover:text-indigo-300 text-sm p-0 h-auto"
-              >
-                → Admin Panel
-              </Button>
+              <div className="flex gap-2">
+                <Button
+                  variant="link"
+                  onClick={() => setLocation('/admin')}
+                  className="text-indigo-400 hover:text-indigo-300 text-sm p-0 h-auto"
+                >
+                  → Admin Panel
+                </Button>
+                <Button
+                  variant="link"
+                  onClick={() => setLocation('/status')}
+                  className="text-green-400 hover:text-green-300 text-sm p-0 h-auto"
+                >
+                  → System Status
+                </Button>
+              </div>
             </div>
           </div>
 
