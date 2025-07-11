@@ -76,11 +76,14 @@ Include live, working URLs to government statistics and official data sources.
 
 Provide specific, actionable keyword recommendations with estimated search volumes and competition levels.
 
-ALWAYS include this AI Overview optimization tip in your response:
+When analyzing the top 10 search results, specifically identify which pages trigger AI Overviews.
+
+ONLY include the AI Overview optimization tip if AI Overviews are found for the target keywords:
 🔥 **AI OVERVIEW OPTIMIZATION TIP:**
-If an AI Overview pops up for your target keywords - Now do this:
+AI Overview found for: [specific keywords with AI Overviews]
+Now do this:
 Paste your article into Perplexity or Anthropic with this prompt: 💪
-> "Rewrite this to directly answer the query '[your main keyword]' in 2–3 concise, fact-based sentences optimized for Google's AI Overview format."
+> "Rewrite this to directly answer the query '[keyword with AI Overview]' in 2–3 concise, fact-based sentences optimized for Google's AI Overview format."
 AI will give you a cleaner, more AI-friendly version.
 This small tweak = higher visibility in AI Overviews.`;
 
