@@ -7,8 +7,8 @@ import { Auth0Provider } from '@auth0/auth0-react';
 const root = createRoot(document.getElementById("root")!);
 root.render(
   <Auth0Provider
-    domain={import.meta.env.VITE_AUTH0_DOMAIN || "your-auth0-domain.auth0.com"}
-    clientId={import.meta.env.VITE_AUTH0_CLIENT_ID || "your-auth0-client-id"}
+    domain={import.meta.env.VITE_AUTH0_DOMAIN || "dev-sofeia.us.auth0.com"}
+    clientId={import.meta.env.VITE_AUTH0_CLIENT_ID || "sofeia-ai-client-id"}
     authorizationParams={{
       redirect_uri: window.location.origin,
       audience: "https://api.sofeia.com"

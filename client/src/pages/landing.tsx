@@ -67,12 +67,57 @@ export default function Landing() {
     }
   };
 
+  // Check if Auth0 is properly configured
+  const isAuth0Configured = import.meta.env.VITE_AUTH0_DOMAIN && 
+    import.meta.env.VITE_AUTH0_DOMAIN !== "dev-sofeia.us.auth0.com" &&
+    import.meta.env.VITE_AUTH0_CLIENT_ID && 
+    import.meta.env.VITE_AUTH0_CLIENT_ID !== "sofeia-ai-client-id";
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
         <div className="text-center">
           <Brain className="w-16 h-16 text-indigo-500 mx-auto mb-4 animate-pulse" />
           <p className="text-slate-300">Loading authentication...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show Auth0 setup instructions if not properly configured
+  if (!isAuth0Configured) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
+        <div className="max-w-2xl mx-auto p-8 text-center">
+          <Brain className="w-16 h-16 text-indigo-500 mx-auto mb-6" />
+          <h1 className="text-3xl font-bold text-white mb-4">Auth0 Setup Required</h1>
+          <div className="text-left bg-slate-800 rounded-lg p-6 mb-6">
+            <h2 className="text-xl font-semibold text-indigo-400 mb-4">To enable secure authentication:</h2>
+            <ol className="text-slate-300 space-y-3 list-decimal list-inside">
+              <li>Create an Auth0 account at <span className="text-indigo-400">auth0.com</span></li>
+              <li>Create a new "Single Page Web Application"</li>
+              <li>Set your <strong>Allowed Callback URLs</strong> to: <code className="bg-slate-700 px-2 py-1 rounded">{window.location.origin}</code></li>
+              <li>Set your <strong>Allowed Logout URLs</strong> to: <code className="bg-slate-700 px-2 py-1 rounded">{window.location.origin}</code></li>
+              <li>Set your <strong>Allowed Web Origins</strong> to: <code className="bg-slate-700 px-2 py-1 rounded">{window.location.origin}</code></li>
+              <li>Copy your <strong>Domain</strong> and <strong>Client ID</strong> from the Auth0 dashboard</li>
+              <li>Update the environment variables in <code className="bg-slate-700 px-2 py-1 rounded">.env</code> file</li>
+            </ol>
+          </div>
+          <div className="flex gap-4 justify-center">
+            <Button 
+              onClick={handleDemo}
+              className="bg-indigo-600 hover:bg-indigo-700"
+            >
+              Continue with Demo Mode
+            </Button>
+            <Button 
+              variant="outline"
+              onClick={() => window.open('https://auth0.com', '_blank')}
+              className="border-slate-600 text-slate-300 hover:bg-slate-800"
+            >
+              Set Up Auth0
+            </Button>
+          </div>
         </div>
       </div>
     );

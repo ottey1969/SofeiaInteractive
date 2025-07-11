@@ -12,6 +12,8 @@ ContentScale is an advanced AI-powered content writing platform that provides re
 - Login to Start Writing button: Auth0 authentication with redirect to home
 - Access Premium Features button: Calls protected API with JWT token validation
 
+**Auth0 Configuration Required:** The system includes automatic detection of Auth0 setup. If environment variables are not properly configured with real Auth0 credentials, the landing page shows setup instructions. See AUTH0_SETUP.md for complete configuration guide.
+
 **Admin System (July 2025):** Implemented full admin functionality for ottmar.francisca1969@gmail.com with unlimited credits, user management capabilities, and subscription control. Admin users automatically bypass daily question limits and can grant credits to other users.
 
 ## User Preferences
