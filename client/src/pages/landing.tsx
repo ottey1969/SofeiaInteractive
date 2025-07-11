@@ -44,7 +44,7 @@ export default function Landing() {
               onClick={handleLogin}
               className="bg-indigo-600 hover:bg-indigo-700"
             >
-              Sign In
+              Get Started
             </Button>
           </div>
         </div>
@@ -343,7 +343,7 @@ export default function Landing() {
               <div className="space-y-2 text-sm">
                 <a href="/privacy" className="block text-slate-400 hover:text-indigo-400 transition-colors">Privacy Policy</a>
                 <a href="/terms" className="block text-slate-400 hover:text-indigo-400 transition-colors">Terms of Service</a>
-                <a href="/gdpr" className="block text-slate-400 hover:text-indigo-400 transition-colors">GDPR Rights</a>
+                <a href="/gdpr" className="block text-slate-400 hover:text-indigo-400 transition-colors">GDPR Compliance</a>
                 <a href="#" className="block text-slate-400 hover:text-indigo-400 transition-colors">Cookie Policy</a>
               </div>
             </div>
@@ -351,7 +351,7 @@ export default function Landing() {
 
           <div className="border-t border-slate-700 mt-8 pt-8 text-center">
             <p className="text-slate-400 text-sm">
-              © 2025 ContentScale. All rights reserved. Powered by Sofeia AI.
+              © 2025 ContentScale AI. All rights reserved. Founded by Ottmar Joseph Gregory Francisca.
             </p>
           </div>
         </div>
