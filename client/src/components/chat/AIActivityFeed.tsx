@@ -84,8 +84,8 @@ export default function AIActivityFeed({ activities, realTimeActivities }: AIAct
         ) : (
           <div className="text-center py-8">
             <Bot className="w-12 h-12 text-slate-600 mx-auto mb-3" />
-            <p className="text-slate-400 text-sm">Waiting for AI activity...</p>
-            <p className="text-slate-500 text-xs">Sofeia will show her thinking process here</p>
+            <p className="text-slate-400 text-sm">Ready for your questions</p>
+            <p className="text-slate-500 text-xs">Ask Sofeia anything about content strategy, SEO, or keyword research</p>
           </div>
         )}
       </div>

@@ -343,12 +343,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Function to broadcast AI activity updates
   global.broadcastAIActivity = (conversationId: number, activity: any) => {
+    console.log('Broadcasting activity:', JSON.stringify(activity, null, 2));
+    
     wss.clients.forEach((client: WebSocketClient) => {
       if (client.readyState === WebSocket.OPEN && client.conversationId === conversationId) {
-        client.send(JSON.stringify({
-          type: 'ai_activity',
-          data: activity
-        }));
+        if (activity.type === 'response_complete') {
+          // Send response completion message directly
+          client.send(JSON.stringify(activity));
+        } else {
+          // Send regular AI activity
+          client.send(JSON.stringify({
+            type: 'ai_activity',
+            data: activity
+          }));
+        }
       }
     });
   };

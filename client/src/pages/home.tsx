@@ -64,14 +64,18 @@ export default function Home() {
 
     ws.onmessage = (event) => {
       try {
+        console.log('WebSocket message received:', event.data);
         const message: WebSocketMessage = JSON.parse(event.data);
         
         if (message.type === 'ai_activity') {
+          console.log('Adding AI activity:', message.data);
           setAiActivities(prev => [...prev, message.data]);
           refetchActivities();
         } else if (message.type === 'response_complete') {
+          console.log('Response complete received:', message);
           // For demo mode, add the message directly to avoid database calls
           if (message.message && isDemoMode) {
+            console.log('Adding demo message:', message.message);
             setDemoMessages(prev => [...prev, message.message]);
             setAiActivities(prev => [...prev, {
               id: Date.now(),
