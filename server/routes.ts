@@ -762,11 +762,11 @@ function getDetailedResponse(userMessage: string): string {
   const msg = userMessage.toLowerCase();
   
   if (msg.includes('seo') || msg.includes('content') || msg.includes('strategy')) {
-    return `I can help you with comprehensive SEO content strategy for: "${userMessage}"\n\n**My expertise includes:**\n• Keyword research and analysis\n• Competitor content analysis\n• Google AI Overview optimization\n• Content structure and planning\n• SEO-optimized copywriting\n• Performance tracking strategies\n\nWould you like me to analyze a specific topic or help you develop a content plan? I can provide detailed keyword research and competitive analysis.\n\n**Demo Mode:** Sign up for the full Sofeia AI experience with unlimited questions and real-time research capabilities.`;
+    return `I can help you with comprehensive SEO content strategy for: "${userMessage}"\n\n**My expertise includes:**\n• Keyword research and analysis\n• Competitor content analysis\n• Google AI Overview optimization\n• Content structure and planning\n• SEO-optimized copywriting\n• Performance tracking strategies\n\nWould you like me to analyze a specific topic or help you develop a content plan? I can provide detailed keyword research and competitive analysis.\n\n🔥 **AI OVERVIEW OPTIMIZATION TIP:**\nAfter I provide keyword research, use this prompt with your content:\n> "Rewrite this to directly answer the query '[your keyword]' in 2–3 concise, fact-based sentences optimized for Google's AI Overview format."\n\n**Demo Mode:** Sign up for the full Sofeia AI experience with unlimited questions and real-time research capabilities.`;
   }
   
   if (msg.includes('keyword') || msg.includes('research')) {
-    return `For keyword research on "${userMessage}", I can provide:\n\n**Keyword Analysis:**\n• Search volume data\n• Competition analysis\n• Long-tail opportunities\n• Search intent mapping\n• Ranking difficulty assessment\n\n**Competitive Intelligence:**\n• Top-ranking content analysis\n• Content gap identification\n• SERP feature opportunities\n• AI Overview positioning\n\nWould you like me to perform detailed keyword research for a specific topic?\n\n**Demo Mode:** Upgrade for real-time Perplexity API integration and unlimited research.`;
+    return `For keyword research on "${userMessage}", I can provide:\n\n**Keyword Analysis:**\n• Search volume data\n• Competition analysis\n• Long-tail opportunities\n• Search intent mapping\n• Ranking difficulty assessment\n\n**Competitive Intelligence:**\n• Top-ranking content analysis\n• Content gap identification\n• SERP feature opportunities\n• AI Overview positioning\n\n🔥 **AI OVERVIEW OPTIMIZATION TIP:**\nAfter keyword research, optimize your content with:\n> "Rewrite this to directly answer the query '[keyword]' in 2–3 concise, fact-based sentences optimized for Google's AI Overview format."\n\nWould you like me to perform detailed keyword research for a specific topic?\n\n**Demo Mode:** Upgrade for real-time Perplexity API integration and unlimited research.`;
   }
   
   return `I understand you're asking about: "${userMessage}"\n\nAs your AI content strategist, I can help with:\n• Content planning and strategy\n• SEO optimization techniques\n• Keyword research and analysis\n• Competitor analysis\n• Content performance optimization\n\nWhat specific aspect would you like me to focus on? I can provide detailed, actionable recommendations.\n\n**Demo Mode:** This is a simplified response. Sign up for advanced C.R.A.F.T framework analysis and unlimited questions.`;
@@ -854,7 +854,19 @@ async function processAIResponse(conversationId: number, userMessage: string, me
 
       global.broadcastAIActivity?.(conversationId, strategyActivity);
 
-      // Generate comprehensive response
+      // Generate comprehensive response with AI Overview optimization prompt
+      const keywordTopics = keywordResearch.keywords.map(k => k.keyword).slice(0, 3);
+      const aiOverviewPrompt = keywordTopics.length > 0 ? `
+
+🔥 **AI OVERVIEW OPTIMIZATION TIP:**
+If an AI Overview pops up for your target keywords (${keywordTopics.join(', ')}) - Now do this:
+
+Paste your article into Perplexity or Anthropic with this prompt: 💪
+> "Rewrite this to directly answer the query '[${keywordTopics[0]}]' in 2–3 concise, fact-based sentences optimized for Google's AI Overview format."
+
+AI will give you a cleaner, more AI-friendly version.
+This small tweak = higher visibility in AI Overviews.` : '';
+
       aiResponse = await generateContent(`Based on this keyword research and competitor analysis, provide a comprehensive SEO strategy:
 
 Keyword Research Results:
@@ -865,7 +877,10 @@ ${JSON.stringify(competitorAnalysis, null, 2)}
 
 User Query: ${userMessage}
 
-Provide actionable recommendations following the C.R.A.F.T framework.`);
+Provide actionable recommendations following the C.R.A.F.T framework.
+
+IMPORTANT: Include the AI Overview optimization tip at the end of your response:
+${aiOverviewPrompt}`);
 
       await storage.updateAIActivity(strategyActivity.id, "completed");
     } else {

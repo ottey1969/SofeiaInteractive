@@ -74,7 +74,15 @@ ${governmentSources.map(source => `- ${source}`).join('\n')}
 AVOID competitor websites and low-authority sources.
 Include live, working URLs to government statistics and official data sources.
 
-Provide specific, actionable keyword recommendations with estimated search volumes and competition levels.`;
+Provide specific, actionable keyword recommendations with estimated search volumes and competition levels.
+
+ALWAYS include this AI Overview optimization tip in your response:
+🔥 **AI OVERVIEW OPTIMIZATION TIP:**
+If an AI Overview pops up for your target keywords - Now do this:
+Paste your article into Perplexity or Anthropic with this prompt: 💪
+> "Rewrite this to directly answer the query '[your main keyword]' in 2–3 concise, fact-based sentences optimized for Google's AI Overview format."
+AI will give you a cleaner, more AI-friendly version.
+This small tweak = higher visibility in AI Overviews.`;
 
     const response = await fetch('https://api.perplexity.ai/chat/completions', {
       method: 'POST',

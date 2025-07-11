@@ -14,6 +14,7 @@ ContentScale is an advanced AI-powered content writing platform that provides re
 - **Government Statistics Integration:** Enhanced both Anthropic and Perplexity services to prioritize real government statistics and official sources
 - **Country-Specific Data:** Added comprehensive country-specific government source mapping for 8 major markets (US, UK, Canada, Australia, Germany, France, Netherlands, Spain)
 - **High-Authority Sources Only:** Configured AI to avoid competitors and low-DR sites, focusing exclusively on .gov, .edu, and official international organization sources
+- **AI Overview Optimization:** Added automatic AI Overview optimization prompts after keyword research with specific instructions: "Rewrite this to directly answer the query '[keyword]' in 2–3 concise, fact-based sentences optimized for Google's AI Overview format."
 
 **Auth0 Integration (July 11, 2025):** Successfully implemented secure Auth0 authentication system to replace problematic Replit OAuth. All three landing page buttons now working correctly:
 - Login/Sign Up button: Uses Auth0 loginWithRedirect()
