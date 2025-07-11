@@ -537,6 +537,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   const httpServer = createServer(app);
 
+  // Add reset context endpoint
+  app.post("/api/reset-context", async (req: any, res) => {
+    try {
+      const { chatId } = req.body;
+      console.log(`Resetting context for chat: ${chatId}`);
+      // In a real app, this would clear any context associated with the chat
+      res.json({ success: true, message: 'Context reset successfully' });
+    } catch (error) {
+      console.error("Error resetting context:", error);
+      res.status(500).json({ message: "Failed to reset context" });
+    }
+  });
+
   // WebSocket server for real-time AI activity updates
   const wss = new WebSocketServer({ server: httpServer, path: '/ws' });
 

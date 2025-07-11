@@ -118,11 +118,26 @@ export default function Home() {
     }
   }, [socket, selectedConversation]);
 
-  const handleNewConversation = () => {
+  const handleNewConversation = async () => {
     setSelectedConversation(null);
     setAiActivities([]);
     setDemoMessages([]);
     setIsTyping(false);
+    
+    // Reset context on backend
+    try {
+      await fetch('/api/reset-context', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          chatId: 'chat_' + Date.now()
+        })
+      });
+    } catch (error) {
+      console.error('Error resetting context:', error);
+    }
   };
 
   const handleConversationCreated = (conversation: Conversation) => {
