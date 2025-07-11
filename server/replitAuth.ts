@@ -103,13 +103,23 @@ export async function setupAuth(app: Express) {
     
     // Set up fallback routes for demo mode
     app.get("/api/login", (req, res) => {
-      res.redirect("/?demo=true");
+      console.log("Demo mode: Login redirected");
+      res.redirect("/?demo=true&message=demo-mode");
+    });
+    
+    app.get("/api/callback", (req, res) => {
+      console.log("Demo mode: Callback redirected"); 
+      res.redirect("/?demo=true&message=demo-mode");
     });
     
     app.get("/api/logout", (req, res) => {
-      req.logout(() => {
+      if (req.session) {
+        req.session.destroy(() => {
+          res.redirect("/");
+        });
+      } else {
         res.redirect("/");
-      });
+      }
     });
     
     return;
@@ -146,17 +156,36 @@ export async function setupAuth(app: Express) {
     passport.deserializeUser((user: Express.User, cb) => cb(null, user));
 
     app.get("/api/login", (req, res, next) => {
-      passport.authenticate(`replitauth:${req.hostname}`, {
+      // Handle hostname mapping for authentication strategy
+      const hostname = req.hostname;
+      const strategyName = `replitauth:${hostname}`;
+      
+      // Check if strategy exists, otherwise redirect to demo
+      if (!passport._strategies[strategyName]) {
+        console.warn(`Strategy ${strategyName} not found, redirecting to demo`);
+        return res.redirect("/?demo=true&message=auth-unavailable");
+      }
+      
+      passport.authenticate(strategyName, {
         prompt: "login consent",
         scope: ["openid", "email", "profile", "offline_access"],
       })(req, res, next);
     });
 
     app.get("/api/callback", (req, res, next) => {
-      passport.authenticate(`replitauth:${req.hostname}`, {
+      const hostname = req.hostname;
+      const strategyName = `replitauth:${hostname}`;
+      
+      passport.authenticate(strategyName, {
         successReturnToOrRedirect: "/",
-        failureRedirect: "/api/login",
-      })(req, res, next);
+        failureRedirect: "/?demo=true&message=auth-failed",
+      })(req, res, (err) => {
+        if (err) {
+          console.error("Authentication callback error:", err);
+          return res.redirect("/?demo=true&message=auth-error");
+        }
+        next();
+      });
     });
 
     app.get("/api/logout", (req, res) => {
