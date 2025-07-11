@@ -1,0 +1,45 @@
+# ContentScale AI - Robots.txt for Content Scale SEO
+User-agent: *
+Allow: /
+
+# Prioritize content scale pages
+Allow: /platform
+Allow: /solutions
+Allow: /pricing
+Allow: /tools
+Allow: /blog
+Allow: /use-cases
+Allow: /resources
+Allow: /api
+
+# Block admin and private areas
+Disallow: /admin
+Disallow: /api/private
+Disallow: /*.json$
+Disallow: /temp/
+Disallow: /staging/
+
+# Allow all major search engines
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: YandexBot
+Allow: /
+
+User-agent: Baiduspider
+Allow: /
+
+# Sitemap location
+Sitemap: https://contentscale.ai/sitemap.xml
+
+# Crawl delay for content scale indexing
+Crawl-delay: 1
+
+# Cache directives for content scale
+# Clean URLs and fast indexing preferred

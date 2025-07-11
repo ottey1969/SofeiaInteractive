@@ -232,16 +232,16 @@ export default function Landing() {
           </Badge>
           
           <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
-            Meet Sofeia AI
+            Scale Content Production 10x Faster
           </h1>
           
           <h2 className="text-2xl md:text-3xl font-semibold mb-6 text-slate-300">
-            Your Autonomous Content Writing Assistant
+            Advanced AI Content Writing Platform | ContentScale AI
           </h2>
           
           <p className="text-xl text-slate-400 mb-8 max-w-2xl mx-auto">
-            Experience real-time AI thinking with advanced content generation, 
-            SEO optimization, and competitive analysis powered by cutting-edge AI technology.
+            Scale content production with AI-powered writing, real-time research, bulk content creation, 
+            and automated SEO optimization. The ultimate content scaling platform for businesses.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
@@ -252,7 +252,7 @@ export default function Landing() {
                   onClick={handleStartWriting}
                   className="bg-indigo-600 hover:bg-indigo-700 text-lg px-8 py-3"
                 >
-                  Login to Start Writing
+                  Start Scaling Content
                 </Button>
                 <Button 
                   size="lg" 
@@ -260,7 +260,7 @@ export default function Landing() {
                   onClick={handleDemo}
                   className="border-slate-600 text-slate-300 hover:bg-slate-800 text-lg px-8 py-3"
                 >
-                  Try Demo (No Login)
+                  Try Content Scale Demo
                 </Button>
               </>
             ) : (
@@ -270,7 +270,7 @@ export default function Landing() {
                   onClick={() => setLocation('/home')}
                   className="bg-indigo-600 hover:bg-indigo-700 text-lg px-8 py-3"
                 >
-                  Start Writing Now
+                  Scale Content Now
                 </Button>
                 <Button 
                   size="lg" 
@@ -282,6 +282,26 @@ export default function Landing() {
                 </Button>
               </>
             )}
+          </div>
+          
+          {/* Content Scale Keywords Section */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8 text-sm text-slate-400">
+            <div className="bg-slate-800/50 rounded-lg p-3">
+              <div className="font-semibold text-indigo-400">Content Scale</div>
+              <div>10x Production</div>
+            </div>
+            <div className="bg-slate-800/50 rounded-lg p-3">
+              <div className="font-semibold text-indigo-400">Bulk Creation</div>
+              <div>Mass Production</div>
+            </div>
+            <div className="bg-slate-800/50 rounded-lg p-3">
+              <div className="font-semibold text-indigo-400">AI Writing</div>
+              <div>Automated Content</div>
+            </div>
+            <div className="bg-slate-800/50 rounded-lg p-3">
+              <div className="font-semibold text-indigo-400">SEO Optimization</div>
+              <div>Scale Strategy</div>
+            </div>
           </div>
           
           <div className="text-center mb-8">
@@ -344,10 +364,10 @@ export default function Landing() {
       <section className="container mx-auto px-6 py-20">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white">
-            Why Choose Sofeia AI?
+            Scale Content Production Like Never Before
           </h2>
           <p className="text-xl text-slate-400 max-w-2xl mx-auto">
-            Advanced AI capabilities that transform how you create and optimize content
+            ContentScale AI transforms how you create, optimize, and scale content production with advanced AI capabilities for bulk content creation and automated content marketing.
           </p>
         </div>
 
