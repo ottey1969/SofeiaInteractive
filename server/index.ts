@@ -2,6 +2,7 @@ import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import http from "http";
+import path from "path";
 
 const app = express( );
 const server = http.createServer(app );
@@ -54,6 +55,9 @@ if (process.env.NODE_ENV === "development") {
   setupVite(app, server);
 } else {
   app.use(serveStatic());
+  app.get("**", (req, res) => {
+    res.sendFile(path.resolve(import.meta.dirname, "..", "client", "dist", "index.html"));
+  });
 }
 
 const port = process.env.PORT || 3000;
