@@ -3,42 +3,27 @@ import type { Express, RequestHandler } from "express";
 import session from "express-session";
 
 export function setupSimpleAuth(app: Express) {
-  console.log("🔧 Setting up simplified authentication...");
+  console.log("🔧 Setting up authentication...");
   
-  // Simple session configuration that works reliably
   app.use(session({
-    secret: process.env.SESSION_SECRET || \'fallback-secret-for-dev\',
+    secret: process.env.SESSION_SECRET || \'a-very-secret-key\',
     resave: false,
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      secure: false, // Allow HTTP for development
+      secure: process.env.NODE_ENV === \'production\', // Use secure cookies in production
       maxAge: 7 * 24 * 60 * 60 * 1000 // 1 week
     }
   } ));
 
-  // Simple login redirect (no passport)
-  app.get("/api/login", (req, res) => {
-    console.log("🔄 Login attempt redirected to demo mode");
-    res.redirect("/?demo=true&message=auth-unavailable");
-  });
+  // No specific login/logout routes here, as they should be handled by Auth0 or similar
 
-  // Simple logout
-  app.get("/api/logout", (req, res) => {
-    if (req.session) {
-      req.session.destroy(() => {
-        res.redirect("/");
-      });
-    } else {
-      res.redirect("/");
-    }
-  });
-
-  console.log("✅ Simplified auth setup complete");
+  console.log("✅ Authentication setup complete");
 }
 
-// Simple auth middleware that works with demo mode
+// This middleware can be used for routes that require authentication
 export const simpleAuth: RequestHandler = (req, res, next) => {
-  // Always allow demo mode to work
+  // In a real Auth0 setup, you would verify the user\'s session/token here
+  // For now, we\'ll just pass through, assuming Auth0 handles the initial authentication flow
   next();
 };
