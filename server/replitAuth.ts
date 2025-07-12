@@ -21,7 +21,7 @@ const getOidcConfig = memoize(
     if (!REPL_ID || !REPLIT_DOMAIN) {
       throw new Error("Missing REPL_ID or REPLIT_DOMAINS for OIDC configuration");
     }
-    return await client.discovery(
+    return await client.discover(
       new URL(process.env.ISSUER_URL ?? "https://replit.com/oidc"),
       REPL_ID
     );
@@ -31,7 +31,7 @@ const getOidcConfig = memoize(
 
 export function getSession() {
   const sessionTtl = 7 * 24 * 60 * 60 * 1000; // 1 week
-  
+
   // Use memory store for development, PG store for production
   const sessionConfig: any = {
     secret: process.env.SESSION_SECRET!,
@@ -46,202 +46,110 @@ export function getSession() {
 
   // Only use PG store if we have a proper database connection
   if (process.env.DATABASE_URL && process.env.NODE_ENV === 'production') {
-    const pgStore = connectPg(session);
-    sessionConfig.store = new pgStore({
+    const PgStore = connectPg(session);
+    sessionConfig.store = new PgStore({
       conString: process.env.DATABASE_URL,
-      createTableIfMissing: true,
-      ttl: sessionTtl,
-      tableName: "sessions",
+      tableName: 'user_sessions',
     });
   }
 
   return session(sessionConfig);
 }
 
-function updateUserSession(
-  user: any,
-  tokens: client.TokenEndpointResponse & client.TokenEndpointResponseHelpers
-) {
-  user.claims = tokens.claims();
-  user.access_token = tokens.access_token;
-  user.refresh_token = tokens.refresh_token;
-  user.expires_at = user.claims?.exp;
-}
+export function setupAuth(app: Express): RequestHandler {
+  // Check if we have Replit vars OR if we're on Render
+  const isRender = process.env.RENDER === 'true' || process.env.NODE_ENV === 'production';
+  const hasReplitEnv = REPL_ID && REPLIT_DOMAIN;
 
-async function upsertUser(
-  claims: any,
-) {
-  await storage.upsertUser({
-    id: claims["sub"],
-    email: claims["email"],
-    firstName: claims["first_name"],
-    lastName: claims["last_name"],
-    profileImageUrl: claims["profile_image_url"],
-  });
-}
+  if (!hasReplitEnv && !isRender) {
+    // Only fall back to demo mode in development
+    console.warn("⚠️ Using demo mode for local development");
+    // Demo routes for local development without Replit auth
+    app.get('/login', (req, res) => {
+      res.send('<h1>Login Page (Demo Mode)</h1><form action="/login/callback" method="post"><button type="submit">Login</button></form>');
+    });
+    app.post('/login/callback', (req, res) => {
+      req.session.user = { id: 'demo-user', name: 'Demo User' };
+      res.redirect('/');
+    });
+    app.get('/logout', (req, res) => {
+      req.session.destroy(() => {
+        res.redirect('/');
+      });
+    });
+    app.get('/user', (req, res) => {
+      res.json(req.session.user || null);
+    });
+    return (req, res, next) => next(); // No-op middleware
+  } else {
+    // Enable full authentication for Render or Replit
+    console.log("✓ Authentication enabled for production environment");
 
-export async function setupAuth(app: Express) {
-  console.log("🔧 Setting up authentication...");
-  console.log("REPL_ID:", REPL_ID ? "✓" : "✗");
-  console.log("REPLIT_DOMAIN:", REPLIT_DOMAIN ? "✓" : "✗");
-  
-  app.set("trust proxy", 1);
-  
-  // Initialize session and passport even for demo mode
-  app.use(getSession());
-  app.use(passport.initialize());
-  app.use(passport.session());
-
-  // Set up minimal passport session handling for demo mode
-  passport.serializeUser((user: Express.User, cb) => cb(null, user));
-  passport.deserializeUser((user: Express.User, cb) => cb(null, user));
-
-  // Check if we have the required environment variables
-  // server/replitAuth.ts
-
-// ... (keep existing imports and code above line 100)
-
-// Check if we have Replit vars OR if we're on Render
-const isRender = process.env.RENDER === 'true' || process.env.NODE_ENV === 'production';
-const hasReplitEnv = REPL_ID && REPLIT_DOMAIN;
-
-if (!hasReplitEnv && !isRender) {
-  // Only fall back to demo mode in local development
-  console.warn("⚠️ Using demo mode for local development");
-  // ... (keep the existing demo mode setup code from lines 100-126 here if it's specifically for demo mode)
-  // If the existing code in lines 100-126 is *only* for setting up demo mode fallback,
-  // then you can keep it within this 'if' block.
-  // Otherwise, you might need to move parts of it outside if it's part of the core auth setup.
-  // For now, assume the original lines 100-126 are entirely for demo mode setup.
-
-  // Placeholder for original demo mode setup if it was within the 'if' block
-  // For example, if it was setting up a demo auth provider:
-  // app.use(async (req, res, next) => {
-  //   req.user = { id: 'demo-user', name: 'Demo User' };
-  //   next();
-  // });
-
-} else {
-  // Enable full authentication for Render or Replit
-  console.log("✓ Authentication enabled for production environment");
-  // Your authentication setup code here
-  // This is where you would place the code that currently only runs when REPL_ID and REPLIT_DOMAIN exist
-  // (i.e., the code that initializes Auth0 or your full authentication system)
-
-  // Example: If your Auth0 setup was previously inside an 'if (hasReplitEnv)' block,
-  // it should now be here. This might involve importing and using your Auth0 setup logic.
-  // For instance, if you have a function like `setupAuth0(app)`:
-  // setupAuth0(app);
-}
-
-// ... (keep existing code below line 126)
-
-  try {
-    const config = await getOidcConfig();
-
-    const verify: VerifyFunction = async (
-      tokens: client.TokenEndpointResponse & client.TokenEndpointResponseHelpers,
-      verified: passport.AuthenticateCallback
-    ) => {
-      const user = {};
-      updateUserSession(user, tokens);
-      await upsertUser(tokens.claims());
-      verified(null, user);
-    };
-
-    // Use REPLIT_DOMAIN for strategy setup
-    for (const domain of REPLIT_DOMAIN.split(",")) {
-      const strategy = new Strategy(
-        {
-          name: `replitauth:${domain}`,
-          config,
-          scope: "openid email profile offline_access",
-          callbackURL: `https://${domain}/api/callback`,
-        },
-        verify,
+    // This is the environment-aware logic provided by the Replit agent
+    // It skips the getOidcConfig() call if not on Replit
+    if (hasReplitEnv) {
+      // Replit OIDC setup (original logic)
+      passport.use(
+        "oidc",
+        new Strategy(
+          { client: getOidcConfig(), params: { scope: "openid email" } },
+          async (tokenSet: any, userinfo: any, done: any) => {
+            const user = {
+              id: userinfo.sub,
+              name: userinfo.name,
+              email: userinfo.email,
+            };
+            await storage.saveUser(user);
+            return done(null, user);
+          }
+        )
       );
-      passport.use(strategy);
+
+      app.get("/login", passport.authenticate("oidc"));
+
+      app.get(
+        "/login/callback",
+        passport.authenticate("oidc", {
+          successRedirect: "/",
+          failureRedirect: "/login",
+        })
+      );
+
+      app.get("/logout", (req, res) => {
+        req.logout(() => {
+          res.redirect("/");
+        });
+      });
+
+      app.get("/user", (req, res) => {
+        res.json(req.user || null);
+      });
+
+      return passport.initialize();
+    } else if (isRender) {
+      // Production routes for Render without Replit OIDC
+      console.log("✅ Running on Render - Setting up production routes without Replit Auth");
+      app.get('/login', (req, res) => {
+        // Redirect to your Auth0 login page or similar
+        res.redirect(process.env.AUTH0_LOGIN_URL || '/');
+      });
+      app.get('/login/callback', (req, res) => {
+        // Handle Auth0 callback or similar
+        res.redirect('/');
+      });
+      app.get('/logout', (req, res) => {
+        // Redirect to Auth0 logout or clear session
+        req.session.destroy(() => {
+          res.redirect('/');
+        });
+      });
+      app.get('/user', (req, res) => {
+        res.json(req.session.user || null);
+      });
+      return (req, res, next) => next(); // No-op middleware if Auth0 is handled client-side
     }
-
-    passport.serializeUser((user: Express.User, cb) => cb(null, user));
-    passport.deserializeUser((user: Express.User, cb) => cb(null, user));
-
-    app.get("/api/login", (req, res, next) => {
-      // Handle hostname mapping for authentication strategy
-      const hostname = req.hostname;
-      const strategyName = `replitauth:${hostname}`;
-      
-      // Check if strategy exists, otherwise redirect to demo
-      if (!passport._strategies[strategyName]) {
-        console.warn(`Strategy ${strategyName} not found, redirecting to demo`);
-        return res.redirect("/?demo=true&message=auth-unavailable");
-      }
-      
-      passport.authenticate(strategyName, {
-        prompt: "login consent",
-        scope: ["openid", "email", "profile", "offline_access"],
-      })(req, res, next);
-    });
-
-    app.get("/api/callback", (req, res, next) => {
-      const hostname = req.hostname;
-      const strategyName = `replitauth:${hostname}`;
-      
-      passport.authenticate(strategyName, {
-        successReturnToOrRedirect: "/",
-        failureRedirect: "/?demo=true&message=auth-failed",
-      })(req, res, (err) => {
-        if (err) {
-          console.error("Authentication callback error:", err);
-          return res.redirect("/?demo=true&message=auth-error");
-        }
-        next();
-      });
-    });
-
-    app.get("/api/logout", (req, res) => {
-      req.logout(() => {
-        res.redirect(
-          client.buildEndSessionUrl(config, {
-            client_id: REPL_ID,
-            post_logout_redirect_uri: `${req.protocol}://${req.hostname}`,
-          }).href
-        );
-      });
-    });
-
-    console.log("✅ Replit Auth configured successfully");
-  } catch (error) {
-    console.error("❌ Failed to setup Replit Auth:", error);
-    console.warn("   Falling back to demo mode");
   }
+  return (req, res, next) => next(); // Fallback no-op middleware
 }
 
-export const isAuthenticated: RequestHandler = async (req, res, next) => {
-  const user = req.user as any;
 
-  if (!req.isAuthenticated() || !user.expires_at) {
-    return res.status(401).json({ message: "Unauthorized" });
-  }
-
-  const now = Math.floor(Date.now() / 1000);
-  if (now <= user.expires_at) {
-    return next();
-  }
-
-  const refreshToken = user.refresh_token;
-  if (!refreshToken) {
-    res.status(401).json({ message: "Unauthorized" });
-    return;
-  }
-
-  try {
-    const config = await getOidcConfig();
-    const tokenResponse = await client.refreshTokenGrant(config, refreshToken);
-    updateUserSession(user, tokenResponse);
-    return next();
-  } catch (error) {
-    res.status(401).json({ message: "Unauthorized" });
-    return;
-  }
-};
