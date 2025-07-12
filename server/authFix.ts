@@ -7,7 +7,7 @@ export function setupSimpleAuth(app: Express) {
   
   // Simple session configuration that works reliably
   app.use(session({
-    secret: process.env.SESSION_SECRET || 'fallback-secret-for-dev',
+    secret: process.env.SESSION_SECRET || \'fallback-secret-for-dev\',
     resave: false,
     saveUninitialized: false,
     cookie: {
@@ -15,7 +15,7 @@ export function setupSimpleAuth(app: Express) {
       secure: false, // Allow HTTP for development
       maxAge: 7 * 24 * 60 * 60 * 1000 // 1 week
     }
-  }));
+  } ));
 
   // Simple login redirect (no passport)
   app.get("/api/login", (req, res) => {
