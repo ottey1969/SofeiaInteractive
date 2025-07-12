@@ -56,7 +56,7 @@ if (process.env.NODE_ENV === "development") {
 } else {
   app.use(serveStatic());
   app.get("**", (req, res) => {
-    res.sendFile(path.resolve(import.meta.dirname, "..", "client", "dist", "index.html"));
+    res.sendFile(path.resolve(import.meta.dirname, "..", "src", "dist", "public", "index.html"));
   });
 }
 
