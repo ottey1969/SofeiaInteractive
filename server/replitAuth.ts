@@ -16,18 +16,8 @@ if (!REPLIT_DOMAIN) {
   console.warn("REPLIT_DOMAINS not found - auth will be disabled");
 }
 
-const getOidcConfig = memoize(
-  async () => {
-    if (!REPL_ID || !REPLIT_DOMAIN) {
-      throw new Error("Missing REPL_ID or REPLIT_DOMAINS for OIDC configuration");
-    }
-    return await client.discover(
-      new URL(process.env.ISSUER_URL ?? "https://replit.com/oidc"),
-      REPL_ID
-    );
-  },
-  { maxAge: 3600 * 1000 }
-);
+// getOidcConfig should only be defined and called if hasReplitEnv is true
+// We will move its definition inside the hasReplitEnv block in setupAuth
 
 export function getSession() {
   const sessionTtl = 7 * 24 * 60 * 60 * 1000; // 1 week
@@ -57,31 +47,10 @@ export function getSession() {
 }
 
 export function setupAuth(app: Express): RequestHandler {
-  // Check if we have Replit vars OR if we're on Render
   const isRender = process.env.RENDER === 'true' || process.env.NODE_ENV === 'production';
   const hasReplitEnv = REPL_ID && REPLIT_DOMAIN;
 
-  if (!hasReplitEnv && !isRender) {
-    // Only fall back to demo mode in development
-    console.warn("⚠️ Using demo mode for local development");
-    // Demo routes for local development without Replit auth
-    app.get('/login', (req, res) => {
-      res.send('<h1>Login Page (Demo Mode)</h1><form action="/login/callback" method="post"><button type="submit">Login</button></form>');
-    });
-    app.post('/login/callback', (req, res) => {
-      req.session.user = { id: 'demo-user', name: 'Demo User' };
-      res.redirect('/');
-    });
-    app.get('/logout', (req, res) => {
-      req.session.destroy(() => {
-        res.redirect('/');
-      });
-    });
-    app.get('/user', (req, res) => {
-      res.json(req.session.user || null);
-    });
-    return (req, res, next) => next(); // No-op middleware
-  } else if (isRender) {
+  if (isRender) {
     // Production routes for Render without Replit OIDC
     console.log("✅ Running on Render - Setting up production routes without Replit Auth");
     app.get('/login', (req, res) => {
@@ -105,6 +74,21 @@ export function setupAuth(app: Express): RequestHandler {
   } else if (hasReplitEnv) {
     // Replit OIDC setup (original logic)
     console.log("✓ Authentication enabled for Replit environment");
+
+    // Define getOidcConfig here, so it's only created if hasReplitEnv is true
+    const getOidcConfig = memoize(
+      async () => {
+        if (!REPL_ID || !REPLIT_DOMAIN) {
+          throw new Error("Missing REPL_ID or REPLIT_DOMAINS for OIDC configuration");
+        }
+        return await client.discover(
+          new URL(process.env.ISSUER_URL ?? "https://replit.com/oidc"),
+          REPL_ID
+        );
+      },
+      { maxAge: 3600 * 1000 }
+    );
+
     passport.use(
       "oidc",
       new Strategy(
@@ -142,7 +126,26 @@ export function setupAuth(app: Express): RequestHandler {
     });
 
     return passport.initialize();
+  } else {
+    // Only fall back to demo mode in development if neither Render nor Replit envs are detected
+    console.warn("⚠️ Using demo mode for local development");
+    // Demo routes for local development without Replit auth
+    app.get('/login', (req, res) => {
+      res.send('<h1>Login Page (Demo Mode)</h1><form action="/login/callback" method="post"><button type="submit">Login</button></form>');
+    });
+    app.post('/login/callback', (req, res) => {
+      req.session.user = { id: 'demo-user', name: 'Demo User' };
+      res.redirect('/');
+    });
+    app.get('/logout', (req, res) => {
+      req.session.destroy(() => {
+        res.redirect('/');
+      });
+    });
+    app.get('/user', (req, res) => {
+      res.json(req.session.user || null);
+    });
+    return (req, res, next) => next(); // No-op middleware
   }
-  return (req, res, next) => next(); // Fallback no-op middleware
 }
 
