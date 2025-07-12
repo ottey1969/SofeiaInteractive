@@ -97,33 +97,44 @@ export async function setupAuth(app: Express) {
   passport.deserializeUser((user: Express.User, cb) => cb(null, user));
 
   // Check if we have the required environment variables
-  if (!REPL_ID || !REPLIT_DOMAIN) {
-    console.warn("⚠️  Replit Auth disabled - missing REPL_ID or REPLIT_DOMAINS");
-    console.warn("   Using demo mode for development");
-    
-    // Set up fallback routes for demo mode
-    app.get("/api/login", (req, res) => {
-      console.log("Demo mode: Login redirected");
-      res.redirect("/?demo=true&message=demo-mode");
-    });
-    
-    app.get("/api/callback", (req, res) => {
-      console.log("Demo mode: Callback redirected"); 
-      res.redirect("/?demo=true&message=demo-mode");
-    });
-    
-    app.get("/api/logout", (req, res) => {
-      if (req.session) {
-        req.session.destroy(() => {
-          res.redirect("/");
-        });
-      } else {
-        res.redirect("/");
-      }
-    });
-    
-    return;
-  }
+  // server/replitAuth.ts
+
+// ... (keep existing imports and code above line 100)
+
+// Check if we have Replit vars OR if we're on Render
+const isRender = process.env.RENDER === 'true' || process.env.NODE_ENV === 'production';
+const hasReplitEnv = REPL_ID && REPLIT_DOMAIN;
+
+if (!hasReplitEnv && !isRender) {
+  // Only fall back to demo mode in local development
+  console.warn("⚠️ Using demo mode for local development");
+  // ... (keep the existing demo mode setup code from lines 100-126 here if it's specifically for demo mode)
+  // If the existing code in lines 100-126 is *only* for setting up demo mode fallback,
+  // then you can keep it within this 'if' block.
+  // Otherwise, you might need to move parts of it outside if it's part of the core auth setup.
+  // For now, assume the original lines 100-126 are entirely for demo mode setup.
+
+  // Placeholder for original demo mode setup if it was within the 'if' block
+  // For example, if it was setting up a demo auth provider:
+  // app.use(async (req, res, next) => {
+  //   req.user = { id: 'demo-user', name: 'Demo User' };
+  //   next();
+  // });
+
+} else {
+  // Enable full authentication for Render or Replit
+  console.log("✓ Authentication enabled for production environment");
+  // Your authentication setup code here
+  // This is where you would place the code that currently only runs when REPL_ID and REPLIT_DOMAIN exist
+  // (i.e., the code that initializes Auth0 or your full authentication system)
+
+  // Example: If your Auth0 setup was previously inside an 'if (hasReplitEnv)' block,
+  // it should now be here. This might involve importing and using your Auth0 setup logic.
+  // For instance, if you have a function like `setupAuth0(app)`:
+  // setupAuth0(app);
+}
+
+// ... (keep existing code below line 126)
 
   try {
     const config = await getOidcConfig();
