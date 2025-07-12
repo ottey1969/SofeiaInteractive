@@ -81,75 +81,68 @@ export function setupAuth(app: Express): RequestHandler {
       res.json(req.session.user || null);
     });
     return (req, res, next) => next(); // No-op middleware
-  } else {
-    // Enable full authentication for Render or Replit
-    console.log("✓ Authentication enabled for production environment");
-
-    // This is the environment-aware logic provided by the Replit agent
-    // It skips the getOidcConfig() call if not on Replit
-    if (hasReplitEnv) {
-      // Replit OIDC setup (original logic)
-      passport.use(
-        "oidc",
-        new Strategy(
-          { client: getOidcConfig(), params: { scope: "openid email" } },
-          async (tokenSet: any, userinfo: any, done: any) => {
-            const user = {
-              id: userinfo.sub,
-              name: userinfo.name,
-              email: userinfo.email,
-            };
-            await storage.saveUser(user);
-            return done(null, user);
-          }
-        )
-      );
-
-      app.get("/login", passport.authenticate("oidc"));
-
-      app.get(
-        "/login/callback",
-        passport.authenticate("oidc", {
-          successRedirect: "/",
-          failureRedirect: "/login",
-        })
-      );
-
-      app.get("/logout", (req, res) => {
-        req.logout(() => {
-          res.redirect("/");
-        });
-      });
-
-      app.get("/user", (req, res) => {
-        res.json(req.user || null);
-      });
-
-      return passport.initialize();
-    } else if (isRender) {
-      // Production routes for Render without Replit OIDC
-      console.log("✅ Running on Render - Setting up production routes without Replit Auth");
-      app.get('/login', (req, res) => {
-        // Redirect to your Auth0 login page or similar
-        res.redirect(process.env.AUTH0_LOGIN_URL || '/');
-      });
-      app.get('/login/callback', (req, res) => {
-        // Handle Auth0 callback or similar
+  } else if (isRender) {
+    // Production routes for Render without Replit OIDC
+    console.log("✅ Running on Render - Setting up production routes without Replit Auth");
+    app.get('/login', (req, res) => {
+      // Redirect to your Auth0 login page or similar
+      res.redirect(process.env.AUTH0_LOGIN_URL || '/');
+    });
+    app.post('/login/callback', (req, res) => {
+      // Handle Auth0 callback or similar
+      res.redirect('/');
+    });
+    app.get('/logout', (req, res) => {
+      // Redirect to Auth0 logout or clear session
+      req.session.destroy(() => {
         res.redirect('/');
       });
-      app.get('/logout', (req, res) => {
-        // Redirect to Auth0 logout or clear session
-        req.session.destroy(() => {
-          res.redirect('/');
-        });
+    });
+    app.get('/user', (req, res) => {
+      res.json(req.session.user || null);
+    });
+    return (req, res, next) => next(); // No-op middleware if Auth0 is handled client-side
+  } else if (hasReplitEnv) {
+    // Replit OIDC setup (original logic)
+    console.log("✓ Authentication enabled for Replit environment");
+    passport.use(
+      "oidc",
+      new Strategy(
+        { client: getOidcConfig(), params: { scope: "openid email" } },
+        async (tokenSet: any, userinfo: any, done: any) => {
+          const user = {
+            id: userinfo.sub,
+            name: userinfo.name,
+            email: userinfo.email,
+          };
+          await storage.saveUser(user);
+          return done(null, user);
+        }
+      )
+    );
+
+    app.get("/login", passport.authenticate("oidc"));
+
+    app.get(
+      "/login/callback",
+      passport.authenticate("oidc", {
+        successRedirect: "/",
+        failureRedirect: "/login",
+      })
+    );
+
+    app.get("/logout", (req, res) => {
+      req.logout(() => {
+        res.redirect("/");
       });
-      app.get('/user', (req, res) => {
-        res.json(req.session.user || null);
-      });
-      return (req, res, next) => next(); // No-op middleware if Auth0 is handled client-side
-    }
+    });
+
+    app.get("/user", (req, res) => {
+      res.json(req.user || null);
+    });
+
+    return passport.initialize();
   }
   return (req, res, next) => next(); // Fallback no-op middleware
 }
-
 
