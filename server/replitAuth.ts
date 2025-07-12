@@ -8,16 +8,10 @@ import memoize from "memoizee";
 import connectPg from "connect-pg-simple";
 import { storage } from "./storage";
 
-// Extract REPL_ID from REPLIT_DOMAINS if not directly available
-const REPL_ID = process.env.REPL_ID || '05a062b5-1e45-4e9a-985b-b83f2397da8d';
-const REPLIT_DOMAIN = process.env.REPLIT_DOMAINS || '';
-
-if (!REPLIT_DOMAIN) {
-  console.warn("REPLIT_DOMAINS not found - auth will be disabled");
-}
-
-// getOidcConfig should only be defined and called if hasReplitEnv is true
-// We will move its definition inside the hasReplitEnv block in setupAuth
+// These variables should only be used if hasReplitEnv is true
+// We will ensure they are not used to trigger getOidcConfig when not on Replit
+const REPL_ID_RAW = process.env.REPL_ID;
+const REPLIT_DOMAIN_RAW = process.env.REPLIT_DOMAINS;
 
 export function getSession() {
   const sessionTtl = 7 * 24 * 60 * 60 * 1000; // 1 week
@@ -48,7 +42,8 @@ export function getSession() {
 
 export function setupAuth(app: Express): RequestHandler {
   const isRender = process.env.RENDER === 'true' || process.env.NODE_ENV === 'production';
-  const hasReplitEnv = REPL_ID && REPLIT_DOMAIN;
+  // Check for actual Replit environment variables, not placeholders
+  const hasReplitEnv = !!REPL_ID_RAW && !!REPLIT_DOMAIN_RAW;
 
   if (isRender) {
     // Production routes for Render without Replit OIDC
@@ -76,18 +71,18 @@ export function setupAuth(app: Express): RequestHandler {
     console.log("✓ Authentication enabled for Replit environment");
 
     // Define getOidcConfig here, so it's only created if hasReplitEnv is true
-    const getOidcConfig = memoize(
-      async () => {
-        if (!REPL_ID || !REPLIT_DOMAIN) {
-          throw new Error("Missing REPL_ID or REPLIT_DOMAINS for OIDC configuration");
-        }
-        return await client.discover(
-          new URL(process.env.ISSUER_URL ?? "https://replit.com/oidc"),
-          REPL_ID
-        );
-      },
-      { maxAge: 3600 * 1000 }
-    );
+    // and ensure it's not memoized at the global scope
+    const getOidcConfigInternal = async () => {
+      // Use the raw Replit environment variables here
+      if (!REPL_ID_RAW || !REPLIT_DOMAIN_RAW) {
+        throw new Error("Missing REPL_ID or REPLIT_DOMAINS for OIDC configuration");
+      }
+      return await client.discover(
+        new URL(process.env.ISSUER_URL ?? "https://replit.com/oidc"),
+        REPL_ID_RAW
+      );
+    };
+    const getOidcConfig = memoize(getOidcConfigInternal, { maxAge: 3600 * 1000 });
 
     passport.use(
       "oidc",
@@ -148,4 +143,7 @@ export function setupAuth(app: Express): RequestHandler {
     return (req, res, next) => next(); // No-op middleware
   }
 }
+
+
+
 
