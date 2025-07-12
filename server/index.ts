@@ -1,8 +1,11 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import http from "http";
 
-const app = express();
+const app = express( );
+const server = http.createServer(app );
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
@@ -47,8 +50,13 @@ app.use((err: any, _req: Request, res: Response, next: NextFunction) => {
   throw err;
 });
 
-setupVite(app);
+if (process.env.NODE_ENV === "development") {
+  setupVite(app, server);
+} else {
+  app.use(serveStatic());
+}
 
-// This is a catch-all route for serving the client-side application.
-// It should be placed after all other API routes.
-app.use(serveStatic());
+const port = process.env.PORT || 3000;
+server.listen(port, () => {
+  console.log(`Server listening on port ${port}`);
+});
