@@ -35,7 +35,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// Call registerRoutes with the 'app' instance
+// Call registerRoutes with the \'app\' instance
 registerRoutes(app);
 
 app.use((err: any, _req: Request, res: Response, next: NextFunction) => {
