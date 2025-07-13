@@ -31,7 +31,7 @@ export default defineConfig(async ({ mode }) => {
     },
     root: path.resolve(__dirname, "client"),
     build: {
-      outDir: path.resolve(__dirname, "src/dist/public"), // THIS IS THE CRITICAL CHANGE
+      outDir: path.resolve(__dirname, "dist", "public"), // Simplified path
       emptyOutDir: true,
     },
     server: {
