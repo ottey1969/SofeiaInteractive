@@ -51,6 +51,9 @@ export interface IStorage {
   getUserSubscription(userId: string): Promise<Subscription | undefined>;
   updateSubscriptionStatus(userId: string, status: string): Promise<void>;
   
+  // Chat completion operations
+  createChatCompletion(userId: string, conversationId: number, message: string): Promise<any>;
+  
   // Blog post operations
   createBlogPost(blogPost: InsertBlogPost): Promise<BlogPost>;
   getBlogPost(id: number): Promise<BlogPost | undefined>;
@@ -345,6 +348,20 @@ export class DatabaseStorage implements IStorage {
       .from(blogPosts)
       .where(eq(blogPosts.bulkJobId, jobId))
       .orderBy(desc(blogPosts.createdAt));
+  }
+
+  // Chat completion operations
+  async createChatCompletion(userId: string, conversationId: number, message: string): Promise<any> {
+    const { chatCompletionService } = await import('./chatCompletion');
+    
+    // Categorize the message for appropriate processing speed
+    const messageType = chatCompletionService.categorizeMessage(message);
+    
+    return await chatCompletionService.createChatCompletion(userId, {
+      conversationId,
+      message,
+      messageType
+    });
   }
 }
 

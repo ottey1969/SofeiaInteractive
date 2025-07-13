@@ -279,4 +279,128 @@ export function registerRoutes(app: Express) {
     // Clear the session or token here if applicable
     res.status(200).json({ message: "Logged out successfully" });
   });
+
+  // Bulk Blog Post Generation Endpoints
+  app.post("/api/blog/bulk-generate", async (req: Request, res: Response) => {
+    if (!process.env.DATABASE_URL) {
+      return res.status(500).json({
+        error: "Database not configured. Please contact support.",
+        code: "DB_NOT_CONFIGURED",
+      });
+    }
+
+    const userId = req.user?.claims?.sub;
+    const { name, keywords, targetCountry = 'USA', contentLength = 'medium' } = req.body;
+
+    try {
+      // Check user permissions for bulk generation
+      const user = await storage.getUser(userId);
+      if (!user?.isPremium && !user?.isAdmin) {
+        return res.status(403).json({ 
+          message: "Bulk generation requires Pro plan or higher. Please upgrade your subscription.",
+          code: "PREMIUM_REQUIRED"
+        });
+      }
+
+      // Create bulk job
+      const bulkJob = await storage.createBulkBlogJob({
+        userId,
+        name,
+        keywords,
+        targetCountry,
+        contentLength,
+        status: 'pending',
+        totalPosts: keywords.length,
+        completedPosts: 0,
+        failedPosts: 0
+      });
+
+      return res.json({ 
+        message: "Bulk generation job created successfully",
+        jobId: bulkJob.id 
+      });
+    } catch (error) {
+      console.error("Error creating bulk job:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.get("/api/blog/bulk-jobs", async (req: Request, res: Response) => {
+    if (!process.env.DATABASE_URL) {
+      return res.status(500).json({
+        error: "Database not configured. Please contact support.",
+        code: "DB_NOT_CONFIGURED",
+      });
+    }
+
+    const userId = req.user?.claims?.sub;
+    try {
+      const jobs = await storage.getBulkBlogJobs(userId);
+      return res.json(jobs);
+    } catch (error) {
+      console.error("Error getting bulk jobs:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.get("/api/blog/bulk-jobs/:jobId", async (req: Request, res: Response) => {
+    if (!process.env.DATABASE_URL) {
+      return res.status(500).json({
+        error: "Database not configured. Please contact support.",
+        code: "DB_NOT_CONFIGURED",
+      });
+    }
+
+    const userId = req.user?.claims?.sub;
+    const { jobId } = req.params;
+    
+    try {
+      const job = await storage.getBulkBlogJob(userId, parseInt(jobId));
+      return res.json(job);
+    } catch (error) {
+      console.error("Error getting bulk job:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.delete("/api/blog/bulk-jobs/:jobId", async (req: Request, res: Response) => {
+    if (!process.env.DATABASE_URL) {
+      return res.status(500).json({
+        error: "Database not configured. Please contact support.",
+        code: "DB_NOT_CONFIGURED",
+      });
+    }
+
+    const userId = req.user?.claims?.sub;
+    const { jobId } = req.params;
+    
+    try {
+      await storage.deleteBulkBlogJob(userId, parseInt(jobId));
+      return res.json({ message: "Bulk job deleted successfully" });
+    } catch (error) {
+      console.error("Error deleting bulk job:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.get("/api/blog/bulk-jobs/:jobId/posts", async (req: Request, res: Response) => {
+    if (!process.env.DATABASE_URL) {
+      return res.status(500).json({
+        error: "Database not configured. Please contact support.",
+        code: "DB_NOT_CONFIGURED",
+      });
+    }
+
+    const userId = req.user?.claims?.sub;
+    const { jobId } = req.params;
+    
+    try {
+      const posts = await storage.getBlogPostsByJobId(userId, parseInt(jobId));
+      return res.json(posts);
+    } catch (error) {
+      console.error("Error getting blog posts:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
 }
+
