@@ -54,7 +54,8 @@ app.use((err: any, _req: Request, res: Response, next: NextFunction) => {
 if (process.env.NODE_ENV === "development") {
   setupVite(app, server);
 } else {
-  app.use(serveStatic());
+  // Serve static assets from the dist/public directory
+  app.use(express.static(path.resolve(import.meta.dirname, "..", "..", "dist", "public")));
   app.get("**", (req, res) => {
     res.sendFile(path.resolve(import.meta.dirname, "..", "..", "dist", "public", "index.html"));
   });
