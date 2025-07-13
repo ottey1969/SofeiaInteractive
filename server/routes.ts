@@ -61,7 +61,7 @@ export function registerRoutes(app: Express) {
 
     const userId = req.user?.claims?.sub;
     try {
-      const conversations = await storage.getConversations(userId);
+      const conversations = await storage.getUserConversations(userId);
       return res.json(conversations);
     } catch (error) {
       console.error("Error getting conversations:", error);
