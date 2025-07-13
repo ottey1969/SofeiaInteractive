@@ -13,26 +13,18 @@ export default function Home() {
   const [socket, setSocket] = useState<WebSocket | null>(null);
   const [aiActivities, setAiActivities] = useState<AIActivity[]>([]);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
-  const [demoMessages, setDemoMessages] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);
   
-  // Check for demo mode
-  const isDemoMode = typeof window !== 'undefined' && sessionStorage.getItem('demo_mode') === 'true';
-
-  // Fetch conversations (skip in demo mode)
+  // Fetch conversations
   const { data: conversations = [], refetch: refetchConversations } = useQuery({
     queryKey: ["/api/conversations"],
-    enabled: !isDemoMode,
   });
 
   // Fetch messages for selected conversation
-  const { data: fetchedMessages = [], refetch: refetchMessages } = useQuery({
+  const { data: messages = [], refetch: refetchMessages } = useQuery({
     queryKey: ["/api/conversations", selectedConversation?.id, "messages"],
-    enabled: !!selectedConversation && !isDemoMode,
+    enabled: !!selectedConversation,
   });
-
-  // Combine fetched messages with demo messages for demo mode
-  const messages = isDemoMode ? demoMessages : fetchedMessages;
 
   // Fetch AI activities for selected conversation
   const { data: activities = [], refetch: refetchActivities } = useQuery({
@@ -73,22 +65,8 @@ export default function Home() {
           refetchActivities();
         } else if (message.type === 'response_complete') {
           console.log('Response complete received:', message);
-          // For demo mode, add the message directly to avoid database calls
-          if (message.message && isDemoMode) {
-            console.log('Adding demo message:', message.message);
-            setDemoMessages(prev => [...prev, message.message]);
-            setAiActivities(prev => [...prev, {
-              id: Date.now(),
-              conversationId: message.message.conversationId,
-              phase: 'generation',
-              status: 'completed',
-              description: 'Response delivered successfully',
-              createdAt: new Date().toISOString()
-            }]);
-          } else {
-            refetchMessages();
-            refetchActivities();
-          }
+          refetchMessages();
+          refetchActivities();
           setIsTyping(false);
         }
       } catch (error) {
@@ -121,7 +99,6 @@ export default function Home() {
   const handleNewConversation = async () => {
     setSelectedConversation(null);
     setAiActivities([]);
-    setDemoMessages([]);
     setIsTyping(false);
     
     // Reset context on backend
@@ -146,17 +123,6 @@ export default function Home() {
   };
 
   const handleMessageSent = (userMessage?: string) => {
-    if (isDemoMode && userMessage && selectedConversation) {
-      // Add user message to demo messages immediately
-      setDemoMessages(prev => [...prev, {
-        id: Date.now(),
-        conversationId: selectedConversation.id,
-        role: 'user',
-        content: userMessage,
-        createdAt: new Date().toISOString()
-      }]);
-      setIsTyping(true);
-    }
     refetchMessages();
   };
 
@@ -164,30 +130,11 @@ export default function Home() {
     <div className="h-screen flex flex-col bg-slate-900">
       <Header />
       
-      {/* Demo Mode Banner */}
-      {isDemoMode && (
-        <div className="bg-yellow-600/20 border-b border-yellow-500/30 px-6 py-2">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <div className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></div>
-              <span className="text-yellow-400 text-sm font-medium">Demo Mode Active</span>
-              <span className="text-yellow-300/70 text-sm">- Limited functionality for testing</span>
-            </div>
-            <button 
-              onClick={() => { sessionStorage.removeItem('demo_mode'); window.location.reload(); }}
-              className="text-yellow-400 hover:text-yellow-300 text-sm underline"
-            >
-              Exit Demo
-            </button>
-          </div>
-        </div>
-      )}
-      
       <div className="flex flex-1 overflow-hidden">
         {/* Left Sidebar - Chat History (narrower) */}
         <div className="w-1/4 bg-slate-800 border-r border-slate-700 flex flex-col">
           <ChatHistory 
-            conversations={isDemoMode ? [] : conversations}
+            conversations={conversations}
             selectedConversation={selectedConversation}
             onSelectConversation={setSelectedConversation}
             onNewConversation={handleNewConversation}
@@ -201,8 +148,6 @@ export default function Home() {
             messages={messages}
             onConversationCreated={handleConversationCreated}
             onMessageSent={handleMessageSent}
-            isDemoMode={isDemoMode}
-            demoMessages={demoMessages}
             isTyping={isTyping}
           />
         </div>
@@ -239,7 +184,6 @@ export default function Home() {
             <AIActivityFeed 
               activities={activities} 
               realTimeActivities={aiActivities}
-              isDemoMode={isDemoMode}
               className="h-full"
             />
           </div>

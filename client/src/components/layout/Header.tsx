@@ -54,7 +54,7 @@ export default function Header() {
             }`}>
               <i className="fas fa-coins text-amber-400 text-xs"></i>
               <span className={`text-sm ${isLimitReached ? 'text-red-400' : 'text-amber-400'}`}>
-                Questions: {questionsRemaining}/
+                Questions: {questionsUsed}/
                 {monthlyLimit === -1 ? "∞" : monthlyLimit}
               </span>
             </div>

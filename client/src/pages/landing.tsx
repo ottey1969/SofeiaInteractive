@@ -501,16 +501,20 @@ export default function Landing() {
             </div>
             <CardHeader className="text-center">
               <CardTitle className="text-2xl text-white">Pro Plan</CardTitle>
-              <div className="text-3xl font-bold text-white mt-4">$29<span className="text-lg text-slate-400">/month</span></div>
+              <div className="text-3xl font-bold text-white mt-4">$35<span className="text-lg text-slate-400">/month</span></div>
             </CardHeader>
             <CardContent className="space-y-3">
               <div className="flex items-center space-x-3">
                 <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                <span className="text-slate-300">Unlimited questions</span>
+                <span className="text-slate-300">150 questions per month</span>
               </div>
               <div className="flex items-center space-x-3">
                 <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                <span className="text-slate-300">Advanced AI analysis</span>
+                <span className="text-slate-300">Bulk content generation</span>
+              </div>
+              <div className="flex items-center space-x-3">
+                <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                <span className="text-slate-300">Advanced SEO analysis</span>
               </div>
               <div className="flex items-center space-x-3">
                 <div className="w-2 h-2 bg-green-400 rounded-full"></div>

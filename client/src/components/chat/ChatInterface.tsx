@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
-import { Send, Brain, User, Shield } from "lucide-react";
+import { Send, Brain, User, Shield, Copy, Code } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { isUnauthorizedError } from "@/lib/authUtils";
 import { apiRequest } from "@/lib/queryClient";
@@ -28,6 +28,31 @@ export default function ChatInterface({
   const [isTyping, setIsTyping] = useState(false);
   const { toast } = useToast();
   const queryClient = useQueryClient();
+
+  // Copy functions
+  const copyToClipboard = async (text: string, type: 'text' | 'html' = 'text') => {
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({
+        title: "Copied!",
+        description: `Content copied as ${type === 'html' ? 'HTML' : 'text'}`,
+        variant: "default",
+      });
+    } catch (error) {
+      console.error('Failed to copy:', error);
+      toast({
+        title: "Copy failed",
+        description: "Unable to copy content to clipboard",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const copyAsHTML = async (content: string) => {
+    // Convert content to proper HTML if it's not already
+    const htmlContent = content.includes('<') ? content : `<p>${content.replace(/\n/g, '</p><p>')}</p>`;
+    await copyToClipboard(htmlContent, 'html');
+  };
 
   const createConversationMutation = useMutation({
     mutationFn: async (title: string) => {
@@ -189,8 +214,30 @@ export default function ChatInterface({
                     <Brain className="text-white text-xs w-4 h-4" />
                   </div>
                   <div className="flex-1">
-                    <div className="bg-slate-700 rounded-2xl px-4 py-3">
+                    <div className="bg-slate-700 rounded-2xl px-4 py-3 relative group">
                       <p className="text-sm whitespace-pre-wrap text-slate-200">{msg.content}</p>
+                      
+                      {/* Copy buttons - show on hover */}
+                      <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity flex space-x-1">
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => copyToClipboard(msg.content)}
+                          className="h-6 w-6 p-0 bg-slate-600/50 hover:bg-slate-600 text-slate-300"
+                          title="Copy as text"
+                        >
+                          <Copy className="w-3 h-3" />
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => copyAsHTML(msg.content)}
+                          className="h-6 w-6 p-0 bg-slate-600/50 hover:bg-slate-600 text-slate-300"
+                          title="Copy as HTML"
+                        >
+                          <Code className="w-3 h-3" />
+                        </Button>
+                      </div>
                     </div>
                     <p className="text-slate-400 text-xs mt-1">
                       {formatTime(msg.createdAt)}
